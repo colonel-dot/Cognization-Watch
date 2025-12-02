@@ -12,8 +12,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/bridge" />
-            <option value="$PROJECT_DIR$/cognitiveImpairmentPrevention" />
+            <option value="$PROJECT_DIR$/cognitive" />
             <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/myapplication" />
           </set>
         </option>
       </GradleProjectSettings>

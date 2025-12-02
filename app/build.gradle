@@ -31,7 +31,7 @@ android {
 dependencies {
 
     implementation project(":bridge")
-    implementation project(":cognitiveImpairmentPrevention")
+    implementation project(":cognitive")
     implementation project(":common")
     implementation libs.appcompat
     implementation libs.material

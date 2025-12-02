@@ -1,4 +1,4 @@
-package com.example.cognitiveimpairmentprevention;
+package com.example.cognitive;
 
 import android.content.Context;
 

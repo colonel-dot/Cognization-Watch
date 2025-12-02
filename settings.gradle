@@ -16,11 +16,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
 rootProject.name = "CooperativeProjectsDemo"
 include ':app'
-include ':cognitiveImpairmentPrevention'
+include ':cognitive'
 include ':bridge'
 include ':common'
+include ':myapplication'
