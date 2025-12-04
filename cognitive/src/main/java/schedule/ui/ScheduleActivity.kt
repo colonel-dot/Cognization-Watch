@@ -9,12 +9,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cognitive.R
 import schedule.vm.ScheduleViewModel
+import com.example.cognitive.R
 
 class ScheduleActivity : AppCompatActivity() {
 
@@ -31,7 +30,12 @@ class ScheduleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
-        checkUsageStatsPermission()
+
+        if (!checkUsageStatsPermission()) {
+            Toast.makeText(this, "请开启“使用情况访问权限”", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+        }
+
         // 初始化视图
         tvBedTime = findViewById(R.id.tvBedTime)
         tvWakeTime = findViewById(R.id.tvWakeTime)
@@ -41,29 +45,57 @@ class ScheduleActivity : AppCompatActivity() {
         val rvWakeHour = findViewById<RecyclerView>(R.id.rvHour)
         val rvWakeMinute = findViewById<RecyclerView>(R.id.rvMinute)
 
-        // 初始化睡觉时间滚轮
+        // 初始化滚轮
         bedHourAdapter = setupWheel(rvBedHour, viewModel.hours, viewModel.bedHourPos) { selectedHour, pos ->
-            viewModel.onBedTimeSelected(selectedHour, bedMinuteAdapter.data[bedMinuteAdapter.selectedPos], pos, bedMinuteAdapter.selectedPos)
+            viewModel.onBedTimeSelected(
+                selectedHour,
+                bedMinuteAdapter.getRealValue(),
+                pos,
+                bedMinuteAdapter.selectedPos
+            )
         }
 
         bedMinuteAdapter = setupWheel(rvBedMinute, viewModel.minutes, viewModel.bedMinutePos) { selectedMinute, pos ->
-            viewModel.onBedTimeSelected(bedHourAdapter.data[bedHourAdapter.selectedPos], selectedMinute, bedHourAdapter.selectedPos, pos)
+            viewModel.onBedTimeSelected(
+                bedHourAdapter.getRealValue(),
+                selectedMinute,
+                bedHourAdapter.selectedPos,
+                pos
+            )
         }
 
-        // 初始化起床时间滚轮
         wakeHourAdapter = setupWheel(rvWakeHour, viewModel.hours, viewModel.wakeHourPos) { selectedHour, pos ->
-            viewModel.onWakeTimeSelected(selectedHour, wakeMinuteAdapter.data[wakeMinuteAdapter.selectedPos], pos, wakeMinuteAdapter.selectedPos)
+            viewModel.onWakeTimeSelected(
+                selectedHour,
+                wakeMinuteAdapter.getRealValue(),
+                pos,
+                wakeMinuteAdapter.selectedPos
+            )
         }
 
         wakeMinuteAdapter = setupWheel(rvWakeMinute, viewModel.minutes, viewModel.wakeMinutePos) { selectedMinute, pos ->
-            viewModel.onWakeTimeSelected(wakeHourAdapter.data[wakeHourAdapter.selectedPos], selectedMinute, wakeHourAdapter.selectedPos, pos)
+            viewModel.onWakeTimeSelected(
+                wakeHourAdapter.getRealValue(),
+                selectedMinute,
+                wakeHourAdapter.selectedPos,
+                pos
+            )
         }
 
 
-        // 设置观察者
+        // 设置观察者（包括滚轮同步）
         setupObservers()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (checkUsageStatsPermission()) {
+            // 刷新系统亮屏/锁屏数据
+            viewModel.refreshBySystemEvents()
+        }
+    }
+
+    /** 初始化滚轮 */
     private fun setupWheel(
         recyclerView: RecyclerView,
         data: List<String>,
@@ -77,8 +109,10 @@ class ScheduleActivity : AppCompatActivity() {
         val snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(recyclerView)
 
-        // 安全计算初始滚动位置
-        val safePos = adapter.getMiddlePosition() + initialPos % data.size
+        // 初始滚动位置
+        //val safePos = adapter.getMiddlePosition() + initialPos % data.size
+        val safePos = adapter.getMiddlePosition() + (initialPos % adapter.data.size + adapter.data.size) % adapter.data.size
+
         recyclerView.scrollToPosition(safePos)
         adapter.selectedPos = safePos
 
@@ -90,8 +124,7 @@ class ScheduleActivity : AppCompatActivity() {
                     if (pos != RecyclerView.NO_POSITION) {
                         adapter.selectedPos = pos
                         adapter.notifyDataSetChanged()
-                        // 取模防止越界
-                        val realPos = pos % adapter.data.size
+                        val realPos = ((pos % adapter.data.size) + adapter.data.size) % adapter.data.size
                         onItemSelected(adapter.data[realPos], realPos)
                     }
                 }
@@ -101,28 +134,39 @@ class ScheduleActivity : AppCompatActivity() {
         return adapter
     }
 
-
+    /** LiveData 观察者，同时滚轮滚动到选中位置 */
     private fun setupObservers() {
-        viewModel.bedTimeText.observe(this, Observer { text ->
+        viewModel.bedTimeText.observe(this) { text ->
             tvBedTime.text = text
-        })
+            scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, findViewById(R.id.rvBedHour))
+            scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, findViewById(R.id.rvBedMinute))
+        }
 
-        viewModel.wakeTimeText.observe(this, Observer { text ->
+        viewModel.wakeTimeText.observe(this) { text ->
             tvWakeTime.text = text
-        })
+            scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, findViewById(R.id.rvHour))
+            scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, findViewById(R.id.rvMinute))
+        }
     }
 
-    private fun checkUsageStatsPermission() {
+    /** 滚动到指定位置 */
+    private fun scrollWheelTo(pos: Int, adapter: WheelAdapter, rv: RecyclerView) {
+        val safePos = adapter.getMiddlePosition() + (pos % adapter.data.size)
+        rv.post {
+            rv.scrollToPosition(safePos)
+            adapter.selectedPos = safePos
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    /** 检查权限 */
+    private fun checkUsageStatsPermission(): Boolean {
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(
             AppOpsManager.OPSTR_GET_USAGE_STATS,
             android.os.Process.myUid(),
             packageName
         )
-        if (mode != AppOpsManager.MODE_ALLOWED) {
-            startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-            Toast.makeText(this, "请开启“使用情况访问权限”", Toast.LENGTH_LONG).show()
-        }
+        return mode == AppOpsManager.MODE_ALLOWED
     }
-
 }
