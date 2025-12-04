@@ -13,7 +13,23 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请在点击开始录音后朗读下面的文本，朗读结束后点击停止，最后点击展示分数查看结果"
+            android:textSize="24sp"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+        <ui.PinyinTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:layout_marginBottom="50dp"
+            android:text="我从去年辞帝京，谪居卧病浔阳城"/>
 
         <Button
             android:id="@+id/btn_start_record"
@@ -28,6 +44,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="停止录音"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="展示分数"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/tv_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="分数"
             android:textSize="18sp" />
 
     </LinearLayout>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/schedule"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="40dp"
+        android:text="灵夕守护默认将手机开屏第一次时间作为起床时间，最后一次锁屏时间作为睡觉时间，如果和您实际作息时间不符可以在下方手动选择您的作息时间"
+        android:textColor="@color/blue"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvWakeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="起床时间: 00:00"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginBottom="40dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHour"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMinute"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvBedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="睡觉时间: 00:00"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBedHour"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBedMinute"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"/>
+
+    </LinearLayout>
+
+</LinearLayout>

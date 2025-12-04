@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 2. 可选但建议加：声明应用需要麦克风硬件（提升兼容性） -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 2. 可选但建议加：声明应用需要麦克风硬件（提升兼容性） -->
+
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
-    <application android:theme="@style/Theme.CooperativeProjectsDemo">
-        <!--<activity
-            android:name="read_assessment.ui.RecordActivity"
-            android:exported="false" />-->
 
-        <!-- android:name=".schulte.ui.SchulteGameActivity" -->
+    <application android:theme="@style/Theme.CooperativeProjectsDemo">
         <activity
-            android:name="read_assessment.ui.RecordActivity"
+            android:name="schedule.ui.ScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +27,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="read_assessment.ui.RecordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".schulte.ui.SchulteGameActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>

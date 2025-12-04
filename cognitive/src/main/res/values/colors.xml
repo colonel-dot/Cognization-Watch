@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="custom_primary">#2196F3</color>
+    <color name="light_wheat">#FBEFDD</color>
     <color name="system_gray">#EEEEEEEE</color>
     <color name="black">#FF000000</color>
-    <color name="custom_primary">#2196F3</color>
+    <color name="red">#FF0000</color>
     <color name="light_black">#23190F</color>
     <color name="white">#FFFFFFFF</color>
     <color name="chocolate">#D2691E</color>
     <color name="cyan">#00FFFF</color>
+
+    <color name="sky_blue">#87CEFA</color>
+    <color name="white_blue">#E0F7FA</color>
+    <color name="light_blue">#B0E2FF</color>
     <color name="blue">#0000FF</color>
     <color name="MediumBlue">#0000CD</color>
     <color name="skyBlue">#87CEEB</color>
@@ -17,13 +23,17 @@
     <color name="light_gray">#D3D3D3</color>
     <color name="dark_gray">#A9A9A9</color>
     <color name="orange">#FFA500</color>
-    <color name="yellow">#FFFF00</color>
+    <color name="light_orange">#FFB344</color>
     <color name="wheat">#F5DEB3</color>
-    <color name="light_wheat">#FBEFDD</color>
     <color name="wood">#DEB887</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="light_yellow">#FFFFE0</color>
+    <color name="apply_yellow"> #FFFACD</color>
+    <color name="my_yellow"> #F9F9CD</color>
     <color name="green">#00FF00</color>
     <color name="transparent_green">#00FF0080</color>
     <color name="grassgreen">#7CFC00</color>
+    <color name="darkgreen">#006400</color>
     <color name="lightgreen">#39FF14</color>
     <color name="send_color">#07C160</color>
 </resources>

@@ -1,4 +1,10 @@
 # Add project specific ProGuard rules here.
+-ignorewarnings
+-libraryjars libs/YoudaoBase_v2.0.0.jar
+-keep class com.youdao.sdk.** { *;}
+
+-libraryjars libs/YoudaoSpeechEvaluate_v2.0.0.jar
+-keep class youdao.com.yd_speech_evaluator.**{*;}
 # You can control the set of applied configuration files using the
 # proguardFiles setting in build.gradle.
 #
