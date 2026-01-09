@@ -28,6 +28,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     var wakeHourPos = 0
     var wakeMinutePos = 0
 
+    // ⭐ 关键：防止旋转屏幕后重复初始化
+    var hasInitBySystemEvents = false
+
     init {
         val (defaultSleep, defaultWake) = getDefaultSleepWakeTime()
         val sleepCal = Calendar.getInstance().apply { timeInMillis = defaultSleep }
@@ -46,6 +49,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             wakeCal.get(Calendar.HOUR_OF_DAY),
             wakeCal.get(Calendar.MINUTE)
         )
+
+        // 第一次初始化标记
+        hasInitBySystemEvents = true
     }
 
     fun onBedTimeSelected(hour: String, minute: String, hourPos: Int, minutePos: Int) {
@@ -60,7 +66,6 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         wakeMinutePos = minutePos
     }
 
-    /** 获取当天 4:00 之后的屏幕事件 */
     private fun getScreenEventsToday(): List<ScreenEvent> {
         val usm = context.getSystemService(Application.USAGE_STATS_SERVICE) as UsageStatsManager
         val cal = Calendar.getInstance()
@@ -78,14 +83,16 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         while (usageEvents.hasNextEvent()) {
             usageEvents.getNextEvent(event)
             when (event.eventType) {
-                UsageEvents.Event.SCREEN_INTERACTIVE -> events.add(ScreenEvent("SCREEN_ON", event.timeStamp))
-                UsageEvents.Event.SCREEN_NON_INTERACTIVE -> events.add(ScreenEvent("SCREEN_OFF", event.timeStamp))
+                UsageEvents.Event.SCREEN_INTERACTIVE ->
+                    events.add(ScreenEvent("SCREEN_ON", event.timeStamp))
+
+                UsageEvents.Event.SCREEN_NON_INTERACTIVE ->
+                    events.add(ScreenEvent("SCREEN_OFF", event.timeStamp))
             }
         }
         return events.sortedBy { it.time }
     }
 
-    /** 推算默认睡觉/起床时间 */
     private fun getDefaultSleepWakeTime(): Pair<Long, Long> {
         val events = getScreenEventsToday()
         val now = System.currentTimeMillis()
@@ -108,8 +115,10 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         return sleepTime to wakeTime
     }
 
-    /** 刷新数据（从系统事件获取） */
+    /** ⭐ 只第一次执行，旋转屏不再重跑 */
     fun refreshBySystemEvents() {
+        if (hasInitBySystemEvents) return
+
         val (sleep, wake) = getDefaultSleepWakeTime()
         val sleepCal = Calendar.getInstance().apply { timeInMillis = sleep }
         val wakeCal = Calendar.getInstance().apply { timeInMillis = wake }
@@ -127,5 +136,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             wakeCal.get(Calendar.HOUR_OF_DAY),
             wakeCal.get(Calendar.MINUTE)
         )
+
+        hasInitBySystemEvents = true
     }
 }

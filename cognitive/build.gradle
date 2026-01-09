@@ -1,7 +1,14 @@
 plugins {
-    alias(libs.plugins.kotlin.android)
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
 }
-def isDebug = isDebugCIP.toBoolean()
+
+/**
+ * 是否 Debug 壳工程
+ * isDebugCIP 建议在 gradle.properties 中定义
+ */
+def isDebug = Boolean.parseBoolean(isDebugCIP)
+
 if (isDebug) {
     apply plugin: 'com.android.application'
 } else {
@@ -15,10 +22,21 @@ android {
     defaultConfig {
         minSdk 24
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation": "${projectDir}/schemas",
+                        "room.incremental"    : "true"
+                ]
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         if (!isDebug) {
             consumerProguardFiles "consumer-rules.pro"
         }
+
         if (isDebug) {
             applicationId "com.example.cooperativeprojectsdemo"
         }
@@ -27,31 +45,62 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles(
+                    getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
+            )
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
 }
 
+// Groovy 语法的 kapt 配置（适配 Room 注解处理器）
+kapt {
+    arguments {
+        arg("room.schemaLocation", "${projectDir}/schemas")
+        arg("room.incremental", "true")
+    }
+}
+
 dependencies {
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.4"
+    //协程
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+
+    implementation "androidx.room:room-ktx:2.6.1"
+    // Room
+    implementation 'androidx.room:room-runtime:2.6.1'
+    kapt 'androidx.room:room-compiler:2.6.1'
+
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2'
+
+    // UI
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation ("com.belerweb:pinyin4j:2.5.0")
-    implementation ("com.github.squti:Android-Wave-Recorder:2.1.0")
-    implementation ("com.google.android.material:material:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2"
-    implementation project(":common")
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.activity:activity-ktx:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Tools
+    implementation 'com.belerweb:pinyin4j:2.5.0'
+    implementation 'com.github.squti:Android-Wave-Recorder:2.1.0'
+
+    // Debug
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
+    // Modules
+    implementation project(':common')
+
+    // Test
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

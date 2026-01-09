@@ -1,11 +1,17 @@
 package read_assessment.vm
 
+import android.content.Context
 import android.media.AudioFormat
+import android.util.Log
 import androidx.lifecycle.*
 import com.github.squti.androidwaverecorder.WaveRecorder
 import kotlinx.coroutines.launch
 import read_assessment.data.ReadAssessmentRepository
+import read_assessment.data.ReadAssessmentSource
 import java.io.File
+import kotlin.random.Random
+
+private const val TAG = "RecordViewModel"
 
 class RecordViewModel : ViewModel() {
 
@@ -22,6 +28,12 @@ class RecordViewModel : ViewModel() {
 
     private var recorder: WaveRecorder? = null
     private var curFile: File? = null
+
+    fun getText(): String {
+        val cnt = Random.nextInt(0, 100)
+        val speakText: String = ReadAssessmentSource.getTextByIndex(cnt)
+        return speakText
+    }
 
 
     /** 开始录音 */

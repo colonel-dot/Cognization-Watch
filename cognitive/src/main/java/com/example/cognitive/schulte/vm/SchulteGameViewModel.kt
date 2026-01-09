@@ -17,7 +17,7 @@ enum class GameState {
 class SchulteGameViewModel : ViewModel() {
 
     companion object {
-        private const val GRID_SIZE = 5
+        private var GRID_SIZE = 5
     }
 
     private val _cells = MutableLiveData<List<SchulteCell>>()
@@ -34,7 +34,7 @@ class SchulteGameViewModel : ViewModel() {
 
     private var startTime: Long = 0L
     private var timerJob: Job? = null
-    private val maxNumber = GRID_SIZE * GRID_SIZE
+    private var maxNumber = GRID_SIZE * GRID_SIZE
 
     init {
         resetGame()
@@ -46,6 +46,12 @@ class SchulteGameViewModel : ViewModel() {
         _nextNumber.value = 1
         _elapsedTime.value = 0L
         _gameState.value = GameState.READY
+    }
+
+    fun changeGridSize(size: Int) {
+        GRID_SIZE = size
+        maxNumber = GRID_SIZE * GRID_SIZE
+        resetGame()
     }
 
     fun startGame() {

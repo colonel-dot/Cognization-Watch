@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class WheelAdapter(private val origin: List<String>) :
+class WheelAdapter(val origin: List<String>) :
     RecyclerView.Adapter<WheelAdapter.VH>() {
 
     private val loopMultiplier = 200
@@ -34,15 +34,25 @@ class WheelAdapter(private val origin: List<String>) :
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.tv.text = data[position]
+
+
+        // 增强高亮效果[11,12](@ref)
         holder.tv.setTextColor(if (position == selectedPos) Color.BLACK else Color.GRAY)
         holder.tv.textSize = if (position == selectedPos) 22f else 18f
+        //holder.tv.setBackgroundColor(if (position == selectedPos) Color.parseColor("#E3F2FD") else Color.TRANSPARENT)
     }
 
     fun getRealValue(): String {
-        return origin[selectedPos % origin.size]
+        val realPos = getRealPosition(selectedPos)
+        return origin[realPos]
     }
 
     fun getMiddlePosition(): Int {
         return origin.size * loopMultiplier / 2
+    }
+
+    // 新增方法：计算真实位置
+    fun getRealPosition(loopPosition: Int): Int {
+        return (loopPosition % origin.size + origin.size) % origin.size
     }
 }

@@ -5,62 +5,84 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context="read_assessment.ui.RecordActivity">
 
-    <LinearLayout
-        android:id="@+id/main1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp">
 
-        <TextView
+
+       <!-- <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="请在点击开始录音后朗读下面的文本，朗读结束后点击停止，最后点击展示分数查看结果"
+            android:text="点击开始录音后朗读下面文本，朗读结束后点击停止，点击展示分数查看结果"
             android:textSize="24sp"
+
             android:textColor="@color/blue"
             android:gravity="center"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="10dp"/>-->
 
-        <ui.PinyinTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginBottom="50dp"
-            android:text="我从去年辞帝京，谪居卧病浔阳城"/>
+    <ui.PinyinTextView
+        android:layout_marginTop="12dp"
+        android:id="@+id/speak_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:maxHeight="300dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="24dp"
+        android:text=""/>
 
-        <Button
-            android:id="@+id/btn_start_record"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="开始录音"
-            android:textSize="18sp" />
+    <ImageView
+        android:id="@+id/huanyige_img"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/huanyige"
+        app:layout_constraintTop_toBottomOf="@id/speak_text"
+        app:layout_constraintStart_toStartOf="@id/speak_text"/>
 
-        <Button
-            android:id="@+id/btn_stop_record"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="停止录音"
-            android:textSize="18sp" />
+    <TextView
+        android:id="@+id/huanyige_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="换一篇文章"
+        app:layout_constraintTop_toTopOf="@id/huanyige_img"
+        app:layout_constraintBottom_toBottomOf="@id/huanyige_img"
+        app:layout_constraintStart_toEndOf="@id/huanyige_img"/>
 
-        <Button
-            android:id="@+id/btn_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="展示分数"
-            android:textSize="18sp" />
+    <Button
+        android:id="@+id/btn_start_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开始录音"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/huanyige_text"
+        android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/tv_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="分数"
-            android:textSize="18sp" />
+    <Button
+        android:id="@+id/btn_stop_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_record"
+        android:text="停止录音"
+        android:textSize="18sp" />
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btn_stop_record"
+        android:layout_marginTop="15dp"
+        android:text="查看结果"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/tv_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="分数：0"
+        app:layout_constraintTop_toBottomOf="@id/btn_score"
+        android:textSize="18sp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

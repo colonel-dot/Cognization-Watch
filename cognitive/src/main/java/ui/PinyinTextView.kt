@@ -46,6 +46,8 @@ class PinyinTextView @JvmOverloads constructor(
         }
 
         super.setText(text, type)
+        requestLayout()
+        invalidate()
     }
 
     // 用 pinyin4j 生成拼音（示例：带声调符号）

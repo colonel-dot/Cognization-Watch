@@ -1,5 +1,8 @@
 package com.example.cognitive.schulte.ui
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -9,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.schulte.ui.SchulteGridAdapter
 import com.example.cognitive.schulte.vm.GameState
 import com.example.cognitive.schulte.vm.SchulteGameViewModel
+
 
 class SchulteGameActivity : AppCompatActivity() {
 
@@ -21,6 +24,9 @@ class SchulteGameActivity : AppCompatActivity() {
     private lateinit var tvNext: TextView
     private lateinit var rvGrid: RecyclerView
     private lateinit var btnReset: Button
+    private lateinit var btn25: Button
+    private lateinit var btn16: Button
+    private var tmpSize = 5
 
     private lateinit var adapter: SchulteGridAdapter
 
@@ -32,11 +38,13 @@ class SchulteGameActivity : AppCompatActivity() {
         tvNext = findViewById(R.id.tvNext)
         rvGrid = findViewById(R.id.rvGrid)
         btnReset = findViewById(R.id.btnReset)
-
-        adapter = SchulteGridAdapter(emptyList()) { number ->
+        btn16 = findViewById(R.id.btn16)
+        btn25 = findViewById(R.id.btn25)
+        adapter = SchulteGridAdapter(5, emptyList()) { number ->
             viewModel.onCellClicked(number)
         }
-
+        btn16.setOnClickListener { changeGridSize(4); tmpSize = 4 }
+        btn25.setOnClickListener { changeGridSize(5); tmpSize = 5 }
         rvGrid.layoutManager = GridLayoutManager(this, 5)
         rvGrid.adapter = adapter
 
@@ -66,6 +74,32 @@ class SchulteGameActivity : AppCompatActivity() {
                 showFinishedDialog()
             }
         }
+    }
+
+    private fun changeGridSize(size: Int) {
+        if (tmpSize == size) return
+        val layoutManager = rvGrid.layoutManager as GridLayoutManager
+        layoutManager.spanCount = size
+        adapter.updateSpanCount(size)
+        when (size) {
+            4 -> {
+                val colorAnim4: ValueAnimator? = ObjectAnimator.ofArgb(btn16, "backgroundColor",Color.parseColor("#E0F7FA"), // 起始色（0xFFE0F7FA）
+                    Color.parseColor("#2196F3")).setDuration(1000)
+                val colorAnim5: ValueAnimator? = ObjectAnimator.ofArgb(btn25, "backgroundColor",Color.parseColor("#2196F3"), // 起始色（0xFFE0F7FA）
+                    Color.parseColor("#E0F7FA")).setDuration(1000)
+                colorAnim5?.start()
+                colorAnim4?.start()
+            }
+            5 -> {
+                val colorAnim4: ValueAnimator? = ObjectAnimator.ofArgb(btn16, "backgroundColor",Color.parseColor("#2196F3"), // 起始色（0xFFE0F7FA）
+                    Color.parseColor("#E0F7FA")).setDuration(1000)
+                val colorAnim5: ValueAnimator? = ObjectAnimator.ofArgb(btn25, "backgroundColor",Color.parseColor("#E0F7FA"), // 起始色（0xFFE0F7FA）
+                    Color.parseColor("#2196F3")).setDuration(1000)
+                colorAnim5?.start()
+                colorAnim4?.start()
+            }
+        }
+        viewModel.changeGridSize(size)
     }
 
     private fun showFinishedDialog() {

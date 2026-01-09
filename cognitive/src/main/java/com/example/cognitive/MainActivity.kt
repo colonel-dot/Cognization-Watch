@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var btn_game: View
     lateinit var btn_speak: View
     lateinit var btn_schedule: View
+    lateinit var btn_sports: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)
         btn_schedule = findViewById<Button>(R.id.schedule_layout)
+        btn_sports = findViewById<View>(R.id.btn_sports)
         btn_speak.setOnClickListener {
             mIntent = Intent(this, read_assessment.ui.RecordActivity::class.java)
             startActivity(mIntent) }
@@ -35,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         }
         btn_schedule.setOnClickListener {
             mIntent = Intent(this, schedule.ui.ScheduleActivity::class.java)
+            startActivity(mIntent)
+        }
+        btn_sports.setOnClickListener {
+            mIntent = Intent(this, sports.ui.StepActivity::class.java)
             startActivity(mIntent)
         }
     }

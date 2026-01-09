@@ -4,17 +4,20 @@
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions"/>
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 2. 可选但建议加：声明应用需要麦克风硬件（提升兼容性） -->
-
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
 
     <application android:theme="@style/Theme.CooperativeProjectsDemo">
+        <activity
+            android:name="sports.ui.StepActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
@@ -32,7 +35,7 @@
             android:exported="false" />
         <activity
             android:name=".schulte.ui.SchulteGameActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

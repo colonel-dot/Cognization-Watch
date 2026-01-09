@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +20,8 @@ import read_assessment.vm.RecordViewModel
 import com.github.squti.androidwaverecorder.WaveRecorder
 import java.io.File
 
+private const val TAG = "RecordActivity"
+
 
 class RecordActivity : AppCompatActivity() {
 
@@ -26,29 +29,38 @@ class RecordActivity : AppCompatActivity() {
 
     private lateinit var btnStart: Button
     private lateinit var btnStop: Button
-
+    private lateinit var imageChange: ImageView
+    private lateinit var textChange: TextView
+    private lateinit var tvResult: TextView
+    private var speakText: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record)
-
+        Log.d(TAG, "onCreate called")
+        val speakTextView = findViewById<TextView>(R.id.speak_text)
         btnStart = findViewById<Button>(R.id.btn_start_record)
         btnStop = findViewById<Button>(R.id.btn_stop_record)
         val btnScore = findViewById<Button>(R.id.btn_score)
-        val tvResult = findViewById<TextView>(R.id.tv_score)
-
+        tvResult = findViewById<TextView>(R.id.tv_score)
+        imageChange = findViewById<ImageView>(R.id.huanyige_img)
+        textChange = findViewById<TextView>(R.id.huanyige_text)
         btnStart.setOnClickListener { checkPermissionAndStart() }
         btnStop.setOnClickListener { viewModel.stopRecord() }
-
+        speakText = viewModel.getText()
+        speakTextView.setText(speakText)
+        imageChange.setOnClickListener { speakText = viewModel.getText()
+            Log.d(TAG, "换过来的句子是:$speakText ")
+            speakTextView.text = speakText
+            Log.d(TAG, "TextView现在是：${speakTextView.text}")}
+        textChange.setOnClickListener { speakText = viewModel.getText(); speakTextView.setText(speakText) }
         btnScore.setOnClickListener {
             viewModel.evaluateSpeech(
-                refText = "我从去年辞帝京，谪居卧病浔阳城",
+                refText = speakText,
                 langType = "zh-CHS"
             )
         }
         observeViewModel()
-        viewModel.scoreResult.observe(this) {
-            tvResult.text = it
-        }
+
     }
 
     private fun observeViewModel() {
@@ -57,9 +69,13 @@ class RecordActivity : AppCompatActivity() {
             btnStop.isEnabled = isRec
         }
 
+        viewModel.scoreResult.observe(this) {
+            tvResult.text = "$it"
+        }
+
         viewModel.recordSavedEvent.observe(this) { file ->
             if (file != null) {
-                Toast.makeText(this, "录音已保存：$file", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "录音已保存：$file", Toast.LENGTH_SHORT).show()
             }
         }
     }

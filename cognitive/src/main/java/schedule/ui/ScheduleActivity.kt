@@ -25,25 +25,37 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var wakeHourAdapter: WheelAdapter
     private lateinit var wakeMinuteAdapter: WheelAdapter
 
+    // 声明RecyclerView变量[1,7](@ref)
+    private lateinit var rvBedHour: RecyclerView
+    private lateinit var rvBedMinute: RecyclerView
+    private lateinit var rvWakeHour: RecyclerView
+    private lateinit var rvWakeMinute: RecyclerView
+
     private val viewModel: ScheduleViewModel by viewModels()
+
+    // 使用单例SnapHelper避免重复绑定[1](@ref)
+    companion object {
+        private val snapHelper by lazy { LinearSnapHelper() }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
 
         if (!checkUsageStatsPermission()) {
-            Toast.makeText(this, "请开启“使用情况访问权限”", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "请开启使用情况访问权限", Toast.LENGTH_LONG).show()
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
 
-        // 初始化视图
+        // 初始化视图[1,7](@ref)
         tvBedTime = findViewById(R.id.tvBedTime)
         tvWakeTime = findViewById(R.id.tvWakeTime)
 
-        val rvBedHour = findViewById<RecyclerView>(R.id.rvBedHour)
-        val rvBedMinute = findViewById<RecyclerView>(R.id.rvBedMinute)
-        val rvWakeHour = findViewById<RecyclerView>(R.id.rvHour)
-        val rvWakeMinute = findViewById<RecyclerView>(R.id.rvMinute)
+        // 正确初始化RecyclerView[2,5](@ref)
+        rvBedHour = findViewById(R.id.rvBedHour)
+        rvBedMinute = findViewById(R.id.rvBedMinute)
+        rvWakeHour = findViewById(R.id.rvHour)
+        rvWakeMinute = findViewById(R.id.rvMinute)
 
         // 初始化滚轮
         bedHourAdapter = setupWheel(rvBedHour, viewModel.hours, viewModel.bedHourPos) { selectedHour, pos ->
@@ -82,7 +94,6 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
-
         // 设置观察者（包括滚轮同步）
         setupObservers()
     }
@@ -90,12 +101,13 @@ class ScheduleActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (checkUsageStatsPermission()) {
-            // 刷新系统亮屏/锁屏数据
+            // 不会重复刷新，因为 ViewModel 会拦住
             viewModel.refreshBySystemEvents()
         }
     }
 
-    /** 初始化滚轮 */
+
+    /** 修复后的初始化滚轮方法 */
     private fun setupWheel(
         recyclerView: RecyclerView,
         data: List<String>,
@@ -106,56 +118,86 @@ class ScheduleActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        val snapHelper = LinearSnapHelper()
+        // 修复SnapHelper绑定问题
+        recyclerView.onFlingListener = null // 先清除已有的fling listener
         snapHelper.attachToRecyclerView(recyclerView)
 
-        // 初始滚动位置
-        //val safePos = adapter.getMiddlePosition() + initialPos % data.size
-        val safePos = adapter.getMiddlePosition() + (initialPos % adapter.data.size + adapter.data.size) % adapter.data.size
-
+        // 统一的位置计算公式
+        val safePos = calculateSafePosition(initialPos, adapter)
         recyclerView.scrollToPosition(safePos)
         adapter.selectedPos = safePos
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val snapView = snapHelper.findSnapView(rv.layoutManager) ?: return
-                    val pos = rv.getChildAdapterPosition(snapView)
-                    if (pos != RecyclerView.NO_POSITION) {
-                        adapter.selectedPos = pos
-                        adapter.notifyDataSetChanged()
-                        val realPos = ((pos % adapter.data.size) + adapter.data.size) % adapter.data.size
-                        onItemSelected(adapter.data[realPos], realPos)
-                    }
-                }
-            }
-        })
-
+        recyclerView.addOnScrollListener(createScrollListener(adapter, onItemSelected))
         return adapter
     }
 
-    /** LiveData 观察者，同时滚轮滚动到选中位置 */
+    /** 统一的安全位置计算 */
+    private fun calculateSafePosition(realPos: Int, adapter: WheelAdapter): Int {
+        val middlePos = adapter.getMiddlePosition()
+        val dataSize = adapter.origin.size
+        val adjustedPos = (realPos % dataSize + dataSize) % dataSize
+        return middlePos + adjustedPos
+    }
+
+    /** 创建统一的滚动监听器 */
+    private fun createScrollListener(
+        adapter: WheelAdapter,
+        onItemSelected: (String, Int) -> Unit
+    ): RecyclerView.OnScrollListener {
+        return object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val layoutManager = rv.layoutManager as? LinearLayoutManager ?: return
+                    val snapView = snapHelper.findSnapView(layoutManager) ?: return
+                    val snapPos = rv.getChildAdapterPosition(snapView)
+
+                    if (snapPos != RecyclerView.NO_POSITION) {
+                        // 准确计算真实位置
+                        val realPos = getRealPosition(snapPos, adapter.origin.size)
+                        adapter.selectedPos = snapPos
+                        adapter.notifyDataSetChanged()
+                        onItemSelected(adapter.origin[realPos], realPos)
+                    }
+                }
+            }
+        }
+    }
+
+    /** 计算真实位置 */
+    private fun getRealPosition(loopPosition: Int, dataSize: Int): Int {
+        return (loopPosition % dataSize + dataSize) % dataSize
+    }
+
+    /** 修复后的LiveData观察者 - 使用正确的RecyclerView引用 */
     private fun setupObservers() {
         viewModel.bedTimeText.observe(this) { text ->
             tvBedTime.text = text
-            scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, findViewById(R.id.rvBedHour))
-            scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, findViewById(R.id.rvBedMinute))
+            // 使用正确的RecyclerView实例，添加延迟避免竞争条件[6](@ref)
+            rvBedHour.postDelayed({
+                scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, rvBedHour)
+                scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, rvBedMinute)
+            }, 50)
         }
 
         viewModel.wakeTimeText.observe(this) { text ->
             tvWakeTime.text = text
-            scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, findViewById(R.id.rvHour))
-            scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, findViewById(R.id.rvMinute))
+            rvWakeHour.postDelayed({
+                scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, rvWakeHour)
+                scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, rvWakeMinute)
+            }, 50)
         }
     }
 
-    /** 滚动到指定位置 */
+    /** 修复后的滚动方法 */
     private fun scrollWheelTo(pos: Int, adapter: WheelAdapter, rv: RecyclerView) {
-        val safePos = adapter.getMiddlePosition() + (pos % adapter.data.size)
+        val safePos = calculateSafePosition(pos, adapter)
         rv.post {
-            rv.scrollToPosition(safePos)
-            adapter.selectedPos = safePos
-            adapter.notifyDataSetChanged()
+            // 检查当前是否在滚动，避免冲突[6](@ref)
+            if (rv.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                rv.scrollToPosition(safePos)
+                adapter.selectedPos = safePos
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 
