@@ -1,20 +1,24 @@
-package com.example.cognitive.schulte.vm
+package schulte.vm
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cognitive.schulte.data.SchulteCell
+import schulte.data.SchulteCell
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import persistense.DailyBehaviorDatabase
+import java.time.LocalDate
 
 enum class GameState {
     READY, RUNNING, FINISHED
 }
 
-class SchulteGameViewModel : ViewModel() {
+class SchulteGameViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private var GRID_SIZE = 5
@@ -35,6 +39,9 @@ class SchulteGameViewModel : ViewModel() {
     private var startTime: Long = 0L
     private var timerJob: Job? = null
     private var maxNumber = GRID_SIZE * GRID_SIZE
+
+    val behaviorDatabase = DailyBehaviorDatabase.getDatabase(application)
+    val behaviorDao = behaviorDatabase.dailyBehaviorDao()
 
     init {
         resetGame()
@@ -104,11 +111,24 @@ class SchulteGameViewModel : ViewModel() {
         timerJob?.cancel()
         // 最后一帧时间更新
         val now = System.currentTimeMillis()
-        _elapsedTime.value = now - startTime
+        val finishedTime = now - startTime
+        saveGameTime(finishedTime)
+        _elapsedTime.value = finishedTime
     }
 
     override fun onCleared() {
         super.onCleared()
         timerJob?.cancel()
+    }
+
+    fun saveGameTime(elapsedTime: Long) {
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            behaviorDao.getOrInitTodayBehavior(today)
+            val lastTime = behaviorDao.getByDate(today)!!.schulteTimeSec!!
+            if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
+                behaviorDao.updateSchulteTime(today, elapsedTime.toDouble())
+            }
+        }
     }
 }

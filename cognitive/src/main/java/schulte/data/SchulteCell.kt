@@ -1,4 +1,4 @@
-package com.example.cognitive.schulte.data
+package schulte.data
 
 data class SchulteCell(
     val number: Int,

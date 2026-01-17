@@ -1,4 +1,4 @@
-package com.example.cognitive.schulte.ui
+package schulte.ui
 
 import android.content.Context
 import android.util.AttributeSet

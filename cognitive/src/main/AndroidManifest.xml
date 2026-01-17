@@ -14,14 +14,18 @@
         android:required="true" />
 
     <application android:theme="@style/Theme.CooperativeProjectsDemo">
+        <activity
+            android:name="mine.ui.MineRecordActivity"
+            android:exported="false" />
+
         <service
             android:name="sports.data.StepForegroundService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name="sports.ui.StepActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
@@ -38,7 +42,7 @@
             android:name="read_assessment.ui.RecordActivity"
             android:exported="false" />
         <activity
-            android:name=".schulte.ui.SchulteGameActivity"
+            android:name="schulte.ui.SchulteGameActivity"
             android:exported="true" />
     </application>
 

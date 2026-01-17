@@ -1,4 +1,4 @@
-package com.example.cognitive.schulte.ui
+package schulte.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.schulte.data.SchulteCell
+import schulte.data.SchulteCell
 
 class SchulteGridAdapter(
     private var spanCount: Int,

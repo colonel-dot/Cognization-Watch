@@ -1,4 +1,4 @@
-package com.example.cognitive.schulte.ui
+package schulte.ui
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.schulte.vm.GameState
-import com.example.cognitive.schulte.vm.SchulteGameViewModel
+import schulte.vm.GameState
+import schulte.vm.SchulteGameViewModel
 
 
 class SchulteGameActivity : AppCompatActivity() {
