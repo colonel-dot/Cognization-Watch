@@ -9,16 +9,17 @@ object ReadAssessmentSource {
             "人生代代无穷已，江月年年望相似。不知江月待何人，但见长江送流水。白云一片去悠悠，青枫浦上不胜愁。"
     val hongLouMeng = "贾不假，白玉为堂金作马；阿房宫，三百里，住不下金陵一个史；" +
             "东海缺少白玉床，龙王来请金陵王；丰年好大雪，珍珠如土金如铁。"
-    val baiNianGuDu = "多年以后，面对行刑队，奥雷里亚诺·布恩迪亚上校将会回想起父亲带他去见识冰块的那个遥远的下午。"
     val heLiNeiLeDuo = "赫里内勒多·马尔克斯上校曾躲过三次暗杀，五次受伤大难不死，身经百战安然无恙，却败给了无尽的等待，" +
             "屈服于凄凉的晚景，在一间借来的光线昏暗的屋子里想着阿玛兰妲"
+    val maKongDuo = "线路上一阵长久的沉默。忽然，机器上跳出奥雷里亚诺·布恩迪亚上校冷漠的代码。" +
+            "“别犯傻了，赫里内勒多”，电码如是说道，“八月下雨很正常。”"
     val list: List<String> = listOf(
         piPaXing,
         changHenGe,
         chunJiangHuaYueYe,
         hongLouMeng,
-        baiNianGuDu,
-        heLiNeiLeDuo
+        heLiNeiLeDuo,
+        maKongDuo
     )
     fun getTextByIndex(index: Int): String {
         return list[index % list.size]

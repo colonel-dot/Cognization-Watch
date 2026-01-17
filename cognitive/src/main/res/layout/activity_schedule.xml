@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
     android:id="@+id/schedule"
@@ -32,7 +32,7 @@
         android:gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="15dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvHour"
@@ -48,6 +48,14 @@
 
     </LinearLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit_rise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="确认"
+        app:cornerRadius="6dp"/>
+
     <TextView
         android:id="@+id/tvBedTime"
         android:layout_width="wrap_content"
@@ -59,6 +67,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
+        android:layout_marginBottom="15dp"
         android:layout_height="100dp">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -74,5 +83,12 @@
             android:overScrollMode="never"/>
 
     </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submit_bed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确认"
+        app:cornerRadius="6dp"/>
 
 </LinearLayout>

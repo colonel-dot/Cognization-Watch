@@ -1,21 +1,27 @@
 package read_assessment.vm
 
+import android.app.Application
 import android.content.Context
 import android.media.AudioFormat
 import android.util.Log
 import androidx.lifecycle.*
 import com.github.squti.androidwaverecorder.WaveRecorder
 import kotlinx.coroutines.launch
+import persistense.DailyBehaviorDatabase
 import read_assessment.data.ReadAssessmentRepository
 import read_assessment.data.ReadAssessmentSource
 import java.io.File
+import java.time.LocalDate
 import kotlin.random.Random
 
 private const val TAG = "RecordViewModel"
 
-class RecordViewModel : ViewModel() {
+class RecordViewModel(application: Application) : AndroidViewModel(application ) {
 
     private val repo = ReadAssessmentRepository()
+
+    private val dailyBehaviorDatabase = DailyBehaviorDatabase.getDatabase(application)
+    private val dailyBehaviorDao = dailyBehaviorDatabase.dailyBehaviorDao()
 
     private val _isRecording = MutableLiveData(false)
     val isRecording: LiveData<Boolean> = _isRecording
@@ -65,7 +71,6 @@ class RecordViewModel : ViewModel() {
 
     fun evaluateSpeech(refText: String, langType: String) {
         val file = curFile ?: return
-
         viewModelScope.launch {
             val json = repo.evaluate(file, refText, langType)
 
@@ -81,7 +86,15 @@ class RecordViewModel : ViewModel() {
                 准确度：$pronunciation
             """.trimIndent()
 
+            saveRecordToDatabase(overall)
+
             _scoreResult.postValue(result)
         }
+    }
+
+    suspend fun saveRecordToDatabase(score: Double) {
+        val today = LocalDate.now()
+        dailyBehaviorDao.getOrInitTodayBehavior(today)
+        dailyBehaviorDao.updateSpeechScore(today, score)
     }
 }

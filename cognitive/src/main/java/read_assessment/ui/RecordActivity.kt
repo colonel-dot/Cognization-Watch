@@ -36,7 +36,6 @@ class RecordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_record)
-        Log.d(TAG, "onCreate called")
         val speakTextView = findViewById<TextView>(R.id.speak_text)
         btnStart = findViewById<Button>(R.id.btn_start_record)
         btnStop = findViewById<Button>(R.id.btn_stop_record)

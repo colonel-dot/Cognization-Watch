@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
     lateinit var mIntent: Intent
@@ -24,6 +25,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        
+
+
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)
         btn_schedule = findViewById<Button>(R.id.schedule_layout)

@@ -6,6 +6,7 @@ import android.app.usage.UsageStatsManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import persistense.DailyBehaviorDatabase
 import java.util.*
 
 data class ScreenEvent(val type: String, val time: Long)
@@ -13,6 +14,9 @@ data class ScreenEvent(val type: String, val time: Long)
 class ScheduleViewModel(application: Application) : AndroidViewModel(application) {
 
     private val context = application.applicationContext
+
+    private val dailyBehaviorDatabase = DailyBehaviorDatabase.getDatabase(application)
+    private val dailyBehaviorDao = dailyBehaviorDatabase.dailyBehaviorDao()
 
     val hours = (0..23).map { String.format("%02d", it) }
     val minutes = (0..59).map { String.format("%02d", it) }
@@ -28,7 +32,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     var wakeHourPos = 0
     var wakeMinutePos = 0
 
-    // ⭐ 关键：防止旋转屏幕后重复初始化
+    // 防止旋转屏幕后重复初始化
     var hasInitBySystemEvents = false
 
     init {
@@ -115,7 +119,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         return sleepTime to wakeTime
     }
 
-    /** ⭐ 只第一次执行，旋转屏不再重跑 */
+    /**  只第一次执行，旋转屏不再重跑 */
     fun refreshBySystemEvents() {
         if (hasInitBySystemEvents) return
 
@@ -138,5 +142,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         )
 
         hasInitBySystemEvents = true
+    }
+
+    fun saveScheduleDatabase() {
+
     }
 }

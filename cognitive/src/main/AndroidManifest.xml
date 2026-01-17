@@ -14,10 +14,14 @@
         android:required="true" />
 
     <application android:theme="@style/Theme.CooperativeProjectsDemo">
+        <service
+            android:name="sports.data.StepForegroundService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name="sports.ui.StepActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
