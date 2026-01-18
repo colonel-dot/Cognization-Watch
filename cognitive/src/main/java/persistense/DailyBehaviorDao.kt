@@ -80,4 +80,18 @@ interface DailyBehaviorDao {
         date: LocalDate,
         steps: Int
     )
+
+    @Query("""
+        UPDATE daily_behavior
+        SET steps = :steps,
+            activeTime = :activeTime,
+            restTime = :restTime
+        WHERE date = :date
+    """)
+    suspend fun updateSports(
+        date: LocalDate,
+        steps: Int,
+        activeTime: Int,
+        restTime: Int
+    )
 }

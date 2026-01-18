@@ -1,146 +1,184 @@
 package sports.data
 
-import android.content.Context
-import android.hardware.*
-import android.os.Handler
-import android.os.Looper
-import org.json.JSONArray
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.util.Log
+import kotlinx.coroutines.*
+import persistense.DailyBehaviorDao
+import java.time.LocalDate
 
-class StepRepository(private val context: Context) : SensorEventListener {
+private const val TAG = "StepRepository"
 
-    private val sm =
-        context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+/**
+ * 职责：
+ * 1. 实时接收传感器数据（只更新内存）
+ * 2. 定时 & 关键节点批量写入数据库
+ */
+class StepRepository(
+    private val sensorManager: SensorManager,
+    private val dao: DailyBehaviorDao
+) : SensorEventListener {
 
-    private val stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-    private val stepDetector = sm.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+    /** 协程作用域（Service 生命周期） */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val sp = context.getSharedPreferences("step", Context.MODE_PRIVATE)
+    /** 传感器 */
+    private val stepCounter =
+        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+    private val stepDetector =
+        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
-    var onStepChanged: ((Int) -> Unit)? = null
-    var onTimeChanged: ((Int, Int) -> Unit)? = null
+    /** -------- 内存态数据（实时） -------- */
+    private var todayDate: LocalDate = LocalDate.now()
 
-    private var initialSteps = 0f
-    private var lastDate = ""
-
+    private var todayBaseCounter = 0f
     private var todaySteps = 0
     private var todayActiveTime = 0
     private var todayRestTime = 0
 
     private var lastStepTime = 0L
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val timerRunnable = object : Runnable {
-        override fun run() {
-            tickTime()
-            handler.postDelayed(this, 1000)
-        }
-    }
+    /** 是否有数据变更（脏标记） */
+    @Volatile
+    private var dirty = false
 
-    private val dateFormat =
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    // -------------------- 对外 --------------------
 
     fun start() {
-        loadState()
+        scope.launch {
+            initToday()
+            startFlushTicker()
+        }
+
         stepCounter?.let {
-            sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
         stepDetector?.let {
-            sm.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        handler.post(timerRunnable)
     }
 
     fun stop() {
-        sm.unregisterListener(this)
-        handler.removeCallbacks(timerRunnable)
-        saveState()
+        sensorManager.unregisterListener(this)
+
+        // ★ 关键：停服务前强制落库一次
+        runBlocking {
+            flushToDb()
+        }
+
+        scope.cancel()
     }
 
-    private fun tickTime() {
-        val now = System.currentTimeMillis()
-        val gapSec =
-            if (lastStepTime == 0L) Int.MAX_VALUE
-            else TimeUnit.MILLISECONDS.toSeconds(now - lastStepTime).toInt()
+    // -------------------- 初始化 --------------------
 
-        if (gapSec < 30) {
+    private suspend fun initToday() {
+        todayDate = LocalDate.now()
+        val entity = dao.getOrInitTodayBehavior(todayDate)
+
+        // ★ 从数据库恢复数据，防止 Service 重启丢失
+        todaySteps = entity.steps ?: 0
+        todayActiveTime = entity.activeTime ?: 0
+        todayRestTime = entity.restTime ?: 0
+
+        todayBaseCounter = 0f
+        lastStepTime = 0L
+        dirty = false
+    }
+
+    private suspend fun onNewDay(newDate: LocalDate) {
+        // 跨天前先落库
+        flushToDb()
+
+        todayDate = newDate
+        dao.getOrInitTodayBehavior(newDate)
+
+        todayBaseCounter = 0f
+        todaySteps = 0
+        todayActiveTime = 0
+        todayRestTime = 0
+        lastStepTime = 0L
+        dirty = false
+    }
+
+    // -------------------- 定时批量落库 --------------------
+
+    /**
+     * 每 30 秒检查一次，只在数据变更时写数据库
+     */
+    private fun startFlushTicker() {
+        scope.launch {
+            while (isActive) {
+                delay(30_000)
+                flushToDb()
+            }
+        }
+    }
+
+    private suspend fun flushToDb() {
+        if (!dirty) return
+
+        Log.d(TAG, "flushToDb() steps=$todaySteps active=$todayActiveTime rest=$todayRestTime")
+
+        dao.updateSports(
+            date = todayDate,
+            steps = todaySteps,
+            activeTime = todayActiveTime,
+            restTime = todayRestTime
+        )
+
+        dirty = false
+    }
+
+    // -------------------- 时间统计（每秒） --------------------
+
+    private fun tickTime() {
+        if (lastStepTime == 0L) return
+
+        val now = System.currentTimeMillis()
+        if (now - lastStepTime <= 30_000) {
             todayActiveTime++
         } else {
             todayRestTime++
         }
 
-        onTimeChanged?.invoke(todayActiveTime, todayRestTime)
+        dirty = true
     }
 
-    override fun onSensorChanged(event: SensorEvent) {
-        val today = getToday()
+    // -------------------- 传感器回调 --------------------
 
-        if (today != lastDate && lastDate.isNotEmpty()) {
-            saveYesterday()
-            resetToday(event.values[0], today)
+    override fun onSensorChanged(event: SensorEvent) {
+        val today = LocalDate.now()
+        if (today != todayDate) {
+            scope.launch { onNewDay(today) }
+            return
         }
 
         when (event.sensor.type) {
+
             Sensor.TYPE_STEP_COUNTER -> {
                 val total = event.values[0]
-                if (initialSteps == 0f) {
-                    initialSteps = total
-                    lastDate = today
+
+                if (todayBaseCounter == 0f) {
+                    todayBaseCounter = total
                 }
-                todaySteps = (total - initialSteps).toInt()
-                onStepChanged?.invoke(todaySteps)
+
+                val newSteps =
+                    (total - todayBaseCounter).toInt().coerceAtLeast(0)
+
+                if (newSteps != todaySteps) {
+                    todaySteps = newSteps
+                    dirty = true
+                }
             }
 
             Sensor.TYPE_STEP_DETECTOR -> {
                 lastStepTime = System.currentTimeMillis()
+                tickTime()
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-    private fun saveYesterday() {
-        val history = JSONArray(sp.getString("history", "[]")!!)
-        val obj = JSONObject().apply {
-            put("date", lastDate)
-            put("steps", todaySteps)
-            put("activeTime", todayActiveTime)
-            put("restTime", todayRestTime)
-        }
-        history.put(obj)
-        sp.edit().putString("history", history.toString()).apply()
-    }
-
-    private fun resetToday(counterBase: Float, today: String) {
-        initialSteps = counterBase
-        todaySteps = 0
-        todayActiveTime = 0
-        todayRestTime = 0
-        lastStepTime = 0L
-        lastDate = today
-        saveState()
-    }
-
-    private fun saveState() {
-        sp.edit()
-            .putFloat("initialSteps", initialSteps)
-            .putString("lastDate", lastDate)
-            .putInt("todayActiveTime", todayActiveTime)
-            .putInt("todayRestTime", todayRestTime)
-            .putLong("lastStepTime", lastStepTime)
-            .apply()
-    }
-
-    private fun loadState() {
-        initialSteps = sp.getFloat("initialSteps", 0f)
-        lastDate = sp.getString("lastDate", "") ?: ""
-        todayActiveTime = sp.getInt("todayActiveTime", 0)
-        todayRestTime = sp.getInt("todayRestTime", 0)
-        lastStepTime = sp.getLong("lastStepTime", 0L)
-    }
-
-    private fun getToday(): String = dateFormat.format(Date())
 }

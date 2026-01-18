@@ -1,14 +1,19 @@
 package com.example.cognitive
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import schulte.ui.SchulteGameActivity
+import sports.data.StepForegroundService
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var mIntent: Intent
@@ -17,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var btn_schedule: View
     lateinit var btn_sports: View
     lateinit var btn_mine: View
+    val REQ_NOTIFY = 1001
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,8 +32,15 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        
+        if (needNotificationPermission()) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                REQ_NOTIFY
+            )
+        } else {
+            startStepService()
+        }
+        startService(Intent(this, StepForegroundService::class.java))
 
         btn_mine = findViewById<View>(R.id.mine_layout)
         btn_game = findViewById<Button>(R.id.game_layout)
@@ -52,6 +65,45 @@ class MainActivity : AppCompatActivity() {
         btn_mine.setOnClickListener {
             mIntent = Intent(this, mine.ui.MineRecordActivity::class.java)
             startActivity(mIntent)
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+
+        if (requestCode == REQ_NOTIFY) {
+            if (grantResults.isNotEmpty() &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                startStepService()
+            } else {
+                // 用户拒绝
+                // 这里你可以提示：没有通知，前台服务可能不稳定
+            }
+        }
+    }
+
+    // ---------------- 工具方法 ----------------
+
+    private fun needNotificationPermission(): Boolean {
+        return Build.VERSION.SDK_INT >= 33 &&
+                checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun startStepService() {
+        val intent = Intent(this, StepForegroundService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // 8.0+ 必须用这个启动前台服务
+            startForegroundService(intent)
+        } else {
+            // 8.0以下用旧方法
+            startService(intent)
         }
     }
 }

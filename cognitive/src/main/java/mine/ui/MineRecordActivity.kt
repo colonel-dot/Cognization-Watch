@@ -17,6 +17,7 @@ class MineRecordActivity : AppCompatActivity() {
     private val viewModel by viewModels<MineRecordViewModel>()
     private lateinit var read_record: TextView
     private lateinit var tvSchulteTime: TextView
+    private lateinit var tvSports: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,7 +29,7 @@ class MineRecordActivity : AppCompatActivity() {
         }
         read_record = findViewById<TextView>(R.id.read_record)
         tvSchulteTime = findViewById<TextView>(R.id.schulte_record)
-
+        tvSports = findViewById<TextView>(R.id.sports_record)
 
         viewModel.queryTodayBehaviorData()
 
@@ -42,6 +43,11 @@ class MineRecordActivity : AppCompatActivity() {
                 // 读取今日语音评分
                 val speechScore = it.speechScore ?: 0.0
                 read_record.text = "语音评分：${speechScore}"
+
+                val stepCount = it.steps ?: 0
+                val activeTime = it.activeTime ?: 0
+                val restTime = it.restTime ?: 0
+                tvSports.text = "今日步数：${stepCount} 步\n今日运动：${activeTime / 60} 分钟\n今日休息：${restTime / 60} 分钟"
 
                 // 读取今日步数
             } ?: run {

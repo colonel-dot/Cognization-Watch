@@ -3,27 +3,28 @@ package sports.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import android.os.Handler
-import android.os.Looper
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import persistense.DailyBehaviorDatabase
+import java.time.LocalDate
 
-class StepViewModel(app: Application) : AndroidViewModel(app) {
+class StepViewModel(application: Application) : AndroidViewModel(application) {
 
     val stepCount = MutableLiveData(0)
     val activeTime = MutableLiveData(0)
     val restTime = MutableLiveData(0)
 
-    private val sp =
-        app.getSharedPreferences("step", Application.MODE_PRIVATE)
+    private val dao =
+        DailyBehaviorDatabase.getDatabase(application).dailyBehaviorDao()
 
-    private val handler = Handler(Looper.getMainLooper())
+    fun refreshToday() {
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            val entity = dao.getOrInitTodayBehavior(today)
 
-    init {
-        handler.post(object : Runnable {
-            override fun run() {
-                activeTime.value = sp.getInt("todayActiveTime", 0)
-                restTime.value = sp.getInt("todayRestTime", 0)
-                handler.postDelayed(this, 1000)
-            }
-        })
+            stepCount.postValue(entity.steps)
+            activeTime.postValue(entity.activeTime)
+            restTime.postValue(entity.restTime)
+        }
     }
 }
