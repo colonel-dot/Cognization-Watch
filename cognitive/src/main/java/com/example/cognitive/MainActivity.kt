@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)
         btn_schedule = findViewById<Button>(R.id.schedule_layout)
-        btn_sports = findViewById<View>(R.id.btn_sports)
         tvSteps = findViewById<TextView>(R.id.tv_steps)
         btn_speak.setOnClickListener {
             mIntent = Intent(this, read_assessment.ui.RecordActivity::class.java)
@@ -68,10 +67,6 @@ class MainActivity : AppCompatActivity() {
         }
         btn_schedule.setOnClickListener {
             mIntent = Intent(this, schedule.ui.ScheduleActivity::class.java)
-            startActivity(mIntent)
-        }
-        btn_sports.setOnClickListener {
-            mIntent = Intent(this, sports.ui.StepActivity::class.java)
             startActivity(mIntent)
         }
         btn_mine.setOnClickListener {

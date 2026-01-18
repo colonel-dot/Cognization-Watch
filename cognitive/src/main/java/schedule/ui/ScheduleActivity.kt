@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -25,11 +26,13 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var wakeHourAdapter: WheelAdapter
     private lateinit var wakeMinuteAdapter: WheelAdapter
 
-    // 声明RecyclerView变量[1,7](@ref)
     private lateinit var rvBedHour: RecyclerView
     private lateinit var rvBedMinute: RecyclerView
     private lateinit var rvWakeHour: RecyclerView
     private lateinit var rvWakeMinute: RecyclerView
+
+    private lateinit var btn_rise: Button
+    private lateinit var btn_bed: Button
 
     private val viewModel: ScheduleViewModel by viewModels()
 
@@ -47,9 +50,11 @@ class ScheduleActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
 
-        // 初始化视图[1,7](@ref)
         tvBedTime = findViewById(R.id.tvBedTime)
         tvWakeTime = findViewById(R.id.tvWakeTime)
+
+        btn_bed = findViewById<Button>(R.id.btn_bed)
+        btn_rise = findViewById<Button>(R.id.btn_rise)
 
         // 正确初始化RecyclerView[2,5](@ref)
         rvBedHour = findViewById(R.id.rvBedHour)
@@ -146,6 +151,8 @@ class ScheduleActivity : AppCompatActivity() {
     ): RecyclerView.OnScrollListener {
         return object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
+
+                //滑动停止状态
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val layoutManager = rv.layoutManager as? LinearLayoutManager ?: return
                     val snapView = snapHelper.findSnapView(layoutManager) ?: return
@@ -172,7 +179,7 @@ class ScheduleActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.bedTimeText.observe(this) { text ->
             tvBedTime.text = text
-            // 使用正确的RecyclerView实例，添加延迟避免竞争条件[6](@ref)
+            // 使用正确的RecyclerView实例，添加延迟避免竞争条件
             rvBedHour.postDelayed({
                 scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, rvBedHour)
                 scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, rvBedMinute)
@@ -192,7 +199,6 @@ class ScheduleActivity : AppCompatActivity() {
     private fun scrollWheelTo(pos: Int, adapter: WheelAdapter, rv: RecyclerView) {
         val safePos = calculateSafePosition(pos, adapter)
         rv.post {
-            // 检查当前是否在滚动，避免冲突[6](@ref)
             if (rv.scrollState == RecyclerView.SCROLL_STATE_IDLE) {
                 rv.scrollToPosition(safePos)
                 adapter.selectedPos = safePos

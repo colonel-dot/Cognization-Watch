@@ -49,7 +49,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/submit_rise"
+        android:id="@+id/btn_rise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
@@ -85,7 +85,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/submit_bed"
+        android:id="@+id/btn_bed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="确认"

@@ -143,8 +143,4 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
         hasInitBySystemEvents = true
     }
-
-    fun saveScheduleDatabase() {
-
-    }
 }

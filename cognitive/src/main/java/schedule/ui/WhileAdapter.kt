@@ -36,7 +36,6 @@ class WheelAdapter(val origin: List<String>) :
         holder.tv.text = data[position]
 
 
-        // 增强高亮效果[11,12](@ref)
         holder.tv.setTextColor(if (position == selectedPos) Color.BLACK else Color.GRAY)
         holder.tv.textSize = if (position == selectedPos) 22f else 18f
         //holder.tv.setBackgroundColor(if (position == selectedPos) Color.parseColor("#E3F2FD") else Color.TRANSPARENT)

@@ -72,6 +72,19 @@ interface DailyBehaviorDao {
     )
 
     @Query("""
+    UPDATE daily_behavior
+    SET wakeMinute = :wakeMinute,
+        sleepMinute = :sleepMinute
+    WHERE date = :date
+""")
+    suspend fun updateSchedule(
+        date: LocalDate,
+        wakeMinute: Int,
+        sleepMinute: Int
+    )
+
+
+    @Query("""
         UPDATE daily_behavior
         SET steps = :steps
         WHERE date = :date
