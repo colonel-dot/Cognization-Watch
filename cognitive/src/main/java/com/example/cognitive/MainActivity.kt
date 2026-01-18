@@ -6,27 +6,39 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import schulte.ui.SchulteGameActivity
 import sports.data.StepForegroundService
+import sports.vm.StepViewModel
+import kotlin.getValue
 
+
+private const val REQ_NOTIFY = 1001
 
 class MainActivity : AppCompatActivity() {
+
+    private val stepsViewModel: StepViewModel by viewModels()
     lateinit var mIntent: Intent
     lateinit var btn_game: View
     lateinit var btn_speak: View
     lateinit var btn_schedule: View
     lateinit var btn_sports: View
     lateinit var btn_mine: View
-    val REQ_NOTIFY = 1001
+    lateinit var tvSteps:TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -40,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepService()
         }
-        startService(Intent(this, StepForegroundService::class.java))
 
         btn_mine = findViewById<View>(R.id.mine_layout)
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)
         btn_schedule = findViewById<Button>(R.id.schedule_layout)
         btn_sports = findViewById<View>(R.id.btn_sports)
+        tvSteps = findViewById<TextView>(R.id.tv_steps)
         btn_speak.setOnClickListener {
             mIntent = Intent(this, read_assessment.ui.RecordActivity::class.java)
             startActivity(mIntent) }
@@ -66,6 +78,14 @@ class MainActivity : AppCompatActivity() {
             mIntent = Intent(this, mine.ui.MineRecordActivity::class.java)
             startActivity(mIntent)
         }
+        stepsViewModel.stepCount.observe(this) {
+            tvSteps.text = "今日步数 $it"
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        stepsViewModel.refreshToday()
     }
 
 
@@ -83,8 +103,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 startStepService()
             } else {
-                // 用户拒绝
-                // 这里你可以提示：没有通知，前台服务可能不稳定
+                Toast.makeText(this, "通知权限未授予，可能无法正常接收步数提醒", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -13,34 +13,27 @@ private const val TAG = "StepRepository"
 
 /**
  * 职责：
- * 1. 实时接收传感器数据（只更新内存）
- * 2. 定时 & 关键节点批量写入数据库
+ * 1. 只负责「今日步数」统计
+ * 2. 内存实时累积，定时批量落库
  */
 class StepRepository(
     private val sensorManager: SensorManager,
     private val dao: DailyBehaviorDao
 ) : SensorEventListener {
 
-    /** 协程作用域（Service 生命周期） */
+    /** Service 生命周期作用域 */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    /** 传感器 */
+    /** 计步传感器（唯一需要的） */
     private val stepCounter =
         sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-    private val stepDetector =
-        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
-    /** -------- 内存态数据（实时） -------- */
+    /** -------- 内存态 -------- */
     private var todayDate: LocalDate = LocalDate.now()
-
     private var todayBaseCounter = 0f
     private var todaySteps = 0
-    private var todayActiveTime = 0
-    private var todayRestTime = 0
 
-    private var lastStepTime = 0L
-
-    /** 是否有数据变更（脏标记） */
+    /** 是否有变更需要落库 */
     @Volatile
     private var dirty = false
 
@@ -55,15 +48,12 @@ class StepRepository(
         stepCounter?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
-        stepDetector?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
     }
 
     fun stop() {
         sensorManager.unregisterListener(this)
 
-        // ★ 关键：停服务前强制落库一次
+        // Service 结束前强制落库
         runBlocking {
             flushToDb()
         }
@@ -71,24 +61,20 @@ class StepRepository(
         scope.cancel()
     }
 
-    // -------------------- 初始化 --------------------
+    // -------------------- 初始化 / 跨天 --------------------
 
     private suspend fun initToday() {
         todayDate = LocalDate.now()
         val entity = dao.getOrInitTodayBehavior(todayDate)
 
-        // ★ 从数据库恢复数据，防止 Service 重启丢失
+        // 从数据库恢复（防止 Service 重启）
         todaySteps = entity.steps ?: 0
-        todayActiveTime = entity.activeTime ?: 0
-        todayRestTime = entity.restTime ?: 0
 
         todayBaseCounter = 0f
-        lastStepTime = 0L
         dirty = false
     }
 
     private suspend fun onNewDay(newDate: LocalDate) {
-        // 跨天前先落库
         flushToDb()
 
         todayDate = newDate
@@ -96,17 +82,11 @@ class StepRepository(
 
         todayBaseCounter = 0f
         todaySteps = 0
-        todayActiveTime = 0
-        todayRestTime = 0
-        lastStepTime = 0L
         dirty = false
     }
 
-    // -------------------- 定时批量落库 --------------------
+    // -------------------- 批量落库 --------------------
 
-    /**
-     * 每 30 秒检查一次，只在数据变更时写数据库
-     */
     private fun startFlushTicker() {
         scope.launch {
             while (isActive) {
@@ -119,31 +99,14 @@ class StepRepository(
     private suspend fun flushToDb() {
         if (!dirty) return
 
-        Log.d(TAG, "flushToDb() steps=$todaySteps active=$todayActiveTime rest=$todayRestTime")
+        Log.d(TAG, "flushToDb() steps=$todaySteps")
 
-        dao.updateSports(
+        dao.updateSteps(
             date = todayDate,
-            steps = todaySteps,
-            activeTime = todayActiveTime,
-            restTime = todayRestTime
+            steps = todaySteps
         )
 
         dirty = false
-    }
-
-    // -------------------- 时间统计（每秒） --------------------
-
-    private fun tickTime() {
-        if (lastStepTime == 0L) return
-
-        val now = System.currentTimeMillis()
-        if (now - lastStepTime <= 30_000) {
-            todayActiveTime++
-        } else {
-            todayRestTime++
-        }
-
-        dirty = true
     }
 
     // -------------------- 传感器回调 --------------------
@@ -155,27 +118,19 @@ class StepRepository(
             return
         }
 
-        when (event.sensor.type) {
+        if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+            val total = event.values[0]
 
-            Sensor.TYPE_STEP_COUNTER -> {
-                val total = event.values[0]
-
-                if (todayBaseCounter == 0f) {
-                    todayBaseCounter = total
-                }
-
-                val newSteps =
-                    (total - todayBaseCounter).toInt().coerceAtLeast(0)
-
-                if (newSteps != todaySteps) {
-                    todaySteps = newSteps
-                    dirty = true
-                }
+            if (todayBaseCounter == 0f) {
+                todayBaseCounter = total
             }
 
-            Sensor.TYPE_STEP_DETECTOR -> {
-                lastStepTime = System.currentTimeMillis()
-                tickTime()
+            val newSteps =
+                (total - todayBaseCounter).toInt().coerceAtLeast(0)
+
+            if (newSteps != todaySteps) {
+                todaySteps = newSteps
+                dirty = true
             }
         }
     }

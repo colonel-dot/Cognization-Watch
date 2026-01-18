@@ -11,8 +11,6 @@ import java.time.LocalDate
 class StepViewModel(application: Application) : AndroidViewModel(application) {
 
     val stepCount = MutableLiveData(0)
-    val activeTime = MutableLiveData(0)
-    val restTime = MutableLiveData(0)
 
     private val dao =
         DailyBehaviorDatabase.getDatabase(application).dailyBehaviorDao()
@@ -21,10 +19,7 @@ class StepViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val today = LocalDate.now()
             val entity = dao.getOrInitTodayBehavior(today)
-
             stepCount.postValue(entity.steps)
-            activeTime.postValue(entity.activeTime)
-            restTime.postValue(entity.restTime)
         }
     }
 }

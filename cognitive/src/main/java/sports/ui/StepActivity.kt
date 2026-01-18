@@ -20,17 +20,9 @@ class StepActivity : AppCompatActivity() {
         startService(Intent(this, StepForegroundService::class.java))
 
         val tvSteps = findViewById<TextView>(R.id.tvStepCount)
-        val tvActive = findViewById<TextView>(R.id.tvActiveTime)
-        val tvRest = findViewById<TextView>(R.id.tvRestTime)
 
         viewModel.stepCount.observe(this) {
             tvSteps.text = "今日步数：$it"
-        }
-        viewModel.activeTime.observe(this) {
-            tvActive.text = "今日运动：${it / 60} 分钟"
-        }
-        viewModel.restTime.observe(this) {
-            tvRest.text = "今日休息：${it / 60} 分钟"
         }
     }
 
