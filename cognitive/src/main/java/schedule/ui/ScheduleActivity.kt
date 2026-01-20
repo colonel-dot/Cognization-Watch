@@ -99,6 +99,29 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
+        btn_bed.setOnClickListener {
+            viewModel.saveScheduleToDb(
+                bedHour = bedHourAdapter.getRealValue(),
+                bedMinute = bedMinuteAdapter.getRealValue(),
+                wakeHour = wakeHourAdapter.getRealValue(),
+                wakeMinute = wakeMinuteAdapter.getRealValue()
+            )
+
+            Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
+        }
+
+
+        btn_rise.setOnClickListener {
+            viewModel.saveScheduleToDb(
+                bedHour = bedHourAdapter.getRealValue(),
+                bedMinute = bedMinuteAdapter.getRealValue(),
+                wakeHour = wakeHourAdapter.getRealValue(),
+                wakeMinute = wakeMinuteAdapter.getRealValue()
+            )
+            Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
+        }
+
+
         // 设置观察者（包括滚轮同步）
         setupObservers()
     }
@@ -136,7 +159,6 @@ class ScheduleActivity : AppCompatActivity() {
         return adapter
     }
 
-    /** 统一的安全位置计算 */
     private fun calculateSafePosition(realPos: Int, adapter: WheelAdapter): Int {
         val middlePos = adapter.getMiddlePosition()
         val dataSize = adapter.origin.size
@@ -144,7 +166,7 @@ class ScheduleActivity : AppCompatActivity() {
         return middlePos + adjustedPos
     }
 
-    /** 创建统一的滚动监听器 */
+    //创建滚动监听器
     private fun createScrollListener(
         adapter: WheelAdapter,
         onItemSelected: (String, Int) -> Unit

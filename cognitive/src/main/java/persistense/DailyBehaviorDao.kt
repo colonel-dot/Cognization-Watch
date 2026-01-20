@@ -25,7 +25,8 @@ interface DailyBehaviorDao {
                 date = date,
                 wakeMinute = 0,
                 sleepMinute = 0,
-                schulteTimeSec = 0.0,
+                schulte16TimeSec = 0.0,
+                schulte25TimeSec = 0.0,
                 speechScore = 0.0,
                 steps = 0
             )
@@ -48,6 +49,9 @@ interface DailyBehaviorDao {
     @Update
     suspend fun update(dailyBehaviorEntity: DailyBehaviorEntity)
 
+    @Query("SELECT * FROM daily_behavior")
+    suspend fun getAll(): List<DailyBehaviorEntity>
+
     @Query("SELECT * FROM daily_behavior WHERE date = :date")
     suspend fun getByDate(date: LocalDate): DailyBehaviorEntity?
 
@@ -63,10 +67,20 @@ interface DailyBehaviorDao {
 
     @Query("""
         UPDATE daily_behavior
-        SET schulteTimeSec = :time
+        SET schulte16TimeSec = :time
         WHERE date = :date
     """)
-    suspend fun updateSchulteTime(
+    suspend fun updateSchulte16Time(
+        date: LocalDate,
+        time: Double
+    )
+
+    @Query("""
+        UPDATE daily_behavior
+        SET schulte25TimeSec = :time
+        WHERE date = :date
+    """)
+    suspend fun updateSchulte25Time(
         date: LocalDate,
         time: Double
     )
@@ -107,4 +121,12 @@ interface DailyBehaviorDao {
         activeTime: Int,
         restTime: Int
     )
+
+    @Query("SELECT * FROM daily_behavior WHERE date >= :date ORDER BY date ASC")
+    suspend fun loadFrom(date: LocalDate): List<DailyBehaviorEntity>
+
+
+    @Query("SELECT * FROM daily_behavior WHERE date BETWEEN :start AND :end ORDER BY date ASC")
+    suspend fun loadRange(start: LocalDate, end: LocalDate): List<DailyBehaviorEntity>
+
 }

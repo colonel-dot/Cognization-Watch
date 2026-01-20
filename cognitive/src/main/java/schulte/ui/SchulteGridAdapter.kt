@@ -23,7 +23,7 @@ class SchulteGridAdapter(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
 
-        // ⭐ RecyclerView 一定已存在，这里拿宽度是安全的
+        //  RecyclerView 一定已存在，这里拿宽度是安全的
         recyclerView.post {
             recyclerViewWidth = recyclerView.measuredWidth
             notifyDataSetChanged()

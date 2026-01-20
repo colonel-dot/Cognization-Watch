@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c3e0834bc035927688a512d2265056a7",
+    "identityHash": "4bee57a254af9280707f63f6f0def6c0",
     "entities": [
       {
         "tableName": "daily_behavior",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` INTEGER NOT NULL, `wakeMinute` INTEGER, `sleepMinute` INTEGER, `schulteTimeSec` REAL, `speechScore` REAL, `steps` INTEGER, `activeTime` INTEGER, `restTime` INTEGER, PRIMARY KEY(`date`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` INTEGER NOT NULL, `wakeMinute` INTEGER, `sleepMinute` INTEGER, `schulte16TimeSec` REAL, `schulte25TimeSec` REAL, `speechScore` REAL, `steps` INTEGER, `activeTime` INTEGER, `restTime` INTEGER, PRIMARY KEY(`date`))",
         "fields": [
           {
             "fieldPath": "date",
@@ -27,8 +27,14 @@
             "notNull": false
           },
           {
-            "fieldPath": "schulteTimeSec",
-            "columnName": "schulteTimeSec",
+            "fieldPath": "schulte16TimeSec",
+            "columnName": "schulte16TimeSec",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "schulte25TimeSec",
+            "columnName": "schulte25TimeSec",
             "affinity": "REAL",
             "notNull": false
           },
@@ -70,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c3e0834bc035927688a512d2265056a7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4bee57a254af9280707f63f6f0def6c0')"
     ]
   }
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:id="@+id/record_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/ic_renzhi"
+        />
+
+    <TextView
+        android:id="@+id/record_steps"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="步数：10000步"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@id/record_icon"
+        app:layout_constraintTop_toBottomOf="@id/record_schulte"
+        android:layout_marginStart="12dp"
+        />
+
+    <TextView
+        android:id="@+id/record_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/record_steps"
+        app:layout_constraintTop_toBottomOf="@id/record_steps"
+        android:text="起床时间：07:00  睡觉时间21：00"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/record_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/record_steps"
+            app:layout_constraintTop_toTopOf="@id/record_steps"
+            android:text="朗读评分：95分"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_marginStart="12dp"
+            />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/record_schulte"
+        app:layout_constraintStart_toEndOf="@id/record_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="12dp"
+        android:text="舒尔特成绩：99"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/record_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/record_steps"
+        app:layout_constraintBottom_toBottomOf="@id/record_icon"
+        android:text="日期"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_marginEnd="8dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

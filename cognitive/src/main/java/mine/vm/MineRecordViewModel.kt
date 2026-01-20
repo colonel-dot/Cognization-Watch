@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import mine.data.MineRecordModel
 import persistense.DailyBehaviorEntity
 import java.time.LocalDate
 
@@ -14,21 +15,34 @@ private const val TAG = "MineRecordViewModel"
 
 class MineRecordViewModel(application: Application): AndroidViewModel(application) {
     private val _todayBehaviorData = MutableLiveData<DailyBehaviorEntity?>()
-    val todayBehaviorData: LiveData<DailyBehaviorEntity?> = _todayBehaviorData
-    private val behaviorDao = persistense.DailyBehaviorDatabase
-        .getDatabase(application)
-        .dailyBehaviorDao()
+    private val _allBehaviorData = MutableLiveData<List<DailyBehaviorEntity>>()
 
-    // 核心：查询当日所有数据的方法，外部调用这个方法即可
-    fun queryTodayBehaviorData() {
+    val todayBehaviorData: LiveData<DailyBehaviorEntity?> = _todayBehaviorData
+    val allBehaviorData: LiveData<List<DailyBehaviorEntity>> = _allBehaviorData
+
+
+    private val recordModel = MineRecordModel(application)
+
+    fun queryRecordData() {
         viewModelScope.launch {
             try {
                 val today = LocalDate.now()
-                val todayData = behaviorDao.getByDate(today)
-                _todayBehaviorData.postValue(todayData) // 给LiveData赋值，通知UI更新
+                val todayData = recordModel.queryRecordDataByDate(today) // 调用仓库方法
+                _todayBehaviorData.postValue(todayData)
             } catch (e: Exception) {
                 Log.e(TAG, "查询当日数据失败:${e.message}", e)
                 _todayBehaviorData.postValue(null)
+            }
+        }
+    }
+
+    fun queryRecordsData() {
+        viewModelScope.launch {
+            try {
+                val recordsList: List<DailyBehaviorEntity> = recordModel.queryAllRecords()
+                _allBehaviorData.postValue(recordsList.reversed())
+            } catch (e: Exception) {
+                Log.e(TAG, "查询历史数据失败:${e.message}", e)
             }
         }
     }

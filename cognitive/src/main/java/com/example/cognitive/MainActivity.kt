@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var btn_game: View
     lateinit var btn_speak: View
     lateinit var btn_schedule: View
-    lateinit var btn_sports: View
     lateinit var btn_mine: View
     lateinit var tvSteps:TextView
 
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

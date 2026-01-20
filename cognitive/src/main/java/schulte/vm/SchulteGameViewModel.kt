@@ -20,9 +20,9 @@ enum class GameState {
 
 class SchulteGameViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object {
+    //companion object {
         private var GRID_SIZE = 5
-    }
+    //}
 
     private val _cells = MutableLiveData<List<SchulteCell>>()
     val cells: LiveData<List<SchulteCell>> = _cells
@@ -125,10 +125,18 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             val today = LocalDate.now()
             behaviorDao.getOrInitTodayBehavior(today)
-            val lastTime = behaviorDao.getByDate(today)!!.schulteTimeSec!!
-            if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
-                behaviorDao.updateSchulteTime(today, elapsedTime.toDouble())
+            if (GRID_SIZE == 4) {
+                val lastTime = behaviorDao.getByDate(today)!!.schulte16TimeSec!!
+                if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
+                    behaviorDao.updateSchulte16Time(today, elapsedTime.toDouble())
+                }
+            } else if (GRID_SIZE == 5) {
+                val lastTime = behaviorDao.getByDate(today)!!.schulte25TimeSec!!
+                if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
+                    behaviorDao.updateSchulte25Time(today, elapsedTime.toDouble())
+                }
             }
+
         }
     }
 }

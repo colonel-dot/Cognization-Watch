@@ -19,7 +19,8 @@ abstract class DailyBehaviorDatabase : androidx.room.RoomDatabase() {
                 return it
             }
             return Room.databaseBuilder(context.applicationContext,
-                DailyBehaviorDatabase::class.java, "daily_behavior_database").build().apply { instance = this }
+                DailyBehaviorDatabase::class.java, "daily_behavior_database")
+                .build().apply { instance = this }
         }
     }
 }

@@ -10,7 +10,8 @@ data class DailyBehaviorEntity (    @PrimaryKey val date: LocalDate,
                                     val wakeMinute: Int? = 0,
                                     val sleepMinute: Int? = 0,
 
-                                    val schulteTimeSec: Double? = 0.0,//舒尔特方格通关时间
+                                    val schulte16TimeSec: Double? = 0.0,//舒尔特方格通关时间
+                                    val schulte25TimeSec: Double? = 0.0,
                                     val speechScore: Double? = 0.0,//语音识别评分
 
                                     val steps: Int? = 0,
