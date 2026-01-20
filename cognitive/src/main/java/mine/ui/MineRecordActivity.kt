@@ -46,10 +46,17 @@ class MineRecordActivity : AppCompatActivity() {
         recordAdapter = RecordRVAdapter(mutableListOf())
         // ③ 给RecyclerView绑定适配器
         recordRV.adapter = recordAdapter
-        // 【可选】绑定Adapter的条目点击事件
-        /*recordAdapter.setOnItemClickListener { position, record ->
 
-        }*/
+        recordAdapter.setOnItemClickListener(object : RecordRVAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int, record: DailyBehaviorEntity) {
+
+                val date = record.date   // LocalDate
+
+                val sheet = risk.ui.RiskDetailBottomSheet.newInstance(date)
+                sheet.show(supportFragmentManager, "RiskDetailBottomSheet")
+            }
+        })
+
     }
 
     //  核心方法：监听ViewModel的LiveData，接收数据库返回的数据

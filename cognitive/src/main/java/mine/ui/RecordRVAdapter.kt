@@ -34,6 +34,10 @@ class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.
         holder.tvSchulte.text = "舒尔特成绩:${item.schulte16TimeSec?.let { "${it/1000}秒(4×4)" } ?: "暂无"} ${item.schulte25TimeSec?.let { "${it/1000}秒(5×5)" } ?: "暂无"}"
         holder.tvSteps.text = "步数:${item.steps ?: "暂无"}"
 
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.onItemClick(position, item)
+        }
+
         // ==========  核心修复：格式化 总分钟数 → 时:分 格式 ==========
         val wakeTimeStr = item.wakeMinute?.let { minuteOfDay ->
             val hour = minuteOfDay / 60
