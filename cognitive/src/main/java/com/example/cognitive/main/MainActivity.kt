@@ -1,5 +1,6 @@
-package com.example.cognitive
+package com.example.cognitive.main
 
+import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -13,23 +14,26 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.cognitive.R
+import mine.ui.MineRecordActivity
+import read_assessment.ui.RecordActivity
+import schedule.ui.ScheduleActivity
 import schulte.ui.SchulteGameActivity
 import sports.data.StepForegroundService
 import sports.vm.StepViewModel
-import kotlin.getValue
 
 
 private const val REQ_NOTIFY = 1001
-
 class MainActivity : AppCompatActivity() {
 
     private val stepsViewModel: StepViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     lateinit var mIntent: Intent
     lateinit var btn_game: View
     lateinit var btn_speak: View
     lateinit var btn_schedule: View
     lateinit var btn_mine: View
-    lateinit var tvSteps:TextView
+    lateinit var tvSteps: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,31 +47,32 @@ class MainActivity : AppCompatActivity() {
         }
         if (needNotificationPermission()) {
             requestPermissions(
-                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 REQ_NOTIFY
             )
         } else {
             startStepService()
         }
-
+        mainViewModel.initTodayBehavior()
+        mainViewModel.saveYesterdayRiskResult()
         btn_mine = findViewById<View>(R.id.mine_layout)
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)
         btn_schedule = findViewById<Button>(R.id.schedule_layout)
         tvSteps = findViewById<TextView>(R.id.tv_steps)
         btn_speak.setOnClickListener {
-            mIntent = Intent(this, read_assessment.ui.RecordActivity::class.java)
+            mIntent = Intent(this, RecordActivity::class.java)
             startActivity(mIntent) }
         btn_game.setOnClickListener {
             mIntent = Intent(this, SchulteGameActivity::class.java)
             startActivity(mIntent)
         }
         btn_schedule.setOnClickListener {
-            mIntent = Intent(this, schedule.ui.ScheduleActivity::class.java)
+            mIntent = Intent(this, ScheduleActivity::class.java)
             startActivity(mIntent)
         }
         btn_mine.setOnClickListener {
-            mIntent = Intent(this, mine.ui.MineRecordActivity::class.java)
+            mIntent = Intent(this, MineRecordActivity::class.java)
             startActivity(mIntent)
         }
         stepsViewModel.stepCount.observe(this) {
@@ -104,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun needNotificationPermission(): Boolean {
         return Build.VERSION.SDK_INT >= 33 &&
-                checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
     }
 
     private fun startStepService() {

@@ -9,8 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.cognitive.R
-import persistense.DailyBehaviorDatabase
-import sports.data.StepRepository
+import persistense.AppDatabase
 
 private const val TAG = "StepForegroundService"
 
@@ -24,7 +23,7 @@ class StepForegroundService : Service() {
         val sensorManager =
             getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        val db = DailyBehaviorDatabase.getDatabase(application)
+        val db = AppDatabase.getDatabase(application)
 
 
         repo = StepRepository(

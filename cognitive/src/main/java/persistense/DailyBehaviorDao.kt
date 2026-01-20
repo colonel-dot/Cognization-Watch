@@ -129,4 +129,12 @@ interface DailyBehaviorDao {
     @Query("SELECT * FROM daily_behavior WHERE date BETWEEN :start AND :end ORDER BY date ASC")
     suspend fun loadRange(start: LocalDate, end: LocalDate): List<DailyBehaviorEntity>
 
+    @Query("""
+    SELECT * FROM daily_behavior
+    WHERE date < :date
+    ORDER BY date DESC
+    LIMIT 15
+""")
+    suspend fun loadPrev15Days(date: LocalDate): List<DailyBehaviorEntity>
+
 }

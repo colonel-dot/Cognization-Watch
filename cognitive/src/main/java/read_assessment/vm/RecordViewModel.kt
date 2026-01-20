@@ -1,13 +1,11 @@
 package read_assessment.vm
 
 import android.app.Application
-import android.content.Context
 import android.media.AudioFormat
-import android.util.Log
 import androidx.lifecycle.*
 import com.github.squti.androidwaverecorder.WaveRecorder
 import kotlinx.coroutines.launch
-import persistense.DailyBehaviorDatabase
+import persistense.AppDatabase
 import read_assessment.data.ReadAssessmentRepository
 import read_assessment.data.ReadAssessmentSource
 import java.io.File
@@ -20,8 +18,8 @@ class RecordViewModel(application: Application) : AndroidViewModel(application )
 
     private val repo = ReadAssessmentRepository()
 
-    private val dailyBehaviorDatabase = DailyBehaviorDatabase.getDatabase(application)
-    private val dailyBehaviorDao = dailyBehaviorDatabase.dailyBehaviorDao()
+    private val appDatabase = AppDatabase.getDatabase(application)
+    private val dailyBehaviorDao = appDatabase.dailyBehaviorDao()
 
     private val _isRecording = MutableLiveData(false)
     val isRecording: LiveData<Boolean> = _isRecording

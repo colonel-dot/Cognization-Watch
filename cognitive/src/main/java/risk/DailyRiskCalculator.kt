@@ -10,7 +10,19 @@ object DailyRiskCalculator {
 
     fun calculate(data: List<NormalizedDailyBehavior>): DailyRiskResult {
 
-        val latest = data.last()
+        val dataSize = data.size
+        if (dataSize < 2) return DailyRiskResult(
+            date = data.last().date.minusDays(1),
+            readRiskScore = 0.0,
+            scheduleRiskScore = 0.0,
+            schulteRiskScore = 0.0,
+            stepsRiskScore = 0.0,
+            riskScore = 0.0,
+            riskLevel = RiskLevel.NORMAL,
+            explanations = listOf("数据不足，无法评估风险")
+        )
+
+        val latest = data[dataSize - 2] // 倒数第1天是当天，取倒数第2天作为最新完整数据
 
         val explanations = mutableListOf<String>()
 

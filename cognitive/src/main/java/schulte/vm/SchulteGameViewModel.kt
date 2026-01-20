@@ -4,14 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import schulte.data.SchulteCell
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import persistense.DailyBehaviorDatabase
+import persistense.AppDatabase
 import java.time.LocalDate
 
 enum class GameState {
@@ -40,7 +39,7 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
     private var timerJob: Job? = null
     private var maxNumber = GRID_SIZE * GRID_SIZE
 
-    val behaviorDatabase = DailyBehaviorDatabase.getDatabase(application)
+    val behaviorDatabase = AppDatabase.getDatabase(application)
     val behaviorDao = behaviorDatabase.dailyBehaviorDao()
 
     init {

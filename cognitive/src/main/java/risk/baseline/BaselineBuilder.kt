@@ -6,7 +6,7 @@ import kotlin.math.sqrt
 object BaselineBuilder {
 
     fun build(values: List<Double>): Baseline? {
-        if (values.size < 5) return null   // 少于5天不建模
+        //if (values.size < 5) return null   // 少于5天不建模
 
         val sorted = values.sorted()
         val mean = sorted.average()

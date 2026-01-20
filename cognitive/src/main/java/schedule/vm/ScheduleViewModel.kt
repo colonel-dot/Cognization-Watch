@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import persistense.DailyBehaviorDatabase
+import persistense.AppDatabase
 import java.time.LocalDate
 import java.util.*
 
@@ -19,7 +19,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     private val context = application.applicationContext
 
     private val dailyBehaviorDao =
-        DailyBehaviorDatabase.getDatabase(application).dailyBehaviorDao()
+        AppDatabase.getDatabase(application).dailyBehaviorDao()
 
     private val today: LocalDate = LocalDate.now()
 

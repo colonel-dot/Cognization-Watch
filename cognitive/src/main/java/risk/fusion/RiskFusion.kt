@@ -36,6 +36,10 @@ object RiskFusion {
         return DailyRiskResult(
             date = date,
             riskScore = score,
+            readRiskScore = speechRisk,
+            scheduleRiskScore = sleepRisk,
+            schulteRiskScore = schulteRisk,
+            stepsRiskScore = sleepRisk,
             riskLevel = level,
             explanations = explanations
         )

@@ -1,13 +1,10 @@
 package mine.data
 
 import android.app.Application
-import android.util.Log
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class MineRecordModel(application: Application) {
-    private val behaviorDao = persistense.DailyBehaviorDatabase
+    private val behaviorDao = persistense.AppDatabase
         .getDatabase(application)
         .dailyBehaviorDao()
 

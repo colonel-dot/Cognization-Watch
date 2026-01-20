@@ -15,6 +15,8 @@ interface DailyRiskDao {
     @Query("SELECT * FROM daily_risk WHERE date = :date")
     suspend fun getByDate(date: LocalDate): DailyRiskEntity?
 
+
+
     @Query("SELECT * FROM daily_risk ORDER BY date ASC")
     suspend fun getAll(): List<DailyRiskEntity>
 
