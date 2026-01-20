@@ -7,7 +7,7 @@ plugins {
  * 是否 Debug 壳工程
  * isDebugCIP 建议在 gradle.properties 中定义
  */
-def isDebug = Boolean.parseBoolean(isDebugCIP)
+def isDebug = Boolean.parseBoolean(isDebugCIP ?: "true")
 
 if (isDebug) {
     apply plugin: 'com.android.application'
@@ -21,24 +21,21 @@ android {
 
     defaultConfig {
         minSdk 26
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        if (isDebug) {
+            applicationId "com.example.cooperativeprojectsdemo"
+        } else {
+            consumerProguardFiles "consumer-rules.pro"
+        }
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [
                         "room.schemaLocation": "${projectDir}/schemas",
-                        "room.incremental"    : "true"
+                        "room.incremental"   : "true"
                 ]
             }
-        }
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        if (!isDebug) {
-            consumerProguardFiles "consumer-rules.pro"
-        }
-
-        if (isDebug) {
-            applicationId "com.example.cooperativeprojectsdemo"
         }
     }
 
@@ -53,13 +50,21 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // 🔑 Kotlin Options 必须写在 android {} 内
+    kotlinOptions {
+        jvmTarget = "17"
+        apiVersion = "1.9"
+        languageVersion = "1.9"
     }
 }
 
-// Groovy 语法的 kapt 配置（适配 Room 注解处理器）
+// kapt 配置
 kapt {
+    correctErrorTypes = true
     arguments {
         arg("room.schemaLocation", "${projectDir}/schemas")
         arg("room.incremental", "true")
@@ -67,17 +72,13 @@ kapt {
 }
 
 dependencies {
-
-
-    //协程
+    // 协程
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 
-    implementation "androidx.room:room-ktx:2.6.1"
     // Room
-    implementation 'androidx.room:room-runtime:2.6.1'
-    implementation libs.activity
-    implementation libs.work.runtime.ktx
-    kapt 'androidx.room:room-compiler:2.6.1'
+    implementation "androidx.room:room-runtime:2.6.1"
+    implementation "androidx.room:room-ktx:2.6.1"
+    kapt "androidx.room:room-compiler:2.6.1"
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'

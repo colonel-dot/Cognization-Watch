@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
 import persistense.DailyBehaviorEntity
@@ -25,16 +26,18 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     fun initTodayBehavior() {
         viewModelScope.launch {
             behaviorDao.getOrInitTodayBehavior(today)
-        }
-    }
-
-    fun saveYesterdayRiskResult() {
-        viewModelScope.launch {
+            delay(10)
             val behaviorRecords = behaviorDao.loadPrev15Days(today)
             val riskResult = DailyRiskCalculator
                 .calculate(behaviorRecords.toNormalizedList())
 
             riskDao.upsert(riskResult.toEntity())
+        }
+    }
+
+    fun saveYesterdayRiskResult() {
+        viewModelScope.launch {
+
         }
     }
 }

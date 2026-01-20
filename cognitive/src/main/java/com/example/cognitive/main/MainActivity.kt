@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             startStepService()
         }
         mainViewModel.initTodayBehavior()
-        mainViewModel.saveYesterdayRiskResult()
+        //mainViewModel.saveYesterdayRiskResult()
         btn_mine = findViewById<View>(R.id.mine_layout)
         btn_game = findViewById<Button>(R.id.game_layout)
         btn_speak = findViewById<Button>(R.id.speak_layout)

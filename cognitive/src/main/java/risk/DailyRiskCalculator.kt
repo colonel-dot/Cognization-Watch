@@ -1,18 +1,22 @@
 package risk
 
+import android.util.Log
 import risk.anomaly.AnomalyEngine
 import risk.baseline.BaselineBuilder
 import risk.fusion.RiskFusion
 import risk.model.*
 import risk.trend.TrendDetector
+import java.time.LocalDate
 
+private const val TAG = "DailyRiskCalculator"
 object DailyRiskCalculator {
 
     fun calculate(data: List<NormalizedDailyBehavior>): DailyRiskResult {
 
+        Log.d(TAG, "这个data列表是$data")
         val dataSize = data.size
         if (dataSize < 2) return DailyRiskResult(
-            date = data.last().date.minusDays(1),
+            date = LocalDate.now().minusDays(1),
             readRiskScore = 0.0,
             scheduleRiskScore = 0.0,
             schulteRiskScore = 0.0,
