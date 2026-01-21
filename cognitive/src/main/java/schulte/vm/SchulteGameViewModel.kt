@@ -11,6 +11,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
+import risk.work.RiskConfigManager
+import schulte.data.SchulteEvaluatorType
 import java.time.LocalDate
 
 enum class GameState {
@@ -137,5 +139,9 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
             }
 
         }
+    }
+
+    fun saveEvaluationType(type: SchulteEvaluatorType) {
+        RiskConfigManager(getApplication()).setSchulteEvaluatorType(type)
     }
 }

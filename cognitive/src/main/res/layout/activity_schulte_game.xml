@@ -39,6 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
+        android:id="@+id/sizeSelectionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -66,6 +67,7 @@
             android:textColor="@color/black"
             android:text="5x5"/>
     </LinearLayout>
+
 
     <Button
         android:id="@+id/btnReset"

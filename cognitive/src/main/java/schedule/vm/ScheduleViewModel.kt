@@ -91,52 +91,13 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    /**
-     * Activity onResume 调用
-     * 只在【还没初始化过】且【有权限】时，兜底用系统事件刷新一次
-     */
-    /*fun refreshBySystemEvents() {
-        if (hasInitBySystemEvents) return
 
-        viewModelScope.launch {
-            val (sleep, wake) = getDefaultSleepWakeTime()
-
-            val sleepCal = Calendar.getInstance().apply { timeInMillis = sleep }
-            val wakeCal = Calendar.getInstance().apply { timeInMillis = wake }
-
-            val sleepMinute = toMinuteOfDay(
-                sleepCal.get(Calendar.HOUR_OF_DAY),
-                sleepCal.get(Calendar.MINUTE)
-            )
-            val wakeMinute = toMinuteOfDay(
-                wakeCal.get(Calendar.HOUR_OF_DAY),
-                wakeCal.get(Calendar.MINUTE)
-            )
-
-            // 写数据库（兜底一次）
-            dailyBehaviorDao.updateSchedule(
-                date = today,
-                wakeMinute = wakeMinute,
-                sleepMinute = sleepMinute
-            )
-
-            // 同步 UI
-            applyScheduleToUI(
-                sleepCal.get(Calendar.HOUR_OF_DAY),
-                sleepCal.get(Calendar.MINUTE),
-                wakeCal.get(Calendar.HOUR_OF_DAY),
-                wakeCal.get(Calendar.MINUTE)
-            )
-
-            hasInitBySystemEvents = true
-        }
-    }*/
     fun refreshBySystemEvents() {
         viewModelScope.launch {
             val entity = dailyBehaviorDao.getOrInitTodayBehavior(today)
 
             // 只要用户已经设置过，就绝不再用系统推断
-            if (entity.wakeMinute != 0 || entity.sleepMinute != 0) {
+            if (entity.wakeMinute!! < 1e-5 || entity.sleepMinute!! < 1e-5) {
                 hasInitBySystemEvents = true
                 return@launch
             }
@@ -211,15 +172,6 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
     /** ================= 用户确认保存 ================= */
 
-    /*fun saveScheduleToDb() {
-        viewModelScope.launch {
-            dailyBehaviorDao.updateSchedule(
-                date = today,
-                wakeMinute = toMinuteOfDay(wakeHourPos, wakeMinutePos),
-                sleepMinute = toMinuteOfDay(bedHourPos, bedMinutePos)
-            )
-        }
-    }*/
     fun saveScheduleToDb(
         bedHour: String,
         bedMinute: String,

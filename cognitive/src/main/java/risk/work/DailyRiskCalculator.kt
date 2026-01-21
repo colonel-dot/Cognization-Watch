@@ -1,17 +1,20 @@
-package risk
+package risk.work
 
 import android.util.Log
 import risk.anomaly.AnomalyEngine
 import risk.baseline.BaselineBuilder
 import risk.fusion.RiskFusion
-import risk.model.*
+import risk.model.DailyRiskResult
+import risk.model.NormalizedDailyBehavior
+import risk.model.RiskLevel
 import risk.trend.TrendDetector
+import schulte.data.SchulteEvaluatorType
 import java.time.LocalDate
 
 private const val TAG = "DailyRiskCalculator"
 object DailyRiskCalculator {
 
-    fun calculate(data: List<NormalizedDailyBehavior>): DailyRiskResult {
+    fun calculate(data: List<NormalizedDailyBehavior>, evaluatorType: SchulteEvaluatorType): DailyRiskResult {
 
         Log.d(TAG, "这个data列表是$data")
         val dataSize = data.size
@@ -44,6 +47,13 @@ object DailyRiskCalculator {
         /** ===== 舒尔特（优先25格，其次16格） ===== */
         val schulteValues =
             data.mapNotNull { it.schulte25Time ?: it.schulte16Time }
+
+        /*后续对16格和25格算法分别处理
+        val schulteValues = when (evaluatorType) {
+            SchulteEvaluatorType.GRID_4 -> data.mapNotNull { it.schulte16Time }
+            SchulteEvaluatorType.GRID_5 -> data.mapNotNull { it.schulte25Time  }
+            else -> emptyList()
+        } */
 
         val schulteBaseline = BaselineBuilder.build(schulteValues)
         val schulteRisk = if (schulteBaseline != null) {
