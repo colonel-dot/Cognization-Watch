@@ -14,7 +14,6 @@
             <option value="$PROJECT_DIR$/bridge" />
             <option value="$PROJECT_DIR$/cognitive" />
             <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/myapplication" />
           </set>
         </option>
       </GradleProjectSettings>

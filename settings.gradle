@@ -20,9 +20,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CooperativeProjectsDemo"
+rootProject.name = "Cognization-Watch"
 include ':app'
 include ':cognitive'
 include ':bridge'
 include ':common'
-include ':myapplication'
