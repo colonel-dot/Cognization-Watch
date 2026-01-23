@@ -106,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------- 工具方法 ----------------
 
     private fun needNotificationPermission(): Boolean {
         return Build.VERSION.SDK_INT >= 33 &&

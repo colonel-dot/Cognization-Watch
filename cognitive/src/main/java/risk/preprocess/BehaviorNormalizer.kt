@@ -10,7 +10,7 @@ object BehaviorNormalizer {
         fun normalizeSleep(min: Int?): Int? {
             if (min == null || min == 0) return null
 
-            // 以 4:00 作为一天起点（医学节律常用）
+            // 以 4:00 作为一天起点
             // 0:00 - 3:59 认为是“前一天深夜” → +1440
             return if (min < 240) min + 1440 else min
         }
@@ -18,8 +18,6 @@ object BehaviorNormalizer {
         fun normalizeWake(min: Int?): Int? {
             if (min == null || min == 0) return null
 
-            // 起床时间一般不跨日，直接用
-            // 但如果系统统计到 0~3 点，也认为是异常早醒
             return min
         }
 

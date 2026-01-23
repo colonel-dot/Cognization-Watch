@@ -33,7 +33,7 @@ object DailyRiskCalculator {
 
         val explanations = mutableListOf<String>()
 
-        /** ===== 语音 ===== */
+        // 语音
         val speechValues = data.mapNotNull { it.speechScore }
         val speechBaseline = BaselineBuilder.build(speechValues)
         val speechRisk = if (latest.speechScore != null && speechBaseline != null) {
@@ -44,7 +44,7 @@ object DailyRiskCalculator {
             maxOf(zRisk, trendRisk)
         } else 0.0
 
-        /** ===== 舒尔特（优先25格，其次16格） ===== */
+        // 舒尔特（优先25格，其次16格）
         val schulteValues =
             data.mapNotNull { it.schulte25Time ?: it.schulte16Time }
 
@@ -67,7 +67,7 @@ object DailyRiskCalculator {
             maxOf(zRisk, trendRisk)
         } else 0.0
 
-        /** ===== 步数 ===== */
+        // 步数
         val stepValues = data.mapNotNull { it.steps?.toDouble() }
         val stepBaseline = BaselineBuilder.build(stepValues)
         val stepsRisk = if (latest.steps != null && stepBaseline != null) {
@@ -76,7 +76,7 @@ object DailyRiskCalculator {
             risk
         } else 0.0
 
-        /** ===== 作息 ===== */
+        // 作息
         val sleepValues = data.mapNotNull { it.sleepMinute?.toDouble() }
         val rhythmRisk = AnomalyEngine.rhythmAnomaly(sleepValues)
         if (rhythmRisk > 0.5) explanations.add("作息时间波动明显")
