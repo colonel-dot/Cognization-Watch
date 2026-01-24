@@ -5,7 +5,7 @@
     android:id="@+id/debug"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DebugActivity">
+    tools:context=".ui.DebugActivity">
 
     <TextView
         android:layout_width="wrap_content"

@@ -28,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     sourceSets {
         main {
@@ -38,11 +38,14 @@ android {
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
             }
+            jniLibs.srcDir 'libs'
         }
     }
 }
 
 dependencies {
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation project(":common")
     implementation libs.appcompat
@@ -52,4 +55,7 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Location_All:9.6.4'
+    implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.6.4'
 }

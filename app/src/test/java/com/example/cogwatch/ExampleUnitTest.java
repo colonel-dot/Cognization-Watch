@@ -1,4 +1,4 @@
-package com.example.cooperativeprojectsdemo;
+package com.example.cogwatch;
 
 import org.junit.Test;
 
