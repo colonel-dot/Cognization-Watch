@@ -30,11 +30,11 @@ import com.example.bridge.feature.location.GeofenceManager;
 import com.example.bridge.feature.location.LocationFeature;
 import com.example.bridge.model.location.GeofenceInfo;
 
-public class DebugActivity extends AppCompatActivity implements LocationFeature.LostStateListener, GeofenceManager.OnTraceReadyListener {
+public class GeofenceActivity extends AppCompatActivity implements LocationFeature.LostStateListener, GeofenceManager.OnTraceReadyListener {
 
     private GeofenceManager geofenceManager;
     private LocationClient mLocationClient;
-    private static final String TAG = "DebugActivity";
+    private static final String TAG = "GeofenceActivity";
     private static final String NOTIFICATION_CHANNEL_ID = "GeofenceChannel";
 
     long serviceId = 242705; // Cogwatch-Debug
@@ -94,9 +94,9 @@ public class DebugActivity extends AppCompatActivity implements LocationFeature.
             geofenceManager.setTraceReadyListener(this);
 
             geofenceManager.start();
-            Log.d(TAG, "已调用 manager.start()，并设置了采集频率和前台服务。等待 onTraceReady 回调...");
+            Log.d(TAG, "已调用 manager.start()，并设置了采集频率和前台服务。等待 onTraceReady 回调");
         } catch (Exception e) {
-            Log.e(TAG, "初始化LBSTraceClient或LocationClient失败", e);
+            Log.e(TAG, "初始化 LBSTraceClient 或 LocationClient 失败", e);
         }
     }
     
@@ -136,7 +136,7 @@ public class DebugActivity extends AppCompatActivity implements LocationFeature.
             option.setScanSpan(0); // 单次定位
             option.setIsNeedAddress(true); // 地址信息
             mLocationClient.setLocOption(option);
-            // 4. 开始定位
+            // 开始定位
             mLocationClient.start();
             Log.d(TAG, "百度定位SDK已启动，请求单次定位");
         } catch (Exception e) {
@@ -159,7 +159,8 @@ public class DebugActivity extends AppCompatActivity implements LocationFeature.
 
                 // 使用获取到的位置创建围栏
                 LatLng center = new LatLng(latitude, longitude);
-                GeofenceInfo geofenceInfo = GeofenceInfo.newCircularFence(1, "Home", entityName, center, 0.01f);
+                double radius = 1.0f;
+                GeofenceInfo geofenceInfo = GeofenceInfo.newCircularFence(1, "Home", entityName, center, radius);
                 geofenceManager.createCircularFence(geofenceInfo);
 
                 // 单次定位成功后，停止定位以节省资源
@@ -175,8 +176,8 @@ public class DebugActivity extends AppCompatActivity implements LocationFeature.
     public void onLostStateChanged(boolean isLost) {
         runOnUiThread(() -> {
             if (isLost) {
-                Log.e(TAG, "用户疑似走失！");
-                Toast.makeText(this, "用户疑似走失！", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "用户疑似走失");
+                Toast.makeText(this, "用户疑似走失", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "用户已在围栏内，状态正常", Toast.LENGTH_SHORT).show();
             }
@@ -187,7 +188,7 @@ public class DebugActivity extends AppCompatActivity implements LocationFeature.
     protected void onDestroy() {
         super.onDestroy();
         if (geofenceManager != null) {
-            Log.d(TAG, "Activity onDestroy，停止地理围栏服务");
+            Log.d(TAG, "Activity onDestroy 停止地理围栏服务");
             geofenceManager.stop();
         }
         if (mLocationClient != null && mLocationClient.isStarted()) {
