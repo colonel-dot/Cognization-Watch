@@ -17,7 +17,7 @@
 
     <application android:theme="@style/Theme.CooperativeProjectsDemo">
         <activity
-            android:name="mine.ui.MineRecordActivity"
+            android:name="mine.ui.MineRecordFragment"
             android:exported="false" />
 
         <service
