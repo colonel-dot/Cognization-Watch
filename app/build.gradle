@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.cooperativeprojectsdemo'
+    namespace 'com.example.cogwatch'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.example.cooperativeprojectsdemo"
+        applicationId "com.example.cogwatch"
         minSdk 24
         targetSdk 35
         versionCode 1
@@ -23,8 +23,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
