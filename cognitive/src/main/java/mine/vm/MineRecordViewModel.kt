@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import mine.data.MineRecordModel
 import persistense.DailyBehaviorEntity
+import risk.persistence.DailyRiskEntity
 import java.time.LocalDate
 
 private const val TAG = "MineRecordViewModel"
@@ -23,7 +24,7 @@ class MineRecordViewModel(application: Application): AndroidViewModel(applicatio
 
     private val recordModel = MineRecordModel(application)
 
-    fun queryRecordData() {
+    fun queryTodayRecordData() {
         viewModelScope.launch {
             try {
                 val today = LocalDate.now()

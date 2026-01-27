@@ -4,22 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
+import com.example.cognitive.main.MainViewModel
 import mine.vm.MineRecordViewModel
 import persistense.DailyBehaviorEntity
 
 class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
     // 你的写法正确：by viewModels() 是 ktx扩展语法，等价于ViewModelProvider(this)，更简洁
     private val viewModel: MineRecordViewModel by viewModels<MineRecordViewModel>()
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var recordRV: RecyclerView
     // 声明适配器为全局变量，方便在监听中刷新数据
     private lateinit var recordAdapter: RecordRVAdapter
@@ -46,9 +44,8 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
         viewModel.queryRecordsData()
     }
 
-    //  初始化RecyclerView 【RecyclerView必须的配置，缺一不可】
     private fun initRecyclerView(){
-        // ① 设置布局管理器：竖向列表，固定写法，RecyclerView没这个就不会显示
+        //  设置布局管理器：竖向列表，固定写法，RecyclerView没这个就不会显示
         recordRV.layoutManager = LinearLayoutManager(requireContext())
         // ② 初始化适配器，传入空集合占位
         recordAdapter = RecordRVAdapter(mutableListOf())
@@ -77,9 +74,17 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
                 recordAdapter.list.addAll(dataList)
                 recordAdapter.notifyDataSetChanged()
             } else {
-                // 无数据：清空列表，显示空页面（可选，根据你的需求加）
+                // 无数据：清空列表，显示空页面
                 recordAdapter.list.clear()
                 recordAdapter.notifyDataSetChanged()
+            }
+        }
+        mainViewModel.recordChanged.observe(viewLifecycleOwner) {
+            viewModel.queryTodayRecordData()
+        }
+        viewModel.todayBehaviorData.observe(viewLifecycleOwner) { today ->
+            if (today != null) {
+                recordAdapter.updateItem(today)
             }
         }
     }

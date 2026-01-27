@@ -9,12 +9,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import schedule.vm.ScheduleViewModel
 import com.example.cognitive.R
+import com.example.cognitive.main.MainViewModel
 
 class ScheduleActivity : AppCompatActivity() {
 

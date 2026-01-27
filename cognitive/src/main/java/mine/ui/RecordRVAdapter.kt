@@ -58,6 +58,11 @@ class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.
         return list.size
     }
 
+    fun updateItem(newData: DailyBehaviorEntity) {
+        list[0] = newData
+        notifyItemChanged(0)
+    }
+
 
     private var onItemClickListener: OnItemClickListener? = null
 

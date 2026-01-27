@@ -8,7 +8,6 @@ class MineRecordModel(application: Application) {
         .getDatabase(application)
         .dailyBehaviorDao()
 
-    // 核心：查询当日所有数据的方法，外部调用这个方法即可
     suspend fun queryRecordDataByDate(date: LocalDate): persistense.DailyBehaviorEntity? {
         return behaviorDao.getByDate(date)
     }

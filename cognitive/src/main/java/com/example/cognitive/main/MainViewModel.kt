@@ -2,6 +2,8 @@ package com.example.cognitive.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,6 +22,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val riskDao = appDatabase.dailyRiskDao()
     private val riskConfigManager = RiskConfigManager(getApplication())
 
+    private val _recordChanged = MutableLiveData<Unit>()
+    val recordChanged: LiveData<Unit> = _recordChanged
+
     fun initTodaySaveYesterday() {
         viewModelScope.launch {
             behaviorDao.getOrInitTodayBehavior(today)
@@ -31,6 +36,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
             riskDao.upsert(riskResult.toEntity())
         }
+    }
+
+    fun notifyRecordChanged() {
+        _recordChanged.postValue(Unit)
     }
 
 }

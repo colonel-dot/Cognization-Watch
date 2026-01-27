@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             return
         } else {
             if (currentFragment === fragment) {
-                return 
+                return
             }
         }
 
