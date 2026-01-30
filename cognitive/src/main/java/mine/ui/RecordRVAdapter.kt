@@ -1,11 +1,14 @@
 package mine.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import persistense.DailyBehaviorEntity
+
+private const val TAG = "RecordRVAdapter"
 
 class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.Adapter<RecordRVAdapter.VH>() {
 
@@ -59,6 +62,11 @@ class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.
     }
 
     fun updateItem(newData: DailyBehaviorEntity) {
+        Log.d(TAG, "准备更新今日数据，对应的list是 $list ")
+        if (list == null || list.isEmpty()) {
+            Log.d(TAG, "列表为空，无法更新")
+            return
+        }
         list[0] = newData
         notifyItemChanged(0)
     }

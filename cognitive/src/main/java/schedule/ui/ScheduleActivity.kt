@@ -1,5 +1,6 @@
 package schedule.ui
 
+import android.app.Activity
 import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
@@ -108,7 +109,7 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeHour = wakeHourAdapter.getRealValue(),
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
-
+            setResult(Activity.RESULT_OK)
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
@@ -120,6 +121,7 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeHour = wakeHourAdapter.getRealValue(),
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
+            setResult(Activity.RESULT_OK)
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
@@ -133,6 +135,7 @@ class ScheduleActivity : AppCompatActivity() {
         if (checkUsageStatsPermission()) {
             // 不会重复刷新，因为 ViewModel 会拦住
             viewModel.refreshBySystemEvents()
+            setResult(Activity.RESULT_OK)
         }
     }
 

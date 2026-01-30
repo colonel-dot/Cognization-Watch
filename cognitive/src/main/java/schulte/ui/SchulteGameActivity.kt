@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -15,6 +16,7 @@ import com.example.cognitive.R
 import schulte.vm.GameState
 import schulte.vm.SchulteGameViewModel
 
+private const val TAG = "SchulteGameActivity"
 
 class SchulteGameActivity : AppCompatActivity() {
 
@@ -72,6 +74,8 @@ class SchulteGameActivity : AppCompatActivity() {
         viewModel.gameState.observe(this) { state ->
             if (state == GameState.FINISHED) {
                 showFinishedDialog()
+                Log.d(TAG, "observeViewModel: 马上就返回去setResult了")
+                setResult(RESULT_OK)
             }
         }
     }

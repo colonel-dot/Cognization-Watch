@@ -1,5 +1,6 @@
 package com.example.cognitive.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import com.example.cognitive.R
 import mine.ui.MineRecordFragment
 import read_assessment.ui.RecordActivity
@@ -27,6 +30,14 @@ class HomeFragment : Fragment() {
     lateinit var btn_schedule: View
     lateinit var tvSteps: TextView
     private val stepsViewModel: StepViewModel by viewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                mainViewModel.notifyRecordChanged()
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,11 +56,13 @@ class HomeFragment : Fragment() {
             startActivity(mIntent) }
         btn_game.setOnClickListener {
             mIntent = Intent(requireContext(), SchulteGameActivity::class.java)
-            startActivity(mIntent)
+            //startActivity(mIntent)
+            startForResult.launch(mIntent)
         }
         btn_schedule.setOnClickListener {
             mIntent = Intent(requireContext(), ScheduleActivity::class.java)
-            startActivity(mIntent)
+            startForResult.launch(mIntent)
+            //startActivity(mIntent)
         }
         stepsViewModel.stepCount.observe(viewLifecycleOwner) {
             tvSteps.text = "今日步数 $it"

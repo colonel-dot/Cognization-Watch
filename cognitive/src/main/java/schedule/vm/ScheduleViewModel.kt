@@ -97,7 +97,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             val entity = dailyBehaviorDao.getOrInitTodayBehavior(today)
 
             // 只要用户已经设置过，就绝不再用系统推断
-            if (entity.wakeMinute!! < 1e-5 || entity.sleepMinute!! < 1e-5) {
+            if (entity.wakeMinute!! > 1e-5 || entity.sleepMinute!! > 1e-5) {
                 hasInitBySystemEvents = true
                 return@launch
             }

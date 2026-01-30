@@ -1,6 +1,7 @@
 package schulte.vm
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,8 @@ import persistense.AppDatabase
 import risk.work.RiskConfigManager
 import schulte.data.SchulteEvaluatorType
 import java.time.LocalDate
+
+private const val TAG = "SchulteGameViewModel"
 
 enum class GameState {
     READY, RUNNING, FINISHED
@@ -90,6 +93,7 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
         if (expected == maxNumber) {
             // 最后一个点完
             _nextNumber.value = expected
+
             finishGame()
         } else {
             _nextNumber.value = expected + 1
@@ -123,6 +127,7 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun saveGameTime(elapsedTime: Long) {
+        Log.d(TAG, "弄完舒尔特马上要更新数据了")
         viewModelScope.launch {
             val today = LocalDate.now()
             behaviorDao.getOrInitTodayBehavior(today)
@@ -130,6 +135,7 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
                 val lastTime = behaviorDao.getByDate(today)!!.schulte16TimeSec!!
                 if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
                     behaviorDao.updateSchulte16Time(today, elapsedTime.toDouble())
+                    Log.d(TAG, "saveGameTime: 保存了新的16格时间")
                 }
             } else if (GRID_SIZE == 5) {
                 val lastTime = behaviorDao.getByDate(today)!!.schulte25TimeSec!!
