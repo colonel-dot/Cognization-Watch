@@ -54,7 +54,7 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
             tvDate.text = "日期：$date"
 
             if (risk == null) {
-                // ⭐ 没有风险数据的核心兜底逻辑
+                // 没有风险数据的核心兜底逻辑
                 tvLevel.text = "暂无认知风险评估"
                 tvScore.text = ""
                 tvDetail.text = "该日期尚未生成风险分析（可能是首次打开或当天未完成评估）"

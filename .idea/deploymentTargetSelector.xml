@@ -21,6 +21,9 @@
           </targets>
         </DialogSelection>
       </SelectionState>
+      <SelectionState runConfigName="cognitiveImpairmentPrevention">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
       <SelectionState runConfigName="cognitive">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

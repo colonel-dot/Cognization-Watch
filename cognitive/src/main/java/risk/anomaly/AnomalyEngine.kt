@@ -5,7 +5,7 @@ import kotlin.math.abs
 
 object AnomalyEngine {
 
-    /** Z-Score 异常（舒尔特 / 语音） */
+    //Z-Score 异常（舒尔特 / 语音）
     fun zScoreAnomaly(x: Double, baseline: Baseline): Double {
         val z = abs(x - baseline.mean) / baseline.std
         return when {
@@ -15,14 +15,14 @@ object AnomalyEngine {
         }
     }
 
-    /** IQR 异常（步数 / 作息） */
+    //IQR 异常（步数 / 作息）
     fun iqrAnomaly(x: Double, baseline: Baseline): Double {
         val iqr = baseline.q3 - baseline.q1
         return if (x < baseline.q1 - 1.5 * iqr ||
             x > baseline.q3 + 1.5 * iqr) 1.0 else 0.0
     }
 
-    /** 昼夜节律异常 */
+    // 昼夜节律异常
     fun rhythmAnomaly(values: List<Double>): Double {
         if (values.size < 5) return 0.0
 

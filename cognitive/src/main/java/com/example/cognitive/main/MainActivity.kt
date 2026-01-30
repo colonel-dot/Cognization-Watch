@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -14,37 +15,39 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.example.cognitive.R
-import mine.ui.MineRecordActivity
+import mine.ui.MineRecordFragment
 import read_assessment.ui.RecordActivity
 import schedule.ui.ScheduleActivity
 import schulte.ui.SchulteGameActivity
 import sports.data.StepForegroundService
 import sports.vm.StepViewModel
 
-
+private const val TAG = "MainActivity"
 private const val REQ_NOTIFY = 1001
 class MainActivity : AppCompatActivity() {
 
-    private val stepsViewModel: StepViewModel by viewModels()
+    private lateinit var btnHome: View
+    private lateinit var btnMine: View
+    private lateinit var homeFragment: Fragment
+    private lateinit var mineFragment: Fragment
+    private var currentFragment: Fragment? = null
     private val mainViewModel: MainViewModel by viewModels()
-    lateinit var mIntent: Intent
-    lateinit var btn_game: View
-    lateinit var btn_speak: View
-    lateinit var btn_schedule: View
-    lateinit var btn_mine: View
-    lateinit var tvSteps: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        btnMine = findViewById<View>(R.id.mine_layout)
+        btnHome = findViewById<View>(R.id.home_layout)
+
         if (needNotificationPermission()) {
             requestPermissions(
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -53,37 +56,47 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepService()
         }
-
         mainViewModel.initTodaySaveYesterday()
-
-        btn_mine = findViewById<View>(R.id.mine_layout)
-        btn_game = findViewById<Button>(R.id.game_layout)
-        btn_speak = findViewById<Button>(R.id.speak_layout)
-        btn_schedule = findViewById<Button>(R.id.schedule_layout)
-        tvSteps = findViewById<TextView>(R.id.tv_steps)
-        btn_speak.setOnClickListener {
-            mIntent = Intent(this, RecordActivity::class.java)
-            startActivity(mIntent) }
-        btn_game.setOnClickListener {
-            mIntent = Intent(this, SchulteGameActivity::class.java)
-            startActivity(mIntent)
-        }
-        btn_schedule.setOnClickListener {
-            mIntent = Intent(this, ScheduleActivity::class.java)
-            startActivity(mIntent)
-        }
-        btn_mine.setOnClickListener {
-            mIntent = Intent(this, MineRecordActivity::class.java)
-            startActivity(mIntent)
-        }
-        stepsViewModel.stepCount.observe(this) {
-            tvSteps.text = "今日步数 $it"
-        }
+        homeFragment = HomeFragment()
+        switchFragment(homeFragment)
+        initBottomClick()
     }
 
-    override fun onResume() {
-        super.onResume()
-        stepsViewModel.refreshToday()
+    private fun switchFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+
+
+        if (currentFragment == null) {
+            transaction.add(R.id.fragment_container, fragment).commit()
+            currentFragment = fragment
+            return
+        } else {
+            if (currentFragment === fragment) {
+                return 
+            }
+        }
+
+
+
+        if (fragment.isAdded) {
+            transaction.hide(currentFragment!!).show(fragment).commit()
+        } else {
+            transaction.hide(currentFragment!!).add(R.id.fragment_container, fragment).commit()
+        }
+
+        currentFragment = fragment
+    }
+
+    fun initBottomClick() {
+        btnHome.setOnClickListener {
+            switchFragment(homeFragment)
+        }
+        btnMine.setOnClickListener {
+            if (!this::mineFragment.isInitialized) {
+                mineFragment = MineRecordFragment()
+            }
+            switchFragment(mineFragment)
+        }
     }
 
 
@@ -106,7 +119,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // ---------------- 工具方法 ----------------
 
     private fun needNotificationPermission(): Boolean {
         return Build.VERSION.SDK_INT >= 33 &&
