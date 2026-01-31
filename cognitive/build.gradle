@@ -32,11 +32,24 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [
+                        // ARouter 配置（保持不变）
+                        AROUTER_MODULE_NAME: project.getName(),
+
+                        // Room 配置（追加到同一个 arguments 中，用逗号分隔）
+                        "room.schemaLocation": "${projectDir}/schemas",
+                        "room.incremental": "true"
+                ]
+            }
+        }
+
+        /*javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
                         "room.schemaLocation": "${projectDir}/schemas",
                         "room.incremental"   : "true"
                 ]
             }
-        }
+        }*/
     }
 
     buildTypes {
@@ -48,6 +61,18 @@ android {
             )
         }
     }
+
+    sourceSets {
+        main {
+            // 独立调试与集成调试时使用不同的 AndroidManifest.xml 文件
+            if (isDebug) {
+                manifest.srcFile 'src/debug/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+    }
+
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -72,6 +97,10 @@ kapt {
 }
 
 dependencies {
+    //组件化
+    implementation "com.alibaba:arouter-api:1.5.2"
+    kapt "com.alibaba:arouter-compiler:1.5.2"
+
     implementation "androidx.fragment:fragment-ktx:1.6.2"
 
     // 协程

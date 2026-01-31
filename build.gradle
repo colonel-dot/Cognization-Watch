@@ -1,6 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+//buildscript块必须在 plugins 块之前
+buildscript {
+    // 配置仓库，确保能下载到 arouter-register
+    repositories {
+        google()
+        mavenCentral()
+        // 可选：阿里镜像，解决下载慢/下载失败问题
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+    }
+
+    dependencies {
+        // 声明 arouter-register，这里用 classpath 是正确的
+        classpath("com.alibaba:arouter-register:1.0.2")
+    }
+}
+
+// 第二步：再写 plugins 块（在 buildscript 之后）
 plugins {
-alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
 }
+

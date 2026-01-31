@@ -2,23 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 保留：模块功能必需的权限（库模式下会和主项目清单合并，无需删除） -->
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 2. 可选但建议加：声明应用需要麦克风硬件（提升兼容性） -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- 保留：模块功能强依赖的硬件要求（若不需要可删除，这里和权限对应，建议保留） -->
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <application>
-        <!-- 保留：所有 Service、Activity 组件（删除仅独立运行的配置即可） -->
+    <application android:theme="@style/Theme.CooperativeProjectsDemo">
+
         <service
             android:name="sports.data.StepForegroundService"
             android:enabled="true"
@@ -30,7 +28,11 @@
         <activity
             android:name=".main.MainActivity"
             android:exported="true">
-            <!-- 【删除】：intent-filter（包含 MAIN 和 LAUNCHER，仅独立运行时需要启动入口） -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="read_assessment.ui.RecordActivity"
