@@ -20,8 +20,9 @@ import schulte.ui.SchulteGameActivity
 import sports.vm.StepViewModel
 import kotlin.getValue
 import androidx.fragment.app.viewModels
+import com.alibaba.android.arouter.facade.annotation.Route
 
-
+@Route(path = "/cognitive/homeFragment")
 class HomeFragment : Fragment() {
 
     lateinit var mIntent: Intent

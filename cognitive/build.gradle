@@ -1,4 +1,5 @@
 plugins {
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
 }
@@ -9,11 +10,11 @@ plugins {
  */
 def isDebug = Boolean.parseBoolean(isDebugCIP ?: "true")
 
-if (isDebug) {
+/*if (isDebug) {
     apply plugin: 'com.android.application'
 } else {
     apply plugin: 'com.android.library'
-}
+}*/
 
 android {
     namespace 'com.example.cognitive'
@@ -23,13 +24,13 @@ android {
         minSdk 26
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        if (isDebug) {
+        /*if (isDebug) {
             applicationId "com.example.cooperativeprojectsdemo"
         } else {
             consumerProguardFiles "consumer-rules.pro"
-        }
-
-        javaCompileOptions {
+        }*/
+        consumerProguardFiles "consumer-rules.pro"
+        /*javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [
                         // ARouter 配置（保持不变）
@@ -40,16 +41,8 @@ android {
                         "room.incremental": "true"
                 ]
             }
-        }
-
-        /*javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [
-                        "room.schemaLocation": "${projectDir}/schemas",
-                        "room.incremental"   : "true"
-                ]
-            }
         }*/
+
     }
 
     buildTypes {
@@ -65,11 +58,12 @@ android {
     sourceSets {
         main {
             // 独立调试与集成调试时使用不同的 AndroidManifest.xml 文件
-            if (isDebug) {
+            /*if (isDebug) {
                 manifest.srcFile 'src/debug/AndroidManifest.xml'
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
-            }
+            }*/
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 
@@ -87,10 +81,10 @@ android {
     }
 }
 
-// kapt 配置
 kapt {
     correctErrorTypes = true
     arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
         arg("room.schemaLocation", "${projectDir}/schemas")
         arg("room.incremental", "true")
     }
@@ -98,7 +92,6 @@ kapt {
 
 dependencies {
 
-    implementation project(":common")
     //组件化
     implementation "com.alibaba:arouter-api:1.5.2"
     kapt "com.alibaba:arouter-compiler:1.5.2"
@@ -109,9 +102,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
 
     // Room
-    implementation "androidx.room:room-runtime:2.6.1"
-    implementation "androidx.room:room-ktx:2.6.1"
-    kapt "androidx.room:room-compiler:2.6.1"
+    implementation "androidx.room:room-runtime:2.8.4"
+    implementation "androidx.room:room-ktx:2.8.4"
+    kapt "androidx.room:room-compiler:2.8.4"
 
     // Lifecycle
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'

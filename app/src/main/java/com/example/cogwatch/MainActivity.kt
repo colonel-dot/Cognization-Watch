@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.alibaba.android.arouter.launcher.ARouter
 import com.example.cognitive.R
 import mine.ui.MineRecordFragment
 import read_assessment.ui.RecordActivity
@@ -60,8 +61,38 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepService()
         }
+
+
+        Log.e("ARouterDebug", "before build")
+
+        val postcard = ARouter.getInstance()
+            .build("/cognitive/homeFragment")
+
+        Log.e("ARouterDebug", "postcard = $postcard")
+
+
         mainViewModel.initTodaySaveYesterday()
-        homeFragment = HomeFragment()
+
+
+        val obj = ARouter.getInstance()
+            .build("/cognitive/homeFragment")
+            .navigation()
+
+        Log.e("ARouterDebug", "navigation obj = $obj, class = ${obj?.javaClass}")
+
+        if (obj !is Fragment) {
+            throw RuntimeException("ARouter 返回的不是 Fragment，请检查路由注册")
+        }
+
+        homeFragment = obj
+
+        /*homeFragment =  ARouter.getInstance()
+            .build("/cognitive/homeFragment")
+            .navigation() as Fragment*/
+
+        Log.e("ARouterDebug", "navigation result = $homeFragment")
+
+
         switchFragment(homeFragment)
         initBottomClick()
     }

@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-23T11:37:23.670683800Z">
+        <DropdownSelection timestamp="2026-01-31T16:06:08.123472300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\FC\.android\avd\iQOO_Z10_Turbo.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=2e99fcca" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -39,6 +39,14 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
+}
+
+
 dependencies {
 
     implementation "com.alibaba:arouter-api:1.5.2"
