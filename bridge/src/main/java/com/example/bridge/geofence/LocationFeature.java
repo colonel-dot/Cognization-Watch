@@ -1,12 +1,6 @@
-package com.example.bridge.feature.location;
+package com.example.bridge.geofence;
 
 import android.util.Log;
-
-import com.example.bridge.domain.location.GeofenceRuleEvaluator;
-import com.example.bridge.domain.location.GeofenceStatus;
-import com.example.bridge.integration.location.GeofenceAlarmAdapter;
-import com.example.bridge.integration.location.GeofenceSdkAdapter;
-import com.example.bridge.model.location.GeofenceEvent;
 
 import java.util.ArrayList;
 import java.util.Date;

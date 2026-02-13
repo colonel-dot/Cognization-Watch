@@ -1,11 +1,8 @@
-package com.example.bridge.domain.location;
+package com.example.bridge.geofence;
 
 import android.util.Log;
 
-import com.example.bridge.feature.location.LocationFeature;
-
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p> 地理围栏规则评估器

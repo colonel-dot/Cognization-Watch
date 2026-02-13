@@ -1,4 +1,4 @@
-package com.example.bridge.ui;
+package com.example.bridge.geofence;
 
 import android.Manifest;
 import android.app.Notification;
@@ -26,9 +26,6 @@ import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.model.LatLng;
 import com.example.bridge.R;
-import com.example.bridge.feature.location.GeofenceManager;
-import com.example.bridge.feature.location.LocationFeature;
-import com.example.bridge.model.location.GeofenceInfo;
 
 public class GeofenceActivity extends AppCompatActivity implements LocationFeature.LostStateListener, GeofenceManager.OnTraceReadyListener {
 
