@@ -8,6 +8,8 @@
     android:background="#FFFFFF"
     android:orientation="vertical">
 
+
+
     <!-- 功能按钮网格区域 - 使用嵌套LinearLayout替代GridView -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,6 +18,15 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="24dp">
+
+        <TextView
+            android:id="@+id/btn_linked"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="我的关联设备"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="@color/white_blue"/>
 
         <!-- 第一行：写作、PPT、设计 -->
         <LinearLayout

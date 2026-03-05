@@ -40,9 +40,7 @@ class ScheduleActivity : AppCompatActivity() {
     private val viewModel: ScheduleViewModel by viewModels()
 
     // 使用单例SnapHelper避免重复绑定
-    companion object {
         private val snapHelper by lazy { LinearSnapHelper() }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

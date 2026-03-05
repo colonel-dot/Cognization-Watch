@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingBottom="24dp">
+
+    <!-- 视频通话 -->
+    <TextView
+        android:id="@+id/other_report"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:text="查看对方报告"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black" />
+
+    <!-- 语音通话 -->
+    <TextView
+        android:id="@+id/video_call"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:text="AR视频通话"
+        android:textSize="24sp" />
+
+</LinearLayout>

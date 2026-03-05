@@ -30,8 +30,6 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 1. 绑定RecyclerView控件
