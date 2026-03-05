@@ -25,7 +25,7 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private lateinit var viewModel: RiskViewModel   // 下一步写
+    private lateinit var viewModel: RiskViewModel  // 下一步写
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,5 +77,11 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
         }
 
         return view
+    }
+
+    override fun onDestroy() {
+        dialog?.setOnCancelListener(null)
+        dialog?.setOnDismissListener(null)
+        super.onDestroy()
     }
 }

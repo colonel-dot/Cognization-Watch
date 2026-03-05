@@ -14,18 +14,23 @@
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <application         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.CooperativeProjectsDemo">
-
+    <application
+        android:theme="@style/Theme.CooperativeProjectsDemo"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name="other.OtherReportActivity"
+            android:exported="false" />
+        <activity
+            android:name="bind_device.BindActivity"
+            android:exported="false" />
         <activity
             android:name="debug_splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApp.Splash"/>
+            android:theme="@style/Theme.MyApp.Splash" />
         <activity
             android:name="debug_login.LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.CooperativeProjectsDemo"/> <!-- 保留：所有 Service、Activity 组件（删除仅独立运行的配置即可） -->
-
+            android:theme="@style/Theme.CooperativeProjectsDemo" /> <!-- 保留：所有 Service、Activity 组件（删除仅独立运行的配置即可） -->
         <service
             android:name="sports.data.StepForegroundService"
             android:enabled="true" />
@@ -40,15 +45,12 @@
 
             <!-- 【删除】：intent-filter（包含 MAIN 和 LAUNCHER，仅独立运行时需要启动入口） -->
         </activity>
-
         <activity
             android:name="read_assessment.ui.RecordActivity"
             android:exported="false" />
         <activity
             android:name="schulte.ui.SchulteGameActivity"
             android:exported="false" />
-
-
     </application>
 
 </manifest>

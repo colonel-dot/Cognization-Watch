@@ -1,49 +1,46 @@
-package mine.ui
+package other
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.main.MainViewModel
+import mine.ui.RecordRVAdapter
 import mine.vm.MineRecordViewModel
 import persistense.DailyBehaviorEntity
+import kotlin.getValue
 
-class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
-    // 你的写法正确：by viewModels() 是 ktx扩展语法，等价于ViewModelProvider(this)，更简洁
+class OtherReportActivity : AppCompatActivity() {
+
     private val viewModel: MineRecordViewModel by viewModels<MineRecordViewModel>()
-    private val mainViewModel: MainViewModel by activityViewModels()
+
+
     private lateinit var recordRV: RecyclerView
     // 声明适配器为全局变量，方便在监听中刷新数据
     private lateinit var recordAdapter: RecordRVAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        // 1. 绑定RecyclerView控件
-        recordRV = view.findViewById(R.id.record_rv)
-        // 2. 初始化RecyclerView【必须2行】：设置布局管理器 + 初始化适配器
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_other_report)
+        recordRV = findViewById<RecyclerView>(R.id.other_record_rv)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
         initRecyclerView()
-        // 3. 监听ViewModel的数据变化【核心】：接收数据库数据，刷新列表
         observeViewModelData()
-        // 4. 触发ViewModel查询数据库数据
         viewModel.queryRecordsData()
     }
 
     private fun initRecyclerView(){
-        recordRV.layoutManager = LinearLayoutManager(requireContext())
+        recordRV.layoutManager = LinearLayoutManager(this)
         recordAdapter = RecordRVAdapter(mutableListOf())
         recordRV.adapter = recordAdapter
 
@@ -53,14 +50,13 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
                 val date = record.date   // LocalDate
 
                 val sheet = risk.ui.RiskDetailBottomSheet.newInstance(date)
-                sheet.show(parentFragmentManager, "RiskDetailBottomSheet")
+                sheet.show(supportFragmentManager, "RiskDetailBottomSheet")
             }
         })
     }
 
-    //  核心方法：监听ViewModel的LiveData，接收数据库返回的数据
     private fun observeViewModelData(){
-        viewModel.allBehaviorData.observe(viewLifecycleOwner) { dataList ->
+        viewModel.allBehaviorData.observe(this) { dataList ->
             // dataList 就是ViewModel从数据库查询到的所有DailyBehaviorEntity数据
             if (dataList.isNotEmpty()) {
                 // 有数据：清空适配器原有数据，添加新数据，刷新列表
@@ -73,13 +69,12 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
                 recordAdapter.notifyDataSetChanged()
             }
         }
-        mainViewModel.recordChanged.observe(viewLifecycleOwner) {
-            viewModel.queryTodayRecordData()
-        }
-        viewModel.todayBehaviorData.observe(viewLifecycleOwner) { today ->
+
+        viewModel.todayBehaviorData.observe(this) { today ->
             if (today != null) {
                 recordAdapter.updateItem(today)
             }
         }
     }
+
 }

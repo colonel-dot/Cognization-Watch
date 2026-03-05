@@ -3,7 +3,7 @@ package bind_device
 import android.content.Context
 import android.content.SharedPreferences
 
-private const val SP_NAME = "login_status"
+private const val SP_NAME = "bind_status"
 
 object BindStatusManager {
     private var isBound: Boolean = false
@@ -24,6 +24,15 @@ object BindStatusManager {
             it.apply()
         }
         boundUsername = otherusername
+    }
+
+    fun saveBindStatus(context: Context, isBound: Boolean, boundUsername: String?) {
+        val editor = getSP(context).edit()
+        editor.putBoolean(KEY_IS_BIND, isBound)
+        editor.putString("bound_username", boundUsername)
+        editor.apply()
+        this.isBound = isBound
+        this.boundUsername = boundUsername
     }
 
     fun unbindDevice() {

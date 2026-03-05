@@ -39,7 +39,7 @@ object RiskFusion {
             readRiskScore = speechRisk,
             scheduleRiskScore = sleepRisk,
             schulteRiskScore = schulteRisk,
-            stepsRiskScore = sleepRisk,
+            stepsRiskScore = stepsRisk,
             riskLevel = level,
             explanations = explanations
         )

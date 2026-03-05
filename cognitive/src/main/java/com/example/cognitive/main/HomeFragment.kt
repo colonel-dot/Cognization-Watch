@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.example.cognitive.R
 import mine.ui.MineRecordFragment
@@ -22,10 +23,14 @@ import schulte.ui.SchulteGameActivity
 import sports.vm.StepViewModel
 import kotlin.getValue
 import androidx.fragment.app.viewModels
+import bind_device.BindActivity
+import bind_device.BindRepository
+import bind_device.BindRequest
 import bind_device.BindStatusManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import other.OtherReportActivity
 
 @Route(path = "/cognitive/homeFragment")
 class HomeFragment : Fragment() {
@@ -71,18 +76,18 @@ class HomeFragment : Fragment() {
             startForResult.launch(mIntent)
         }
         btn_linked.setOnClickListener {
-            showCallOptionsDialog(this.requireContext())
+            isBindDevice()
         }
         stepsViewModel.stepCount.observe(viewLifecycleOwner) {
             tvSteps.text = "今日步数 $it"
         }
     }
 
-    fun bindDevice() {
+    fun isBindDevice() {
         if (BindStatusManager.isBound(requireContext())) {
             showCallOptionsDialog(requireContext())
         } else {
-
+            bindDevice()
         }
     }
 
@@ -96,9 +101,10 @@ class HomeFragment : Fragment() {
             dialog.dismiss()
         }
 
-        // 语音通话点击
+        // 查看报告点击
         dialog.findViewById<TextView>(R.id.other_report)?.setOnClickListener {
-            // 处理语音通话逻辑
+            val intent = Intent(requireContext(), OtherReportActivity::class.java)
+            startActivity(intent)
             dialog.dismiss()
         }
 
@@ -106,6 +112,35 @@ class HomeFragment : Fragment() {
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.show()
     }
+
+    fun bindDevice() {
+        showBindDialog()
+    }
+
+    // 在 Fragment 中：用 requireContext() 获取上下文（避免空指针）
+// 在 Activity 中：直接用 this 或 ActivityName.this
+    fun showBindDialog() {
+        AlertDialog.Builder(requireContext())
+            // 1. 设置对话框标题
+            .setTitle("绑定设备")
+            // 2. 设置对话框内容
+            .setMessage("暂无绑定设备，确定要执行这个操作吗？")
+            // 3. 设置“取消”按钮
+            .setNegativeButton("取消") { dialog, _ ->
+                // 点击取消：仅关闭对话框（dialog.dismiss() 可省略，系统默认会关闭）
+                dialog.dismiss()
+            }
+            // 4. 设置“确认”按钮
+            .setPositiveButton("确认") { _, _ ->
+                val intent = Intent(requireContext(), BindActivity::class.java)
+                startActivity(intent)
+            }
+            // 5. 设置是否可通过点击外部/返回键关闭（可选）
+            .setCancelable(true)
+            // 6. 显示对话框
+            .show()
+    }
+
 
     override fun onResume() {
         super.onResume()

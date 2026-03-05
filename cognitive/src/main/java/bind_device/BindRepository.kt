@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class BindRepository {
-    suspend fun bindDevice(request: BindRequest): Flow<Result<BindResponse>> = flow{
+    fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{
         try {
             val request = BindRequest(request.musername, request.otherusername)
             val response = RetrofitClient.apiService.bind(request)
