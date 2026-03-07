@@ -37,14 +37,16 @@ class MineRecordViewModel(application: Application): AndroidViewModel(applicatio
         }
     }
 
-    fun queryRecordsData() {
+    fun queryRecordsData(){
         viewModelScope.launch {
             try {
                 val recordsList: List<DailyBehaviorEntity> = recordModel.queryAllRecords()
                 _allBehaviorData.postValue(recordsList.reversed())
+
             } catch (e: Exception) {
                 Log.e(TAG, "查询历史数据失败:${e.message}", e)
             }
         }
+
     }
 }

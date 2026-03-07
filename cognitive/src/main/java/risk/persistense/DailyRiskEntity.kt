@@ -10,14 +10,14 @@ data class DailyRiskEntity(
     @PrimaryKey val date: LocalDate,
 
     val riskScore: Double,//风险指数
-    val riskLevel: RiskLevel,//总的风险等级
+    val riskLevel: RiskLevel = RiskLevel.数据不足无法评估,//总的风险等级
 
-    val sleepRisk: Double,
-    val schulteRisk: Double,
-    val stepsRisk: Double,
-    val speechRisk: Double,
+    val sleepRisk: Double = 0.0,
+    val schulteRisk: Double = 0.0,
+    val stepsRisk: Double = 0.0,
+    val speechRisk: Double = 0.0,
 
     val alerted: Boolean = false,
 
-    val explanations: String
+    val explanations: String = ""
 )

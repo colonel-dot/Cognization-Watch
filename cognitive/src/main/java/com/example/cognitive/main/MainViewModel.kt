@@ -32,7 +32,11 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     fun initTodaySaveYesterday() {
         viewModelScope.launch {
            // Log.d(TAG, "initTodaySaveYesterday: today = $today")
-            InsertData.insertData(getApplication())
+            //以下为调试代码
+            InsertData.init(getApplication())
+            InsertData.insertBehaviorData()
+            InsertData.insertRiskData()
+            //以上为调试代码
             behaviorDao.getOrInitTodayBehavior(today)
             val behaviorRecords = behaviorDao.loadPrev15Days(today)
             val evaluatorType = riskConfigManager.getSchulteEvaluatorType()
