@@ -54,22 +54,29 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
             tvDate.text = "日期：$date"
 
             if (risk == null) {
-                // 没有风险数据的核心兜底逻辑
+                // 没有风险数据的兜底逻辑，前两天或者是当天还没有生成风险评估时都会走这里
                 tvLevel.text = "暂无认知风险评估"
                 tvScore.text = ""
-                tvDetail.text = "该日期尚未生成风险分析（可能是首次打开或当天未完成评估）"
+                tvDetail.text = "该日期尚未生成风险分析"
                 return@observe
             }
 
+            /*if (LocalDate.now() == date) {
+                tvLevel.text = "暂无认知风险评估"
+                tvScore.text = ""
+                tvDetail.text = "今日风险评估结果将在明日凌晨生成"
+                return@observe
+            }*/
+
             // 有数据时正常展示
-            tvLevel.text = "风险等级：${risk.riskLevel}"
+            tvLevel.text = "风险等级：${risk!!.riskLevel}"
             tvScore.text = "总风险分：${"%.2f".format(risk.riskScore)}"
 
             tvDetail.text = """
-                        睡眠风险：${"%.2f".format(risk.sleepRisk)}
-                        舒尔特风险：${"%.2f".format(risk.schulteRisk)}
-                        步数风险：${"%.2f".format(risk.stepsRisk)}
-                        语音风险：${"%.2f".format(risk.speechRisk)}
+                        睡眠风险指数：${"%.2f".format(risk.sleepRisk)}
+                        舒尔特风险指数：${"%.2f".format(risk.schulteRisk)}
+                        步数风险指数：${"%.2f".format(risk.stepsRisk)}
+                        语音能力指数：${"%.2f".format(risk.speechRisk)}
                         
                         解释：
                         ${risk.explanations}

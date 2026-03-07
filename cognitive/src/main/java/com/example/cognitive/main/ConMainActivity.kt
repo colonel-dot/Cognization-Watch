@@ -49,7 +49,6 @@ class ConMainActivity : AppCompatActivity() {
         } else {
             startStepService()
         }
-        mainViewModel.initTodaySaveYesterday()
         homeFragment = HomeFragment()
         switchFragment(homeFragment)
         initBottomClick()

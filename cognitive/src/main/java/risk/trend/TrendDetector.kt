@@ -3,7 +3,7 @@ package risk.trend
 object TrendDetector {
 
     fun theilSenSlope(values: List<Double>): Double {
-        if (values.size < 5) return 0.0
+        //if (values.size < 5) return 0.0
 
         val slopes = mutableListOf<Double>()
         for (i in values.indices) {

@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainViewModel.initTodaySaveYesterday()
         btn_game = view.findViewById<Button>(R.id.game_layout)
         btn_speak = view.findViewById<Button>(R.id.speak_layout)
         btn_schedule = view.findViewById<Button>(R.id.schedule_layout)

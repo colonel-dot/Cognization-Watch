@@ -14,4 +14,11 @@ interface ApiService {
 
     @POST("bind")
     suspend fun bind(@Body request: BindRequest): BindResponse
+
+    /*@POST("elder/schulte")
+
+    @POST("elder/daily")
+
+    @POST("elder/steps")*/
+
 }

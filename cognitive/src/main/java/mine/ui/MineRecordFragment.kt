@@ -32,13 +32,9 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 1. 绑定RecyclerView控件
         recordRV = view.findViewById(R.id.record_rv)
-        // 2. 初始化RecyclerView【必须2行】：设置布局管理器 + 初始化适配器
         initRecyclerView()
-        // 3. 监听ViewModel的数据变化【核心】：接收数据库数据，刷新列表
         observeViewModelData()
-        // 4. 触发ViewModel查询数据库数据
         viewModel.queryRecordsData()
     }
 

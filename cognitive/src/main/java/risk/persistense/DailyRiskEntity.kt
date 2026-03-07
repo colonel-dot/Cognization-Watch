@@ -9,7 +9,7 @@ import risk.model.RiskLevel
 data class DailyRiskEntity(
     @PrimaryKey val date: LocalDate,
 
-    val riskScore: Double,//风险分数
+    val riskScore: Double,//风险指数
     val riskLevel: RiskLevel,//总的风险等级
 
     val sleepRisk: Double,

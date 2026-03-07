@@ -28,9 +28,9 @@ object RiskFusion {
                     speechRisk * weights["speech"]!!
 
         val level = when {
-            score < 0.3 -> RiskLevel.NORMAL
-            score < 0.6 -> RiskLevel.WARNING
-            else -> RiskLevel.HIGH_RISK
+            score < 0.3 -> RiskLevel.认知情况正常
+            score < 0.6 -> RiskLevel.认知情况存在轻度风险
+            else -> RiskLevel.认知能力有明显下滑趋势
         }
 
         return DailyRiskResult(

@@ -40,7 +40,7 @@ interface DailyBehaviorDao {
     suspend fun insertIfNotExists(entity: DailyBehaviorEntity)
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(dailyBehaviorEntity: DailyBehaviorEntity)
 
     @Delete
@@ -131,8 +131,8 @@ interface DailyBehaviorDao {
 
     @Query("""
     SELECT * FROM daily_behavior
-    WHERE date < :date
-    ORDER BY date DESC
+    WHERE date <= :date
+    ORDER BY date ASC
     LIMIT 15
 """)
     suspend fun loadPrev15Days(date: LocalDate): List<DailyBehaviorEntity>

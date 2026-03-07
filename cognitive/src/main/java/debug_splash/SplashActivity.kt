@@ -28,8 +28,9 @@ class SplashActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        debug_login()
+        //checkLoginStatusAndJump()
 
-        checkLoginStatusAndJump()
     }
 
     private fun checkLoginStatusAndJump() {
@@ -42,5 +43,12 @@ class SplashActivity : AppCompatActivity() {
         }
         startActivity(intent)
         finish() // 关闭启动页，避免返回时重新进入
+    }
+
+    private fun debug_login() {
+            // 直接跳登录界面，绕过登录状态检查
+            val intent = Intent(this, ConMainActivity::class.java)
+            startActivity(intent)
+            finish()
     }
 }
