@@ -1,4 +1,4 @@
-package com.example.bridge.integration.location;
+package com.example.bridge.geofence;
 
 import android.util.Log;
 
@@ -16,8 +16,6 @@ import com.baidu.trace.api.fence.MonitoredStatusResponse;
 import com.baidu.trace.api.fence.OnFenceListener;
 import com.baidu.trace.api.fence.UpdateFenceResponse;
 import com.baidu.trace.model.PushMessage;
-import com.example.bridge.feature.location.LocationFeature;
-import com.example.bridge.model.location.GeofenceEvent;
 
 /**
  * <p> 用于将 SDK 返回的围栏相关回调事件统一转换为本地定义的 GeofenceEvent

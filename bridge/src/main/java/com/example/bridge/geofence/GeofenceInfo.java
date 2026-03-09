@@ -1,4 +1,4 @@
-package com.example.bridge.model.location;
+package com.example.bridge.geofence;
 
 import com.baidu.trace.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.example.bridge.model.location;
+package com.example.bridge.geofence;
 
 /**
  * 老年端设备进出围栏的事件枚举类

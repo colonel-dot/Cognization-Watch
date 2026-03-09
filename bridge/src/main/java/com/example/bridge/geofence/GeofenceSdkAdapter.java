@@ -1,24 +1,16 @@
-package com.example.bridge.integration.location;
+package com.example.bridge.geofence;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
-import com.baidu.trace.api.entity.AddEntityRequest;
-import com.baidu.trace.api.entity.AddEntityResponse;
-import com.baidu.trace.api.entity.OnEntityListener;
 import com.baidu.trace.api.fence.CreateFenceRequest;
 import com.baidu.trace.api.fence.DeleteFenceRequest;
-import com.baidu.trace.api.fence.MonitoredStatusRequest;
 import com.baidu.trace.model.CoordType;
 import com.baidu.trace.model.OnTraceListener;
 import com.baidu.trace.model.PushMessage;
-import com.example.bridge.model.location.GeofenceInfo;
 
 import java.util.Collections;
-import java.util.List;
 
 /**
  * <p> 百度地图鹰眼 SDK 适配器

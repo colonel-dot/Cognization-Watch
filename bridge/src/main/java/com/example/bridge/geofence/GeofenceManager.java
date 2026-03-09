@@ -1,12 +1,9 @@
-package com.example.bridge.feature.location;
+package com.example.bridge.geofence;
 
 import android.util.Log;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
-import com.example.bridge.domain.location.GeofenceRuleEvaluator;
-import com.example.bridge.integration.location.GeofenceSdkAdapter;
-import com.example.bridge.model.location.GeofenceInfo;
 
 /**
  * <p> 向显示层暴露稳定 API、对外统一的地理围栏管理入口

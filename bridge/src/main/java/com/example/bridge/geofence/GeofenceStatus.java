@@ -1,4 +1,4 @@
-package com.example.bridge.domain.location;
+package com.example.bridge.geofence;
 
 import java.util.Date;
 
