@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,6 +21,8 @@ private const val TAG = "BindActivity"
 class BindActivity : AppCompatActivity() {
     lateinit var btn_bind: View
     lateinit var tv_bind: EditText
+    private val viewModel: BindViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -31,12 +34,16 @@ class BindActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        //绑定按钮，未绑定时绑定
         btn_bind.setOnClickListener {
-            bind(this)
+            viewModel.bind(tv_bind.text.toString())
         }
+        checkBindResult()
+
 
     }
+
+
 
     private fun bind(context: Context) {
         val bindname = tv_bind.text.toString()
@@ -62,6 +69,20 @@ class BindActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "bind: $e")
+            }
+        }
+    }
+
+    private fun checkBindResult() {
+        lifecycleScope.launch {
+            viewModel.bindResult.collect { isSuccess ->
+                // 布尔值用 == 判断（或直接用 if）
+                if (isSuccess) {
+                    Toast.makeText(this@BindActivity, "绑定成功", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this@BindActivity, "绑定失败", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

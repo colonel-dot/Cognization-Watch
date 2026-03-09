@@ -14,7 +14,9 @@
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <application         android:usesCleartextTraffic="true"
+    <application
+        android:name=".main.ConApplication"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.CooperativeProjectsDemo">
 
         <activity

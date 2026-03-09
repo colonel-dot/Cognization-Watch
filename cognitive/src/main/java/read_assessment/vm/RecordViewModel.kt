@@ -67,6 +67,10 @@ class RecordViewModel(application: Application) : AndroidViewModel(application )
         recorder = null
     }
 
+    fun updateRecord() {
+
+    }
+
     fun evaluateSpeech(refText: String, langType: String) {
         val file = curFile ?: return
         viewModelScope.launch {

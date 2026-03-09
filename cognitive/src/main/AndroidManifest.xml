@@ -16,7 +16,8 @@
 
     <application
         android:theme="@style/Theme.CooperativeProjectsDemo"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:name=".main.ConApplication">
         <activity
             android:name="other.OtherReportActivity"
             android:exported="false" />

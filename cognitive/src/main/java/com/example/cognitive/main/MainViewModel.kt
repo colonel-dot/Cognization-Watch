@@ -10,10 +10,12 @@ import debug_simulate.InsertData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
+import repository.NetWorkRepository
 import risk.work.DailyRiskCalculator
 import risk.model.toEntity
 import risk.model.toNormalizedList
 import risk.work.RiskConfigManager
+import user.UserManager
 import java.time.LocalDate
 
 private const val TAG = "MainViewModel"
@@ -37,12 +39,15 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             InsertData.insertBehaviorData()
             InsertData.insertRiskData()
             //以上为调试代码
-            behaviorDao.getOrInitTodayBehavior(today)
+            val todayBehavior = behaviorDao.getOrInitTodayBehavior(today)
             val behaviorRecords = behaviorDao.loadPrev15Days(today)
             val evaluatorType = riskConfigManager.getSchulteEvaluatorType()
             val riskResult = DailyRiskCalculator
                 .calculate(behaviorRecords.toNormalizedList(), evaluatorType)
             riskDao.upsert(riskResult.toEntity())
+
+            NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today, todayBehavior)
+            NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.minusDays(1), riskResult)
         }
     }
 

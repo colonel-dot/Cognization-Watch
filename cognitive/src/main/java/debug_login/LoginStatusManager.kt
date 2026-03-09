@@ -12,22 +12,22 @@ object LoginStatusManager {
     // 存储的Key
     private const val KEY_IS_LOGIN = "is_login"
     private const val KEY_USER_ID = "username"
+    private const val KEY_IDENTITY = "identity"
 
     // 获取SP实例
     private fun getLoginSP(context: Context): SharedPreferences {
         return context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
     }
 
-    /**
-     * 保存登录状态
-     * @param context 上下文
-     * @param isLogin 是否登录
-     * @param userId 用户ID（可选）
-     */
-    fun saveLoginStatus(context: Context, isLogin: Boolean, userId: String = "") {
+    fun getLoggedInUserId(context: Context): String {
+        return getLoginSP(context).getString(KEY_USER_ID, "") ?: ""
+    }
+
+    fun saveLoginStatus(context: Context, isLogin: Boolean, userId: String = "", identity: String = "") {
         val editor = getLoginSP(context).edit()
         editor.putBoolean(KEY_IS_LOGIN, isLogin)
         editor.putString(KEY_USER_ID, userId)
+        editor.putString(KEY_IDENTITY, identity)
         editor.apply() // 异步提交，不阻塞主线程
     }
 

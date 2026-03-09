@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class BindRepository {
+
     fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{
         try {
             val request = BindRequest(request.musername, request.otherusername)
@@ -17,4 +18,5 @@ class BindRepository {
             emit(Result.failure(e))
         }
     }.flowOn(Dispatchers.IO)
+
 }

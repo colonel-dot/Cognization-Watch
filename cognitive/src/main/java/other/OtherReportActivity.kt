@@ -1,15 +1,20 @@
 package other
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
+import kotlinx.coroutines.launch
 import mine.ui.RecordRVAdapter
 import mine.vm.MineRecordViewModel
 import persistense.DailyBehaviorEntity
@@ -17,7 +22,7 @@ import kotlin.getValue
 
 class OtherReportActivity : AppCompatActivity() {
 
-    private val viewModel: MineRecordViewModel by viewModels<MineRecordViewModel>()
+    private val viewModel: OtherReportViewModel by viewModels<OtherReportViewModel>()
 
 
     private lateinit var recordRV: RecyclerView
@@ -35,8 +40,9 @@ class OtherReportActivity : AppCompatActivity() {
             insets
         }
         initRecyclerView()
-        observeViewModelData()
-        viewModel.queryRecordsData()
+        viewModel.getOtherDailyBehavior()
+
+        //observeViewModelData()
     }
 
     private fun initRecyclerView(){
@@ -55,7 +61,27 @@ class OtherReportActivity : AppCompatActivity() {
         })
     }
 
-    private fun observeViewModelData(){
+    private fun observeRequestStatus(){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.operationResult.collect { result ->
+                    when (result) {
+                        is OtherReportResult.BehaviorLoadSuccess -> {
+                            Toast.makeText(this@OtherReportActivity, "行为数据加载成功", Toast.LENGTH_SHORT).show()
+                        }
+                        is OtherReportResult.RiskLoadSuccess -> {
+                            Toast.makeText(this@OtherReportActivity, "风险数据加载成功", Toast.LENGTH_SHORT).show()
+                        }
+                        is OtherReportResult.LoadFailure -> {
+                            Toast.makeText(this@OtherReportActivity, result.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /*private fun observeViewModelData(){
         viewModel.allBehaviorData.observe(this) { dataList ->
             // dataList 就是ViewModel从数据库查询到的所有DailyBehaviorEntity数据
             if (dataList.isNotEmpty()) {
@@ -75,6 +101,6 @@ class OtherReportActivity : AppCompatActivity() {
                 recordAdapter.updateItem(today)
             }
         }
-    }
+    }*/
 
 }

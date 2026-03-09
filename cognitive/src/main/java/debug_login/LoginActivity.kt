@@ -3,8 +3,10 @@ package debug_login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,11 +18,19 @@ import com.example.cognitive.main.ConMainActivity
 import kotlinx.coroutines.launch
 
 private const val TAG = "LoginActivity"
+private const val INDENTITY_ELDER = "elder"
+private const val INDENTITY_CHILD = "child"
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var btn_login: Button
+    private lateinit var btn_child: View
+    private lateinit var btn_elder: View
     private lateinit var account_login: EditText
     private lateinit var password_login: EditText
+    private lateinit var identity: String
+    private var isChoseIdentity = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
         account_login = findViewById<EditText>(R.id.login_account)
         password_login = findViewById<EditText>(R.id.login_password)
         btn_login = findViewById<Button>(R.id.login_button)
-
+        btn_child = findViewById<TextView>(R.id.child)
+        btn_elder = findViewById<TextView>(R.id.elder)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -36,9 +47,24 @@ class LoginActivity : AppCompatActivity() {
         }
 
         login()
-
     }
+
+    private fun initIdentity() {
+        btn_child.setOnClickListener {
+            isChoseIdentity = true
+            identity = INDENTITY_CHILD
+        }
+        btn_elder.setOnClickListener {
+            isChoseIdentity = true
+            identity = INDENTITY_ELDER
+        }
+    }
+
     private fun login() {
+        if (!isChoseIdentity) {
+            Toast.makeText(this, "请选择身份", Toast.LENGTH_SHORT).show()
+            return
+        }
         btn_login.setOnClickListener {
             val userName = account_login.text.toString()
             val password = password_login.text.toString()
@@ -50,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                             // 请求成功，判断状态码
                             if (loginResponse.code == 200) {
                                 Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
-                                LoginStatusManager.saveLoginStatus(applicationContext, true, userName)
+                                LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
                                 val intent = Intent(this@LoginActivity, ConMainActivity::class.java)
                                 startActivity(intent)
                             } else {
@@ -67,4 +93,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

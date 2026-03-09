@@ -14,6 +14,12 @@ object BindStatusManager {
         return context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
     }
 
+    fun init(context: Context) {
+        val sp = getSP(context)
+        isBound = sp.getBoolean(KEY_IS_BIND, false)
+        boundUsername = sp.getString("bound_username", null)
+    }
+
 
     fun bindDevice(context: Context, musername: String, otherusername: String) {
         val editor = getSP(context).edit()

@@ -69,8 +69,8 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
             }*/
 
             // 有数据时正常展示
-            tvLevel.text = "风险等级：${risk!!.riskLevel}"
-            tvScore.text = "总风险分：${"%.2f".format(risk.riskScore)}"
+            tvLevel.text = "认知风险总评：${risk!!.riskLevel}"
+            tvScore.text = "总认知风险指数：${"%.2f".format(risk.riskScore)}"
 
             tvDetail.text = """
                         睡眠风险指数：${"%.2f".format(risk.sleepRisk)}
