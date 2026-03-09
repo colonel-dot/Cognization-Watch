@@ -25,6 +25,7 @@ class ConMainActivity : AppCompatActivity() {
     private lateinit var btnMine: View
     private lateinit var homeFragment: Fragment
     private lateinit var mineFragment: Fragment
+    private lateinit var btnCall: View
     private var currentFragment: Fragment? = null
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -40,6 +41,12 @@ class ConMainActivity : AppCompatActivity() {
         }
         btnMine = findViewById<View>(R.id.mine_layout)
         btnHome = findViewById<View>(R.id.home_layout)
+
+        btnCall = findViewById<View>(R.id.call)
+        btnCall.setOnClickListener {
+            mainViewModel.debug_post()
+        }
+
 
         if (needNotificationPermission()) {
             requestPermissions(
@@ -67,7 +74,6 @@ class ConMainActivity : AppCompatActivity() {
                 return
             }
         }
-
 
         if (fragment.isAdded) {
             transaction.hide(currentFragment!!).show(fragment).commit()

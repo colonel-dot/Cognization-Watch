@@ -34,6 +34,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:textSize="24sp"
+            android:clickable="true"
+
             android:text="子女端"/>
     </com.google.android.material.card.MaterialCardView>
 
@@ -49,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
+            android:clickable="true"
             android:padding="16dp"
             android:backgroundTint="@color/white_blue"
             android:background="@color/white_blue"

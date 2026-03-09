@@ -1,6 +1,7 @@
 package com.example.cognitive.main
 
 import android.app.Application
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -13,7 +14,9 @@ import persistense.AppDatabase
 import repository.NetWorkRepository
 import risk.work.DailyRiskCalculator
 import risk.model.toEntity
+import risk.model.toNormalized
 import risk.model.toNormalizedList
+import risk.model.toResult
 import risk.work.RiskConfigManager
 import user.UserManager
 import java.time.LocalDate
@@ -46,6 +49,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 .calculate(behaviorRecords.toNormalizedList(), evaluatorType)
             riskDao.upsert(riskResult.toEntity())
 
+            //以下为调试代码
+            debug_post()
+            //以上为调试代码
+
             NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today, todayBehavior)
             NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.minusDays(1), riskResult)
         }
@@ -53,6 +60,20 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun notifyRecordChanged() {
         _recordChanged.postValue(Unit)
+    }
+
+    fun debug_post(){
+        Log.d(TAG, "debug_post: 要给后端发送测试数据了。")
+        val entity = InsertData.testEntity11
+        NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today.plusDays(2),
+            InsertData.testEntity11)
+        Log.d(TAG, "debug_post: $entity")
+        NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today.plusDays(1),
+            InsertData.testEntity3)
+        NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.plusDays(1),
+            InsertData.riskEntity3.toResult())
+        NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.plusDays(2),
+            InsertData.riskEntity11.toResult())
     }
 
 }

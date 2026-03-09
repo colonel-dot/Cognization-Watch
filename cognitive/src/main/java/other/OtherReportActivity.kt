@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -16,14 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import kotlinx.coroutines.launch
 import mine.ui.RecordRVAdapter
-import mine.vm.MineRecordViewModel
 import persistense.DailyBehaviorEntity
-import kotlin.getValue
 
 class OtherReportActivity : AppCompatActivity() {
 
-    private val viewModel: OtherReportViewModel by viewModels<OtherReportViewModel>()
-
+    private val viewModel: OtherReportViewModel by viewModels()
 
     private lateinit var recordRV: RecyclerView
     // 声明适配器为全局变量，方便在监听中刷新数据
@@ -40,9 +36,12 @@ class OtherReportActivity : AppCompatActivity() {
             insets
         }
         initRecyclerView()
+        // 监听请求状态（成功/失败提示）
+        observeRequestStatus()
+        // 监听数据库数据，更新RecyclerView
+        observeDailyBehaviorData()
+        // 发起后端数据请求
         viewModel.getOtherDailyBehavior()
-
-        //observeViewModelData()
     }
 
     private fun initRecyclerView(){
@@ -52,15 +51,14 @@ class OtherReportActivity : AppCompatActivity() {
 
         recordAdapter.setOnItemClickListener(object : RecordRVAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, record: DailyBehaviorEntity) {
-
                 val date = record.date   // LocalDate
-
                 val sheet = risk.ui.RiskDetailBottomSheet.newInstance(date)
                 sheet.show(supportFragmentManager, "RiskDetailBottomSheet")
             }
         })
     }
 
+    // 监听请求结果（成功/失败的Toast提示）
     private fun observeRequestStatus(){
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -81,26 +79,26 @@ class OtherReportActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun observeViewModelData(){
-        viewModel.allBehaviorData.observe(this) { dataList ->
-            // dataList 就是ViewModel从数据库查询到的所有DailyBehaviorEntity数据
-            if (dataList.isNotEmpty()) {
-                // 有数据：清空适配器原有数据，添加新数据，刷新列表
-                recordAdapter.list.clear()
-                recordAdapter.list.addAll(dataList)
-                recordAdapter.notifyDataSetChanged()
-            } else {
-                // 无数据：清空列表，显示空页面
-                recordAdapter.list.clear()
-                recordAdapter.notifyDataSetChanged()
-            }
-        }
+    // 新增：监听数据库中的行为数据，更新RecyclerView
+    private fun observeDailyBehaviorData() {
+        lifecycleScope.launch {
+            // 仅在页面处于RESUMED状态时监听，避免后台消耗
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                // 收集ViewModel暴露的数据库数据Flow
+                viewModel.dailyBehaviorList.collect { behaviorList ->
+                    // 更新适配器数据
+                    recordAdapter.list.clear()
+                    recordAdapter.list.addAll(behaviorList)
+                    // 通知适配器刷新UI
+                    recordAdapter.notifyDataSetChanged()
 
-        viewModel.todayBehaviorData.observe(this) { today ->
-            if (today != null) {
-                recordAdapter.updateItem(today)
+                    // 可选：如果数据为空，显示空页面提示
+                    if (behaviorList.isEmpty()) {
+                        Toast.makeText(this@OtherReportActivity, "暂无行为数据", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
-    }*/
+    }
 
 }

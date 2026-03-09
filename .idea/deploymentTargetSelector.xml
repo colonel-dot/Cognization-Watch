@@ -23,6 +23,14 @@
       </SelectionState>
       <SelectionState runConfigName="cognitive">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2026-03-09T13:17:02.912064900Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=2MH0224423003344" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="bridge">
         <option name="selectionMode" value="DROPDOWN" />

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import user.UserManager
 import java.time.LocalDate
 
@@ -43,6 +44,9 @@ interface DailyBehaviorDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(dailyBehaviorEntity: DailyBehaviorEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(entities: List<DailyBehaviorEntity>)
 
     @Delete
     suspend fun delete(dailyBehaviorEntity: DailyBehaviorEntity)
@@ -137,5 +141,8 @@ interface DailyBehaviorDao {
     LIMIT 15
 """)
     suspend fun loadPrev15Days(date: LocalDate): List<DailyBehaviorEntity>
+
+    @Query("SELECT * FROM daily_behavior") // 注意：表名要和实体类的@Entity(tableName = "xxx")一致
+    fun getAllDailyBehavior(): Flow<List<DailyBehaviorEntity>>
 
 }

@@ -45,20 +45,19 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        login()
-    }
-
-    private fun initIdentity() {
         btn_child.setOnClickListener {
+            Log.d(TAG, "onCreate: 点击了选择子女端")
             isChoseIdentity = true
             identity = INDENTITY_CHILD
         }
         btn_elder.setOnClickListener {
+            Log.d(TAG, "onCreate: 点击了选择老人端")
             isChoseIdentity = true
             identity = INDENTITY_ELDER
         }
+        btn_login.setOnClickListener { login() }
     }
+    
 
     private fun login() {
         if (!isChoseIdentity) {

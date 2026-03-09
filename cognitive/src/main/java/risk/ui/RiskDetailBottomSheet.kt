@@ -61,13 +61,6 @@ class RiskDetailBottomSheet : BottomSheetDialogFragment() {
                 return@observe
             }
 
-            /*if (LocalDate.now() == date) {
-                tvLevel.text = "暂无认知风险评估"
-                tvScore.text = ""
-                tvDetail.text = "今日风险评估结果将在明日凌晨生成"
-                return@observe
-            }*/
-
             // 有数据时正常展示
             tvLevel.text = "认知风险总评：${risk!!.riskLevel}"
             tvScore.text = "总认知风险指数：${"%.2f".format(risk.riskScore)}"

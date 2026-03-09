@@ -51,7 +51,7 @@ object InsertData {
         riskScore = 0.35
     )
 
-    private val testEntity3 = DailyBehaviorEntity(
+    val testEntity3 = DailyBehaviorEntity(
         date = testDate3,
         wakeMinute = 450, // 7:30
         sleepMinute = 1200, // 20:00
@@ -63,12 +63,12 @@ object InsertData {
         restTime = 2400 // 40分钟
     )
 
-    private val riskEntity3 = DailyRiskEntity(
+    val riskEntity3 = DailyRiskEntity(
         date = testDate3,
         riskScore = 0.2
     )
 
-    private val testEntity11 = DailyBehaviorEntity(
+    val testEntity11 = DailyBehaviorEntity(
         date = testDate11,
         wakeMinute = 450, // 7:30
         sleepMinute = 1200, // 20:00
@@ -80,12 +80,12 @@ object InsertData {
         restTime = 2400 // 40分钟
     )
 
-    private val riskEntity11 = DailyRiskEntity(
+    val riskEntity11 = DailyRiskEntity(
         date = testDate3,
         riskScore = 0.7
     )
 
-    private val testEntity12 = DailyBehaviorEntity(
+    val testEntity12 = DailyBehaviorEntity(
         date = testDate12,
         wakeMinute = 450, // 7:30
         sleepMinute = 1200, // 20:00
@@ -97,7 +97,7 @@ object InsertData {
         restTime = 2400 // 40分钟
     )
 
-    private val riskEntity12 = DailyRiskEntity(
+    val riskEntity12 = DailyRiskEntity(
         date = testDate3,
         riskScore = 0.33
     )

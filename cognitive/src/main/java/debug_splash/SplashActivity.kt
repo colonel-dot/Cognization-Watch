@@ -28,8 +28,8 @@ class SplashActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        debug_login()
-        //checkLoginStatusAndJump()
+        //debug_login()
+        checkLoginStatusAndJump()
 
     }
 
