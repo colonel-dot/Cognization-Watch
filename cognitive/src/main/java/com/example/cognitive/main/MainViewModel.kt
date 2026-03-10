@@ -63,17 +63,41 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun debug_post(){
-        Log.d(TAG, "debug_post: 要给后端发送测试数据了。")
-        val entity = InsertData.testEntity11
-        NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today.plusDays(2),
-            InsertData.testEntity11)
-        Log.d(TAG, "debug_post: $entity")
-        NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today.plusDays(1),
-            InsertData.testEntity3)
-        NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.plusDays(1),
-            InsertData.riskEntity3.toResult())
-        NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.plusDays(2),
-            InsertData.riskEntity11.toResult())
+        viewModelScope.launch {
+
+            NetWorkRepository.updateDailyBehavior(
+                account = UserManager.getUserId(),
+                date = today.plusDays(2),
+                InsertData.testEntity11
+            ).collect{
+                Log.d(TAG,"behavior1 $it")
+            }
+
+            NetWorkRepository.updateDailyBehavior(
+                account = UserManager.getUserId(),
+                date = today.plusDays(1),
+                InsertData.testEntity3
+            ).collect{
+                Log.d(TAG,"behavior2 $it")
+            }
+
+            NetWorkRepository.updateDailyRisk(
+                account = UserManager.getUserId(),
+                date = today.plusDays(1),
+                InsertData.riskEntity3.toResult()
+            ).collect{
+                Log.d(TAG,"risk1 $it")
+            }
+
+            NetWorkRepository.updateDailyRisk(
+                account = UserManager.getUserId(),
+                date = today.plusDays(2),
+                InsertData.riskEntity11.toResult()
+            ).collect{
+                Log.d(TAG,"risk2 $it")
+            }
+
+        }
     }
 
 }

@@ -53,7 +53,7 @@ object InsertData {
 
     val testEntity3 = DailyBehaviorEntity(
         date = testDate3,
-        wakeMinute = 450, // 7:30
+        wakeMinute = 490, // 7:30
         sleepMinute = 1200, // 20:00
         schulte16TimeSec = 10800.0,
         schulte25TimeSec = 22100.0,

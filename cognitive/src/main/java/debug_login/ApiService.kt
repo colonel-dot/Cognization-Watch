@@ -4,6 +4,7 @@ import bind_device.BindRequest
 import bind_device.BindResponse
 import persistense.DailyBehaviorEntity
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -35,17 +36,28 @@ interface ApiService {
     @POST("bind")
     suspend fun bind(@Body request: BindRequest): BindResponse
 
-    @POST("elder/updatedailyrisk")
-    suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)
+/*    @POST("elder/updatedailyrisk")
+    suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/
 
     @GET("elder/dailyrisk")
-    suspend fun  getDailyRisk(account: String, date: LocalDate): DailyRiskEntity
+    suspend fun  getDailyRisk(account: String, date: String): DailyRiskEntity
+
+/*    @POST("elder/updatedailyhealthrecord")
+    suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/
+
 
     @POST("elder/updatedailyhealthrecord")
-    suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)
+    suspend fun postDailyBehavior(
+        @Body request: UpdateDailyHealthRequest
+    ): Response<Unit>
+
+    @POST("elder/updatedailyrisk")
+    suspend fun postDailyRisk(
+        @Body request: UpdateDailyRiskRequest
+    ): Response<Unit>
 
     @GET("elder/daily")
-    suspend fun getDailyBehavior(account: String?, date: LocalDate): DailyBehaviorEntity
+    suspend fun getDailyBehavior(account: String?, date: String): DailyBehaviorEntity
 
     @GET("daily/all")
     suspend fun getAllDailyBehavior(account: String): List<DailyBehaviorEntity>
