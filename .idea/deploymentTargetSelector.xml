@@ -23,10 +23,10 @@
       </SelectionState>
       <SelectionState runConfigName="cognitive">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-03-09T13:17:02.912064900Z">
+        <DropdownSelection timestamp="2026-03-11T13:25:42.602810800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=2MH0224423003344" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\30371\.android\avd\Pixel_7a.avd" />
             </handle>
           </Target>
         </DropdownSelection>

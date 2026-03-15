@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
 import repository.NetWorkRepository
+import repository.UpdateRepository
 import risk.work.DailyRiskCalculator
 import risk.model.toEntity
 import risk.model.toNormalized
@@ -52,7 +53,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             //以下为调试代码
             debug_post()
             //以上为调试代码
-
+            Log.d(TAG, "initTodaySaveYesterday: 要给更新仓库传过去的todayBehavior是 $todayBehavior")
+            UpdateRepository.initToday(todayBehavior)
             NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today, todayBehavior)
             NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.minusDays(1), riskResult)
         }
@@ -63,8 +65,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun debug_post(){
+        var maccount = UserManager.getUserId()
+        Log.d(TAG, "debug_post: 要给后端传送过去的用户名是$maccount")
         viewModelScope.launch {
-
             NetWorkRepository.updateDailyBehavior(
                 account = UserManager.getUserId(),
                 date = today.plusDays(2),

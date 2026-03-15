@@ -1,37 +1,31 @@
 package repository
 
 import android.util.Log
+import com.example.cognitive.main.ConApplication
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import persistense.AppDatabase
 import persistense.DailyBehaviorDao
 import persistense.DailyBehaviorEntity
-import risk.persistence.DailyRiskDao
 import user.UserManager
-import java.time.LocalDate
 
 private const val TAG = "UpdateRepository"
 
-class UpdateRepository(
-    private val behaviorDao: DailyBehaviorDao,
-    //private val riskDao: DailyRiskDao
-) {
+object UpdateRepository{
     // 1. 互斥锁保证线程安全（多协程修改 todayBehavior 时串行执行）
     private val mutex = Mutex()
     // 2. 内存缓存（私有，仅内部修改）
-    private var todayBehavior: DailyBehaviorEntity? = null
+    private var mtodayBehavior: DailyBehaviorEntity? = null
+    private val behaviorDao = AppDatabase.getDatabase(ConApplication.context).dailyBehaviorDao()
 
-
-    suspend fun initToday(today: LocalDate) {
-        mutex.withLock {
-            todayBehavior = behaviorDao.getOrInitTodayBehavior(today)
-        }
+    fun initToday(todayBehavior: DailyBehaviorEntity? = null) {
+            mtodayBehavior = todayBehavior
     }
 
     suspend fun getTodayBehavior(): DailyBehaviorEntity {
         return mutex.withLock {
-            todayBehavior ?: throw IllegalStateException("未调用 initToday 初始化今日数据")
+            mtodayBehavior ?: throw IllegalStateException("未调用 initToday 初始化今日数据")
         }
     }
 
@@ -40,26 +34,28 @@ class UpdateRepository(
         updateAction: (DailyBehaviorEntity) -> DailyBehaviorEntity
     ) {
         mutex.withLock {
-            // 步骤1：判空（未初始化直接返回）
-            val oldEntity = todayBehavior ?: return
+            Log.d(TAG, "updateBehavior: 这里的 todayBehavior = $mtodayBehavior")
 
-            // 步骤2：执行自定义更新逻辑（修改指定字段）
+            val oldEntity = mtodayBehavior ?: return
+
             val newEntity = updateAction(oldEntity)
 
-            // 步骤3：更新内存缓存
-            todayBehavior = newEntity
+            mtodayBehavior = newEntity
 
-            // 步骤4：更新本地数据库
             behaviorDao.update(newEntity)
+            Log.d(TAG, "updateBehavior: 更新了本地数据库")
 
-            // 步骤5：同步网络（带异常处理）
             syncToNetwork(newEntity)
         }
     }
 
     // 4. 具体业务方法（极简，仅关注字段修改）
-    suspend fun updateSchulte(score: Double) {
-        updateBehavior { it.copy(schulte16TimeSec = score) }
+    suspend fun update16Schulte(time: Double) {
+        updateBehavior { it.copy(schulte16TimeSec = time) }
+    }
+
+    suspend fun update25Schulte(time: Double) {
+        updateBehavior { it.copy(schulte25TimeSec = time) }
     }
 
     suspend fun updateSpeechScore(score: Double) {
@@ -76,6 +72,11 @@ class UpdateRepository(
 
     suspend fun updateSleepTime(sleepMinute: Int) {
         updateBehavior { it.copy(sleepMinute = sleepMinute) }
+    }
+    
+    suspend fun updateScheduleTime(wakeMinute: Int, sleepMinute: Int) {
+        Log.d(TAG, "updateScheduleTime: 要在更新仓库中更新时间了。wakeMinute = $wakeMinute sleepMinute = $sleepMinute")
+        updateBehavior { it.copy( wakeMinute = wakeMinute, sleepMinute = sleepMinute) }
     }
 
     // 5. 通用网络同步逻辑（集中处理异常和日志）

@@ -52,7 +52,6 @@ class StepForegroundService : Service() {
         startId: Int
     ): Int = START_STICKY
 
-    // -------------------- Notification --------------------
 
     private fun createNotification(): Notification {
         createChannel()

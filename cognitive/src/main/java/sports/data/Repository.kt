@@ -7,37 +7,30 @@ import android.hardware.SensorManager
 import android.util.Log
 import kotlinx.coroutines.*
 import persistense.DailyBehaviorDao
+import repository.UpdateRepository
 import java.time.LocalDate
 
 private const val TAG = "StepRepository"
 
-/**
- * 职责：
- * 1. 只负责「今日步数」统计
- * 2. 内存实时累积，定时批量落库
- */
 class StepRepository(
     private val sensorManager: SensorManager,
     private val dao: DailyBehaviorDao
 ) : SensorEventListener {
 
-    /** Service 生命周期作用域 */
+    // Service 生命周期作用域
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    /** 计步传感器（唯一需要的） */
+    //计步传感器
     private val stepCounter =
         sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-    /** -------- 内存态 -------- */
     private var todayDate: LocalDate = LocalDate.now()
     private var todayBaseCounter = 0f
     private var todaySteps = 0
 
-    /** 是否有变更需要落库 */
     @Volatile
     private var dirty = false
 
-    // -------------------- 对外 --------------------
 
     fun start() {
         scope.launch {
@@ -61,7 +54,6 @@ class StepRepository(
         scope.cancel()
     }
 
-    // -------------------- 初始化 / 跨天 --------------------
 
     private suspend fun initToday() {
         todayDate = LocalDate.now()
@@ -85,7 +77,6 @@ class StepRepository(
         dirty = false
     }
 
-    // -------------------- 批量落库 --------------------
 
     private fun startFlushTicker() {
         scope.launch {
@@ -101,15 +92,15 @@ class StepRepository(
 
         Log.d(TAG, "flushToDb() steps=$todaySteps")
 
-        dao.updateSteps(
+        /*dao.updateSteps(
             date = todayDate,
             steps = todaySteps
-        )
+        )*/
+        UpdateRepository.updateSteps(steps = todaySteps)
 
         dirty = false
     }
 
-    // -------------------- 传感器回调 --------------------
 
     override fun onSensorChanged(event: SensorEvent) {
         val today = LocalDate.now()

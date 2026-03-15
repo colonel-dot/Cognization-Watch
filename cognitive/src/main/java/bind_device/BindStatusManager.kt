@@ -2,9 +2,10 @@ package bind_device
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 private const val SP_NAME = "bind_status"
-
+private const val TAG = "BindStatusManager"
 object BindStatusManager {
     private var isBound: Boolean = false
     private var boundUsername: String? = null
@@ -51,6 +52,7 @@ object BindStatusManager {
     }
 
     fun getBindStatus(): Pair<Boolean, String?> {
+        Log.d(TAG, "getBindStatus: BindManager里管理的绑定用户的用户名是$boundUsername")
         return Pair(isBound, boundUsername)
     }
 }

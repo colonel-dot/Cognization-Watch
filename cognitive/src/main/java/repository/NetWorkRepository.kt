@@ -16,6 +16,7 @@ import risk.model.DailyRiskResult
 import risk.model.RiskLevel
 import risk.model.toResult
 import risk.persistence.DailyRiskEntity
+import user.UserManager
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -36,6 +37,8 @@ object NetWorkRepository {
                 "voice_score" to record.speechScore,
                 "step_count" to record.steps
             )
+
+            Log.d(TAG, "updateDailyBehavior: 将给后端post的日常数据是 $dateStr $dataMap ${dataMap["wake_time"]} ${dataMap["voice_score"]}")
 
             val request = UpdateDailyHealthRequest(
                 elder_account = account,
@@ -101,12 +104,12 @@ object NetWorkRepository {
         }
     }.flowOn(Dispatchers.IO)
 
-    fun getOtherDailyRisk(account: String?, date: LocalDate): Flow<Result<DailyRiskResult>> = flow {
+    fun getOtherDailyRisk(otheraccount: String?, date: LocalDate): Flow<Result<DailyRiskResult>> = flow {
         try {
-            if (account == null) {
+            if (otheraccount == null) {
                 throw IllegalArgumentException("Account cannot be null")
             }
-            val response = RetrofitClient.apiService.getDailyRisk(account, date.format(DATE_FORMATTER))
+            val response = RetrofitClient.apiService.getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
             // 发送成功结果
             emit(Result.success(response.toResult()))
         } catch (e: Exception) {
@@ -120,7 +123,7 @@ object NetWorkRepository {
             if (account == null) {
                 throw IllegalArgumentException("Account cannot be null")
             }
-            val response = RetrofitClient.apiService.getDailyBehavior(account, date.format(DATE_FORMATTER))
+            val response = RetrofitClient.apiService.getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
             // 发送成功结果
             emit(Result.success(response))
         } catch (e: Exception) {

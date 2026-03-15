@@ -61,7 +61,7 @@ class OtherReportViewModel(application: Application) : AndroidViewModel(applicat
     fun getOtherDailyBehavior(date: LocalDate = LocalDate.now()) {
         viewModelScope.launch {
             val otherId = UserManager.getOtherId()
-            // 空值校验：避免传入null导致接口请求失败
+
             if (otherId.isNullOrBlank()) {
                 val errorMsg = "用户ID为空，无法获取行为数据"
                 Log.d(TAG, "getOtherDailyBehavior: $errorMsg")

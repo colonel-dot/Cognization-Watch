@@ -3,14 +3,18 @@ package schedule.vm
 import android.app.Application
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
+import repository.UpdateRepository
 import java.time.LocalDate
 import java.util.*
+
+private const val TAG = "ScheduleViewModel"
 
 data class ScreenEvent(val type: String, val time: Long)
 
@@ -182,11 +186,13 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             val sleepMinuteOfDay = bedHour.toInt() * 60 + bedMinute.toInt()
             val wakeMinuteOfDay = wakeHour.toInt() * 60 + wakeMinute.toInt()
 
-            dailyBehaviorDao.updateSchedule(
+            UpdateRepository.updateScheduleTime(wakeMinuteOfDay, sleepMinuteOfDay)
+            Log.d(TAG, "saveScheduleToDb: 已经调用了更新数据库的方法")
+            /*dailyBehaviorDao.updateSchedule(
                 date = today,
                 wakeMinute = wakeMinuteOfDay,
                 sleepMinute = sleepMinuteOfDay
-            )
+            )*/
         }
     }
 

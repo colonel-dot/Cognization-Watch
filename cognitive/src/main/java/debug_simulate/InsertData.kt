@@ -116,7 +116,7 @@ object InsertData {
         dao.insert(testEntity1)
         dao.insert(testEntity2)
         dao.insert(testEntity3)
-        dao.insert(testEntity11)
+        //dao.insert(testEntity11)
         dao.insert(testEntity12)
     }
 
@@ -126,7 +126,7 @@ object InsertData {
         riskDao.insert(riskEntity2)
         riskDao.insert(riskEntity3)
         riskDao.insert(riskEntity7)
-        riskDao.insert(riskEntity11)
+        //riskDao.insert(riskEntity11)
         riskDao.insert(riskEntity12)
     }
 

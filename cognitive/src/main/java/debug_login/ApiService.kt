@@ -11,6 +11,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 import risk.model.DailyRiskResult
 import risk.persistence.DailyRiskEntity
 import java.time.LocalDate
@@ -39,9 +40,6 @@ interface ApiService {
 /*    @POST("elder/updatedailyrisk")
     suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/
 
-    @GET("elder/dailyrisk")
-    suspend fun  getDailyRisk(account: String, date: String): DailyRiskEntity
-
 /*    @POST("elder/updatedailyhealthrecord")
     suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/
 
@@ -57,12 +55,30 @@ interface ApiService {
     ): Response<Unit>
 
     @GET("elder/daily")
-    suspend fun getDailyBehavior(account: String?, date: String): DailyBehaviorEntity
+    suspend fun getDailyBehavior(
+        @Query("username") child_account: String?, // 关键：account → child_account
+        @Query("elder_account") account: String?, // 关键：account → elder_account
+        @Query("date") date: String
+    ): DailyBehaviorEntity
 
+    // 2. 对应 /daily/all 接口（GetAllDailyHandler）
     @GET("daily/all")
-    suspend fun getAllDailyBehavior(account: String): List<DailyBehaviorEntity>
+    suspend fun getAllDailyBehavior(
+        @Query("elder_account") account: String // 关键：account → elder_account
+    ): List<DailyBehaviorEntity>
 
+    // 3. 对应 /elder/dailyrisk 接口（GetDailyRiskHandler）
+    @GET("elder/dailyrisk")
+    suspend fun getDailyRisk(
+        @Query("username") childAccount: String?, // 关键：account → child_account
+        @Query("elder_account") account: String, // 关键：account → elder_account
+        @Query("date") date: String
+    ): DailyRiskEntity
+
+    // 4. 对应 /daily/allrisk 接口（GetAllDailyRiskHandler）
     @GET("daily/allrisk")
-    suspend fun getAllDailyRisk(account: String): List<DailyRiskEntity>
+    suspend fun getAllDailyRisk(
+        @Query("elder_account") account: String // 关键：account → elder_account
+    ): List<DailyRiskEntity>
 
 }
