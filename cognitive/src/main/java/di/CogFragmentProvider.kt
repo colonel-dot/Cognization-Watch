@@ -8,7 +8,7 @@ import provider.FragmentProvider
 class CogFragmentProvider: FragmentProvider {
 
     override fun createFragment(className: String): Fragment {
-        return HomeFragment.newInstance()
+        return HomeFragment.newInstance("", "")
     }
 
 }

@@ -26,7 +26,7 @@ class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.
         viewType: Int
     ): VH {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.record_item, parent, false) // 第三个参数必须是false，标准！
+            .inflate(R.layout.item_record, parent, false) // 第三个参数必须是false，标准！
         return VH(itemView)
     }
 

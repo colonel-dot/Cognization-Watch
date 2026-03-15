@@ -40,16 +40,6 @@
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".main.ConMainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.CooperativeProjectsDemo">
-
-            <!-- 【删除】：intent-filter（包含 MAIN 和 LAUNCHER，仅独立运行时需要启动入口） -->
-        </activity>
-        <activity
-            android:name="read_assessment.ui.RecordActivity"
-            android:exported="false" />
-        <activity
             android:name="schulte.ui.SchulteGameActivity"
             android:exported="false" />
     </application>

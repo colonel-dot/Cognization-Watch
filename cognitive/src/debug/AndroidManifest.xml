@@ -42,16 +42,6 @@
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".main.ConMainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.CooperativeProjectsDemo">
-
-        </activity>
-
-        <activity
-            android:name="read_assessment.ui.RecordActivity"
-            android:exported="false" />
-        <activity
             android:name="schulte.ui.SchulteGameActivity"
             android:exported="false" />
     </application>
