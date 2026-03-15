@@ -5,10 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -18,20 +15,17 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.cognitive.R
 import mine.ui.MineRecordFragment
-import read_assessment.ui.RecordActivity
-import schedule.ui.ScheduleActivity
-import schulte.ui.SchulteGameActivity
 import sports.data.StepForegroundService
-import sports.vm.StepViewModel
 
 private const val TAG = "MainActivity"
 private const val REQ_NOTIFY = 1001
-class MainActivity : AppCompatActivity() {
+class ConMainActivity : AppCompatActivity() {
 
     private lateinit var btnHome: View
     private lateinit var btnMine: View
     private lateinit var homeFragment: Fragment
     private lateinit var mineFragment: Fragment
+    private lateinit var btnCall: View
     private var currentFragment: Fragment? = null
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -48,6 +42,12 @@ class MainActivity : AppCompatActivity() {
         btnMine = findViewById<View>(R.id.mine_layout)
         btnHome = findViewById<View>(R.id.home_layout)
 
+        btnCall = findViewById<View>(R.id.call)
+        btnCall.setOnClickListener {
+            mainViewModel.debug_post()
+        }
+
+
         if (needNotificationPermission()) {
             requestPermissions(
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             startStepService()
         }
-        mainViewModel.initTodaySaveYesterday()
         homeFragment = HomeFragment()
         switchFragment(homeFragment)
         initBottomClick()
@@ -75,8 +74,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
-
-
 
         if (fragment.isAdded) {
             transaction.hide(currentFragment!!).show(fragment).commit()
@@ -106,8 +103,6 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-
         if (requestCode == REQ_NOTIFY) {
             if (grantResults.isNotEmpty() &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED

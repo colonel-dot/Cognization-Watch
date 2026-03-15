@@ -18,20 +18,20 @@ data class NormalizedDailyBehavior(
     val steps: Int?
 )
 
-    fun DailyBehaviorEntity.toNormalized(): NormalizedDailyBehavior {
-        return NormalizedDailyBehavior(
-            date = this.date,
-            wakeMinute = this.wakeMinute,
-            sleepMinute = this.sleepMinute,
-            schulte16Time = this.schulte16TimeSec,
-            schulte25Time = this.schulte25TimeSec,
-            speechScore = this.speechScore,
-            steps = this.steps
-        )
-    }
+fun DailyBehaviorEntity.toNormalized(): NormalizedDailyBehavior {
+    return NormalizedDailyBehavior(
+        date = this.date,
+        wakeMinute = this.wakeMinute,
+        sleepMinute = this.sleepMinute,
+        schulte16Time = this.schulte16TimeSec,
+        schulte25Time = this.schulte25TimeSec,
+        speechScore = this.speechScore,
+        steps = this.steps
+    )
+}
 
-    fun List<DailyBehaviorEntity>.toNormalizedList(): List<NormalizedDailyBehavior> {
-        return this.map { it.toNormalized() }
-    }
+fun List<DailyBehaviorEntity>.toNormalizedList(): List<NormalizedDailyBehavior> {
+    return this.map { it.toNormalized() }
+}
 
 

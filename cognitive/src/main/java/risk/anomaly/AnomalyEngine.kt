@@ -30,6 +30,10 @@ object AnomalyEngine {
         val varian = values.map { (it - mean) * (it - mean) }.average()
 
         // 方差 > 90分钟² 认为异常
-        return if (varian > 90.0 * 90.0) 1.0 else 0.0
+        return when {
+            varian > 120.0 * 120.0 -> 1.0
+            varian > 90.0 * 90.0 -> 0.5
+            else -> 0.0
+        }
     }
 }

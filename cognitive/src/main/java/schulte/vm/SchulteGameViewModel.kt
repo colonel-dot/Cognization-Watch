@@ -12,6 +12,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
+import repository.UpdateRepository
 import risk.work.RiskConfigManager
 import schulte.data.SchulteEvaluatorType
 import java.time.LocalDate
@@ -133,14 +134,21 @@ class SchulteGameViewModel(application: Application) : AndroidViewModel(applicat
             behaviorDao.getOrInitTodayBehavior(today)
             if (GRID_SIZE == 4) {
                 val lastTime = behaviorDao.getByDate(today)!!.schulte16TimeSec!!
+
                 if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
-                    behaviorDao.updateSchulte16Time(today, elapsedTime.toDouble())
-                    Log.d(TAG, "saveGameTime: 保存了新的16格时间")
+
+                    UpdateRepository.update16Schulte(
+                        time = elapsedTime.toDouble()
+
+                    )
                 }
             } else if (GRID_SIZE == 5) {
                 val lastTime = behaviorDao.getByDate(today)!!.schulte25TimeSec!!
                 if (lastTime < 0.1 || elapsedTime.toDouble() < lastTime) {
-                    behaviorDao.updateSchulte25Time(today, elapsedTime.toDouble())
+                    //behaviorDao.updateSchulte25Time(today, elapsedTime.toDouble())
+                    UpdateRepository.update25Schulte(
+                        time = elapsedTime.toDouble()
+                    )
                 }
             }
 

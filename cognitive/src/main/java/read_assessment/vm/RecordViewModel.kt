@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import persistense.AppDatabase
 import read_assessment.data.ReadAssessmentRepository
 import read_assessment.data.ReadAssessmentSource
+import repository.UpdateRepository
 import java.io.File
 import java.time.LocalDate
 import kotlin.random.Random
@@ -67,6 +68,7 @@ class RecordViewModel(application: Application) : AndroidViewModel(application )
         recorder = null
     }
 
+
     fun evaluateSpeech(refText: String, langType: String) {
         val file = curFile ?: return
         viewModelScope.launch {
@@ -93,6 +95,7 @@ class RecordViewModel(application: Application) : AndroidViewModel(application )
     suspend fun saveRecordToDatabase(score: Double) {
         val today = LocalDate.now()
         dailyBehaviorDao.getOrInitTodayBehavior(today)
-        dailyBehaviorDao.updateSpeechScore(today, score)
+        //dailyBehaviorDao.updateSpeechScore(today, score)
+        UpdateRepository.updateSpeechScore(score)
     }
 }

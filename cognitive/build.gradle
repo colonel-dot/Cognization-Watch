@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library'
+    id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
 }
@@ -92,8 +92,18 @@ kapt {
 
 dependencies {
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    //Splash启动页
+    implementation "androidx.core:core-splashscreen:1.0.1"
+
     //组件化
     implementation "com.alibaba:arouter-api:1.5.2"
+    implementation libs.activity
     kapt "com.alibaba:arouter-compiler:1.5.2"
 
     implementation "androidx.fragment:fragment-ktx:1.6.2"

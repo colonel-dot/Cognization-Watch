@@ -51,10 +51,10 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 REQ_NOTIFY
             )
-        } else {
+        }
+        else {
             startStepService()
         }
-
 
         Log.e("ARouterDebug", "before build")
 
@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             .build("/cognitive/homeFragment")
 
         Log.e("ARouterDebug", "postcard = $postcard")
-
 
         mainViewModel.initTodaySaveYesterday()
 
@@ -79,12 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         homeFragment = obj
 
-        /*homeFragment =  ARouter.getInstance()
-            .build("/cognitive/homeFragment")
-            .navigation() as Fragment*/
-
         Log.e("ARouterDebug", "navigation result = $homeFragment")
-
 
         switchFragment(homeFragment)
         initBottomClick()
@@ -92,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun switchFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
-
 
         if (currentFragment == null) {
             transaction.add(R.id.fragment_container, fragment).commit()
@@ -103,8 +96,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
-
-
 
         if (fragment.isAdded) {
             transaction.hide(currentFragment!!).show(fragment).commit()

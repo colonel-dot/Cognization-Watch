@@ -40,9 +40,7 @@ class ScheduleActivity : AppCompatActivity() {
     private val viewModel: ScheduleViewModel by viewModels()
 
     // 使用单例SnapHelper避免重复绑定
-    companion object {
         private val snapHelper by lazy { LinearSnapHelper() }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,7 +122,6 @@ class ScheduleActivity : AppCompatActivity() {
             setResult(Activity.RESULT_OK)
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
-
 
         // 设置观察者（包括滚轮同步）
         setupObservers()

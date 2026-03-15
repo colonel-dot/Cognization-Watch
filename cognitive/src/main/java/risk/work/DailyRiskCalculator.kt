@@ -15,19 +15,23 @@ private const val TAG = "DailyRiskCalculator"
 object DailyRiskCalculator {
 
     fun calculate(data: List<NormalizedDailyBehavior>, evaluatorType: SchulteEvaluatorType): DailyRiskResult {
-
-        Log.d(TAG, "这个data列表是$data")
+        
         val dataSize = data.size
-        if (dataSize < 2) return DailyRiskResult(
-            date = LocalDate.now().minusDays(1),
-            readRiskScore = 0.0,
-            scheduleRiskScore = 0.0,
-            schulteRiskScore = 0.0,
-            stepsRiskScore = 0.0,
-            riskScore = 0.0,
-            riskLevel = RiskLevel.NORMAL,
-            explanations = listOf("数据不足，无法评估风险")
-        )
+        Log.d(TAG, "这个data的大小是${dataSize},最后一天的日期是${data[0].date}")
+
+        if (dataSize < 4) {
+            Log.d(TAG, "calculate: 数据不足，无法评估风险，正常表现3天以上以查看风险评估")
+            return DailyRiskResult(
+                date = LocalDate.now().minusDays(1),
+                readRiskScore = 0.0,
+                scheduleRiskScore = 0.0,
+                schulteRiskScore = 0.0,
+                stepsRiskScore = 0.0,
+                riskScore = 0.0,
+                riskLevel = RiskLevel.数据不足无法评估,
+                explanations = listOf("数据不足，无法评估风险，正常表现3天以上以查看风险评估")
+            )
+        }
 
         val latest = data[dataSize - 2] // 倒数第1天是当天，取倒数第2天作为最新完整数据
 
@@ -40,9 +44,12 @@ object DailyRiskCalculator {
             val zRisk = AnomalyEngine.zScoreAnomaly(latest.speechScore, speechBaseline)
             val trendRisk = TrendDetector.speechTrendRisk(speechValues)
             if (zRisk > 0.5 || trendRisk > 0.5)
-                explanations.add("近期朗读评分出现下降趋势")
+                explanations.add("近期语音能力评分出现下降趋势")
             maxOf(zRisk, trendRisk)
-        } else 0.0
+        } else {
+            explanations.add("语音能力没有明显下滑")
+            0.0
+        }
 
         // 舒尔特（优先25格，其次16格）
         val schulteValues =
@@ -65,7 +72,10 @@ object DailyRiskCalculator {
             if (zRisk > 0.5 || trendRisk > 0.5)
                 explanations.add("舒尔特方格完成时间变慢")
             maxOf(zRisk, trendRisk)
-        } else 0.0
+        } else {
+            explanations.add("舒尔特方格的完成情况没有明显体现出认知情况的下滑")
+            0.0
+        }
 
         // 步数
         val stepValues = data.mapNotNull { it.steps?.toDouble() }
@@ -74,12 +84,23 @@ object DailyRiskCalculator {
             val risk = AnomalyEngine.iqrAnomaly(latest.steps.toDouble(), stepBaseline)
             if (risk > 0.5) explanations.add("近期活动量明显减少")
             risk
-        } else 0.0
+        } else {
+            explanations.add("活动量没有明显减少")
+            0.0
+        }
 
         // 作息
         val sleepValues = data.mapNotNull { it.sleepMinute?.toDouble() }
         val rhythmRisk = AnomalyEngine.rhythmAnomaly(sleepValues)
-        if (rhythmRisk > 0.5) explanations.add("作息时间波动明显")
+        if (rhythmRisk > 0.5) {
+            explanations.add("作息时间波动明显")
+        }
+        else if (rhythmRisk > 0.0) {
+            explanations.add("作息时间有轻微波动")
+        }
+        else {
+            explanations.add("作息时间没有明显波动")
+        }
 
         return RiskFusion.fuse(
             date = latest.date,

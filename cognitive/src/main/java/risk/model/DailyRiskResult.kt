@@ -11,7 +11,8 @@ data class DailyRiskResult(
     val stepsRiskScore: Double,
     val riskScore: Double,
     val riskLevel: RiskLevel,
-    val explanations: List<String>
+    val explanations: List<String>,
+    val alerted: Boolean = false
 )
 
 // 扩展函数：业务模型 → 数据库实体
