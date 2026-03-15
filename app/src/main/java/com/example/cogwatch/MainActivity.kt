@@ -1,6 +1,5 @@
 package com.example.cogwatch
 
-import com.example.cognitive.main.HomeFragment
 import com.example.cognitive.main.MainViewModel
 
 
@@ -11,8 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -23,11 +20,7 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.cognitive.R
 import mine.ui.MineRecordFragment
-import read_assessment.ui.RecordActivity
-import schedule.ui.ScheduleActivity
-import schulte.ui.SchulteGameActivity
 import sports.data.StepForegroundService
-import sports.vm.StepViewModel
 
 private const val TAG = "MainActivity"
 private const val REQ_NOTIFY = 1001

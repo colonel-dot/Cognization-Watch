@@ -25,7 +25,7 @@ import com.tencent.trtc.TRTCCloudListener;
  * 声网样例代码有兼容问题，具体表现是 Agora Camera1 在 Android15 vivo 设备上触发 JNI 层崩溃
  * 根因是 SDK 向 Camera.setVersion() 传入 null 字符串
  * 妈的 腾讯云也是这个问题
- * 破案 因为 Debug 构建变体  的程序版本号为 null
+ * 因为 Debug 构建变体的程序版本号为 null
  * 版本号会传入 Camera 如果为空则会崩溃
  */
 public class RtcActivity extends AppCompatActivity
@@ -109,8 +109,11 @@ public class RtcActivity extends AppCompatActivity
     }
 
     private TXCloudVideoView rtcVideo;
+    private TXCloudVideoView cameraVideo;
+
     private void bindView() {
         rtcVideo = findViewById(R.id.rtc_video);
+        cameraVideo = findViewById(R.id.camera_video);
     }
 
     private void openAppPermissionSettings() {
@@ -150,6 +153,7 @@ public class RtcActivity extends AppCompatActivity
                 super.onUserVideoAvailable(userId, available);
                 Log.d(TAG, "initTrtcApplicationAndPresenter TRTCCloudListener: 对方视频流准备完成 开始推流");
                 cloud.startRemoteView(userId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG, rtcVideo);
+                cloud.startLocalPreview(true, cameraVideo);
             }
         });
         presenter.initCloud(cloud);
