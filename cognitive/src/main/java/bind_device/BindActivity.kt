@@ -18,6 +18,7 @@ import com.example.cognitive.R
 import kotlinx.coroutines.launch
 
 private const val TAG = "BindActivity"
+
 class BindActivity : AppCompatActivity() {
     lateinit var btn_bind: View
     lateinit var tv_bind: EditText
@@ -46,10 +47,8 @@ class BindActivity : AppCompatActivity() {
             viewModel.bind(bindName)
         }
 
-        // 监听绑定+数据加载状态（替换原来的 checkBindResult）
         observeBindAndLoadState()
 
-        // 移除无用的 bind() 方法（原来的逻辑已移到 ViewModel 中，Activity 无需重复写）
     }
 
     // 新增：监听 ViewModel 的密封类状态
@@ -90,6 +89,4 @@ class BindActivity : AppCompatActivity() {
         }
     }
 
-    // 移除原来的 bind() 方法（已移到 ViewModel，Activity 只负责触发和监听，不处理业务逻辑）
-    // 移除原来的 checkBindResult() 方法（被 observeBindAndLoadState 替代）
 }

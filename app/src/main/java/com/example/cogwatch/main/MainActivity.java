@@ -30,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.navigation);
 
-        // ViewGroup menuView = (ViewGroup) bottomNavigation.getChildAt(0);
-        // for (int i = 0; i < menuView.getChildCount(); i++) {
-        //     View item = menuView.getChildAt(i);
-        //     item.setOnLongClickListener(v -> true);
-        // }
-
         initBottomNavigation();
     }
 

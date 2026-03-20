@@ -92,10 +92,6 @@ class StepRepository(
 
         Log.d(TAG, "flushToDb() steps=$todaySteps")
 
-        /*dao.updateSteps(
-            date = todayDate,
-            steps = todaySteps
-        )*/
         UpdateRepository.updateSteps(steps = todaySteps)
 
         dirty = false

@@ -36,11 +36,11 @@ class OtherReportActivity : AppCompatActivity() {
             insets
         }
         initRecyclerView()
-        // 监听请求状态（成功/失败提示）
+
         observeRequestStatus()
-        // 监听数据库数据，更新RecyclerView
+
         observeDailyBehaviorData()
-        // 发起后端数据请求
+
         viewModel.getOtherDailyBehavior()
     }
 

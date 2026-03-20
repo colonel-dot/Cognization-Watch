@@ -41,7 +41,7 @@ object UpdateRepository{
             val newEntity = updateAction(oldEntity)
 
             mtodayBehavior = newEntity
-
+            Log.d(TAG, "updateBehavior: 现在的mEntity是$mtodayBehavior newEntity是$newEntity")
             behaviorDao.update(newEntity)
             Log.d(TAG, "updateBehavior: 更新了本地数据库")
 
@@ -59,6 +59,7 @@ object UpdateRepository{
     }
 
     suspend fun updateSpeechScore(score: Double) {
+        Log.d(TAG, "updateSpeechScore: 这里的speechScore是$score")
         updateBehavior { it.copy(speechScore = score) }
     }
 

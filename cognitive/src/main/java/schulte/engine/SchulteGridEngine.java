@@ -16,7 +16,6 @@ public class SchulteGridEngine {
     private State state = State.STOPPED;
 
     public SchulteGridEngine() {
-        // TODO: 根据本地值读取
         end = isFourSquared ? 16 : 25;
     }
 

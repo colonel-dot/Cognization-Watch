@@ -142,7 +142,10 @@ interface DailyBehaviorDao {
 """)
     suspend fun loadPrev15Days(date: LocalDate): List<DailyBehaviorEntity>
 
-    @Query("SELECT * FROM daily_behavior") // 注意：表名要和实体类的@Entity(tableName = "xxx")一致
+    @Query("SELECT * FROM daily_behavior WHERE date = :date LIMIT 1")
+    fun observeBehaviorByDate(date: LocalDate): Flow<DailyBehaviorEntity>
+
+    @Query("SELECT * FROM daily_behavior")
     fun getAllDailyBehavior(): Flow<List<DailyBehaviorEntity>>
 
 }

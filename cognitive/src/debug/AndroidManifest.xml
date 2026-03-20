@@ -21,12 +21,8 @@
 
         <activity
             android:name="debug_splash.SplashActivity"
-            android:exported="true"
+            android:exported="false"
             android:theme="@style/Theme.MyApp.Splash">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity
@@ -42,8 +38,16 @@
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />
         <activity
-            android:name="schulte.ui.SchulteGameActivity"
+            android:name="schulte.ui.SchulteGridActivity"
             android:exported="false" />
+        <activity android:name=".main.ConMainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

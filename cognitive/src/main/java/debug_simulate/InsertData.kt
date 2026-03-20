@@ -15,7 +15,8 @@ object InsertData {
     private val testDate3 = LocalDate.of(2026, 3, 10)
     private val testDate11 = LocalDate.of(2026, 3, 11)
     private val testDate12 = LocalDate.of(2026, 3, 12)
-
+    private val testDate17 = LocalDate.of(2026, 3, 17)
+    private val testDateToday = LocalDate.now()
 
     private val testEntity1 = DailyBehaviorEntity(
         date = testDate1,
@@ -61,6 +62,40 @@ object InsertData {
         steps = 12000,
         activeTime = 3000, // 50分钟
         restTime = 2400 // 40分钟
+    )
+
+    val testEntity17 = DailyBehaviorEntity(
+        date = testDate17,
+        wakeMinute = 490, // 7:30
+        sleepMinute = 1200, // 20:00
+        schulte16TimeSec = 10800.0,
+        schulte25TimeSec = 22100.0,
+        speechScore = 98.0,
+        steps = 12000,
+        activeTime = 3000, // 50分钟
+        restTime = 2400 // 40分钟
+    )
+
+    val testEntityToday = DailyBehaviorEntity(
+        date = testDateToday,
+        wakeMinute = 400, // 6:00
+        sleepMinute = 1200, // 20:00
+        schulte16TimeSec = 10800.0,
+        schulte25TimeSec = 22100.0,
+        speechScore = 98.0,
+        steps = 12000,
+        activeTime = 3000, // 50分钟
+        restTime = 2400 // 40分钟
+    )
+
+    val riskEntityToday = DailyRiskEntity(
+        date = testDateToday,
+        riskScore = 0.33
+    )
+
+    val riskEntity17 = DailyRiskEntity(
+        date = testDate17,
+        riskScore = 0.33
     )
 
     val riskEntity3 = DailyRiskEntity(
@@ -118,6 +153,7 @@ object InsertData {
         dao.insert(testEntity3)
         //dao.insert(testEntity11)
         dao.insert(testEntity12)
+        dao.insert(testEntityToday)
     }
 
     suspend fun  insertRiskData() {
@@ -128,6 +164,8 @@ object InsertData {
         riskDao.insert(riskEntity7)
         //riskDao.insert(riskEntity11)
         riskDao.insert(riskEntity12)
+        riskDao.insert(riskEntity17)
+        riskDao.insert(riskEntityToday)
     }
 
 }
