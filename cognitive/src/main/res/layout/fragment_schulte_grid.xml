@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SchulteGridFragment">
+    tools:context="schulte.ui.SchulteGridFragment">
 
     <TextView
         android:id="@+id/function"
@@ -17,7 +17,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Schulte Grid"
+        android:text="舒尔特方格"
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -26,16 +26,16 @@
     <TextView
         android:id="@+id/hint"
         android:layout_width="match_parent"
-        android:layout_height="21dp"
+        android:layout_height="24dp"
         app:layout_constraintTop_toBottomOf="@id/function"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="Find numbers 1 to n in order!"
+        android:text="尽快依次点击1到25"
         android:textColor="@color/grey"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:fontFamily="@font/harmonyos_sans_bold"
         />
 
@@ -50,7 +50,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:stateListAnimator="@animator/button_press"
-        android:text="TIME"
+        android:text="时间"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@id/right"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/harmonyos_sans_bold"
-            android:text="TIME"
+            android:text="用时"
             android:textColor="@color/white" />
 
         <TextView
@@ -85,7 +85,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:stateListAnimator="@animator/button_press"
-        android:text="TIME"
+        android:text="方格数"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/left"
@@ -96,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/harmonyos_sans_bold"
-            android:text="GIRD"
+            android:text="点击方格数"
             android:textColor="@color/white" />
 
         <TextView
@@ -134,7 +134,7 @@
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/blue"
         android:gravity="center"
-        android:text="PAUSE"
+        android:text="暂停"
         android:textColor="@color/white"
         android:fontFamily="@font/harmonyos_sans_bold"
         android:stateListAnimator="@animator/button_press"
@@ -152,7 +152,7 @@
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/blue"
         android:gravity="center"
-        android:text="START"
+        android:text="开始"
         android:textColor="@color/white"
         android:fontFamily="@font/harmonyos_sans_bold"
         android:stateListAnimator="@animator/button_press"

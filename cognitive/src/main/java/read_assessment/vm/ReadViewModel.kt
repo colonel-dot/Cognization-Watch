@@ -15,7 +15,7 @@ import kotlin.random.Random
 
 private const val TAG = "RecordViewModel"
 
-class RecordViewModel(application: Application) : AndroidViewModel(application ) {
+class ReadViewModel(application: Application) : AndroidViewModel(application ) {
 
     private val repo = ReadAssessmentRepository()
 
@@ -95,7 +95,6 @@ class RecordViewModel(application: Application) : AndroidViewModel(application )
     suspend fun saveRecordToDatabase(score: Double) {
         val today = LocalDate.now()
         dailyBehaviorDao.getOrInitTodayBehavior(today)
-        //dailyBehaviorDao.updateSpeechScore(today, score)
         UpdateRepository.updateSpeechScore(score)
     }
 }

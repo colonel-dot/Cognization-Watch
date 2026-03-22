@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="#FFFFFF">
+    android:background="@color/blue_grey">
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -82,3 +82,4 @@
     </LinearLayout>
 
 </LinearLayout>
+

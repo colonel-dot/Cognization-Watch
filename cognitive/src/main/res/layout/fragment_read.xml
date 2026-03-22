@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".RecordFragment">
+    tools:context="read_assessment.ui.ReadFragment">
 
     <TextView
         android:id="@+id/function"
@@ -15,9 +15,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Cognization Voice Test"
+        android:text="朗读训练"
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -26,33 +26,35 @@
     <TextView
         android:id="@+id/hint"
         android:layout_width="match_parent"
-        android:layout_height="21dp"
+        android:layout_height="28dp"
         app:layout_constraintTop_toBottomOf="@id/function"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="Please read the text aloud"
+        android:text="请大声朗读以下文本，点击文本可以更换"
         android:textColor="@color/grey"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:fontFamily="@font/harmonyos_sans_bold"
         />
 
-    <TextView
+    <ui.PinyinTextView
         android:id="@+id/read"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:padding="6dp"
+        android:layout_height="280dp"
         app:layout_constraintTop_toBottomOf="@id/hint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
+        android:textSize="20sp"
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/white_background"
-        android:text="Lorem ipsum dolor sit amet, Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+        android:text="赫里内勒多·马尔克斯上校曾躲过三次暗杀，五次受伤大难不死，身经百战安然无恙，却败给了无尽的等待，屈服于凄凉的晚景，在一间借来的光线昏暗的屋子里想着阿玛兰妲"
         android:fontFamily="@font/harmonyos_sans_medium"
         />
 
@@ -63,15 +65,14 @@
         app:layout_constraintTop_toBottomOf="@id/read"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_circle"
         android:backgroundTint="@color/blue"
         android:src="@drawable/mic"
-        android:tint="@color/white"
         android:padding="25dp"
         android:stateListAnimator="@animator/button_press"
         android:clickable="true"
-        />
+        app:tint="@color/white" />
 
     <LinearLayout
         android:id="@+id/voiceprint"
@@ -126,7 +127,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/start"
         android:layout_width="120dp"
         android:layout_height="60dp"
@@ -137,12 +138,12 @@
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/green"
         android:gravity="center"
-        android:text="START"
+        android:text="开始"
         android:textColor="@color/white"
         android:fontFamily="@font/harmonyos_sans_bold"
         android:stateListAnimator="@animator/button_press"
         android:clickable="true"
-        />
+        />-->
 
     <TextView
         android:id="@+id/stop"
@@ -150,12 +151,12 @@
         android:layout_height="60dp"
         app:layout_constraintTop_toBottomOf="@id/voiceprint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/start"
-        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/red"
         android:gravity="center"
-        android:text="STOP"
+        android:text="结束"
         android:textColor="@color/white"
         android:fontFamily="@font/harmonyos_sans_bold"
         android:stateListAnimator="@animator/button_press"
@@ -171,9 +172,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Result: Low Risk"
+        android:text="结果: Low Risk"
         android:textSize="18dp"
         android:textColor="@color/green"
         android:fontFamily="@font/harmonyos_sans_bold"

@@ -20,4 +20,5 @@ public class SchulteGridCell {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
 }

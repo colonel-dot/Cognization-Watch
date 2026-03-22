@@ -38,6 +38,7 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var btn_bed: Button
 
     private val viewModel: ScheduleViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
 
     // 使用单例SnapHelper避免重复绑定
         private val snapHelper by lazy { LinearSnapHelper() }
@@ -108,7 +109,9 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
             setResult(Activity.RESULT_OK)
+            mainViewModel.notifyRecordChanged()
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
+
         }
 
 
@@ -120,6 +123,7 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
             setResult(Activity.RESULT_OK)
+            mainViewModel.notifyRecordChanged()
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
@@ -194,12 +198,10 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
-    /** 计算真实位置 */
     private fun getRealPosition(loopPosition: Int, dataSize: Int): Int {
         return (loopPosition % dataSize + dataSize) % dataSize
     }
 
-    /** 修复后的LiveData观察者 - 使用正确的RecyclerView引用 */
     private fun setupObservers() {
         viewModel.bedTimeText.observe(this) { text ->
             tvBedTime.text = text

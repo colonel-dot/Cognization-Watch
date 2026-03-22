@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CognitiveTestFragment">
+    tools:context="collection.HealthMonitoringFragment">
 
     <TextView
         android:id="@+id/function"
@@ -17,7 +17,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Health Monitoring"
+        android:text="基础健康情况监测"
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -33,7 +33,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="Today's collected data"
+        android:text="今日数据"
         android:textColor="@color/grey"
         android:textSize="12sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -74,7 +74,7 @@
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Unlock BP Trends with Premium!"
+            android:text="开通会员解锁更多功能"
             android:textSize="16sp"
             android:textColor="@color/purple"
             android:fontFamily="@font/harmonyos_sans_bold"

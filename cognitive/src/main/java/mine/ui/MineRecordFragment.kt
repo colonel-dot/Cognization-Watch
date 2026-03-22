@@ -31,7 +31,6 @@ import java.time.format.DateTimeFormatter
 
 private const val TAG = "MineRecordFragment"
 class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
-    // 你的写法正确：by viewModels() 是 ktx扩展语法，等价于ViewModelProvider(this)，更简洁
     private val viewModel: MineRecordViewModel by viewModels<MineRecordViewModel>()
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var recordRV: RecyclerView
@@ -56,8 +55,13 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
         lifecycleScope.launch {
             setChartData()
         }
-        observeViewModelData()
         viewModel.queryRecordsData()
+        observeViewModelData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun initRecyclerView(){
@@ -92,10 +96,10 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
 
         val yAxis = lineChart.axisLeft
         yAxis.apply {
-            axisMinimum = 0.0f      // Y轴最小值0
-            axisMaximum = 1.0f       // Y轴最大值1
-            granularity = 0.1f       // 刻度间隔0.1
-            setDrawGridLines(true)  // 显示网格线
+            axisMinimum = 0.0f
+            axisMaximum = 1.0f
+            granularity = 0.1f
+            setDrawGridLines(true)
         }
         lineChart.axisRight.isEnabled = false // 禁用右侧Y轴
 
@@ -125,23 +129,19 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
         val riskDao = AppDatabase.getDatabase(this.requireContext()).dailyRiskDao()
         val riskRecords = riskDao.getAll()
         Log.d(TAG, "setChartData: $riskRecords")
-        // 1. 整理数据：按时间排序，映射到X轴索引（0-14）
         riskRecords.forEach { record ->
-            // 计算当前日期在「15天时间轴」中的索引
             val daysAgo = LocalDate.now().plusDays(5).until(record.date).days * -1 // 负数表示过去的天数
             val xIndex = 14 - daysAgo // 映射到0-14的X轴索引
             val yValue = record.riskScore ?: 0.0
             entries.add(Entry(xIndex.toFloat(), yValue.toFloat()))
         }
 
-        // 2. 创建折线数据集
         val dataSet = LineDataSet(entries, "风险指数").apply {
             color = resources.getColor(R.color.blue, null) // 折线颜色
-            //circleColor = resources.getColor(R.color.blue, null) // 节点颜色
-            circleRadius = 4f // 节点大小
-            lineWidth = 2f // 折线宽度
-            setDrawValues(false) // 隐藏节点数值（可选）
-            setDrawFilled(true) // 填充折线下方区域（可选）
+            circleRadius = 4f
+            lineWidth = 2f
+            setDrawValues(false)
+            setDrawFilled(true)
             fillColor = resources.getColor(R.color.red, null) // 填充颜色
             fillAlpha = 50 // 填充透明度
         }
