@@ -26,7 +26,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cogwatch"
-        tools:replace="android:theme"
+        tools:replace="android:theme,android:name"
         tools:targetApi="31" >
         <activity
             android:name=".login.ui.LoginActivity"
@@ -59,6 +59,23 @@
                 <action android:name="com.example.GEOFENCE_ACTION"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="other.OtherReportActivity"
+            android:exported="false" />
+        <activity
+            android:name="schulte.ui.SchulteGridActivity"
+            android:exported="false" />
+        <activity
+            android:name="bind_device.BindActivity"
+            android:exported="false" />
+        <service
+            android:name="sports.data.StepForegroundService"
+            android:enabled="true" />
+        <activity
+            android:name="schedule.ui.ScheduleActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

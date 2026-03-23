@@ -1,0 +1,732 @@
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.library'\r\napply plugin: 'org.jetbrains.kotlin.android'\r\napply plugin: 'kotlin-kapt'\r\n\r\nandroid {\r\n    namespace 'com.example.bridge'\r\n    compileSdk 36\r\n\r\n    defaultConfig {\r\n        minSdk 26\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n        consumerProguardFiles \"consumer-rules.pro\"\r\n\r\n        ndk {\r\n            abiFilters \"armeabi-v7a\", \"arm64-v8a\" // 支持 armeabi-v7a 32bit 和 arm64-v8a 64bit 架构\r\n        }\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_17\r\n        targetCompatibility JavaVersion.VERSION_17\r\n    }\r\n    sourceSets {\r\n        main {\r\n            manifest.srcFile 'src/main/AndroidManifest.xml'\r\n            jniLibs.srcDir 'libs'\r\n        }\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n\r\n    implementation project(':common')\r\n\r\n    implementation libs.appcompat\r\n    implementation libs.material\r\n    implementation libs.activity\r\n    implementation libs.constraintlayout\r\n    implementation libs.camera.view\r\n    implementation libs.core.ktx\r\n    implementation libs.room.ktx\r\n    testImplementation libs.junit\r\n    androidTestImplementation libs.ext.junit\r\n    androidTestImplementation libs.espresso.core\r\n    kapt \"androidx.room:room-compiler:2.8.4\"\r\n    implementation \"androidx.room:room-runtime:2.8.4\"\r\n\r\n    def camerax_version = \"1.3.3\"\r\n\r\n    implementation \"androidx.camera:camera-core:$camerax_version\"\r\n    implementation \"androidx.camera:camera-camera2:$camerax_version\"\r\n    implementation \"androidx.camera:camera-lifecycle:$camerax_version\"\r\n    implementation \"androidx.camera:camera-view:$camerax_version\"\r\n\r\n    implementation \"androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2\"\r\n    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3\"\r\n\r\n    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'\r\n\r\n    implementation \"com.google.android.material:material:1.11.0\"\r\n\r\n    implementation 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle b/build.gradle
+--- a/build.gradle	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/build.gradle	(date 1774270205904)
+@@ -1,6 +1,4 @@
+ apply plugin: 'com.android.library'
+-apply plugin: 'org.jetbrains.kotlin.android'
+-apply plugin: 'kotlin-kapt'
+ 
+ android {
+     namespace 'com.example.bridge'
+@@ -40,18 +38,14 @@
+ 
+     implementation project(':common')
+ 
++    implementation project(":common")
+     implementation libs.appcompat
+     implementation libs.material
+     implementation libs.activity
+     implementation libs.constraintlayout
+-    implementation libs.camera.view
+-    implementation libs.core.ktx
+-    implementation libs.room.ktx
+     testImplementation libs.junit
+     androidTestImplementation libs.ext.junit
+     androidTestImplementation libs.espresso.core
+-    kapt "androidx.room:room-compiler:2.8.4"
+-    implementation "androidx.room:room-runtime:2.8.4"
+ 
+     def camerax_version = "1.3.3"
+ 
+Index: ../gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\nagp = \"8.10.1\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.3.0\"\r\nespressoCore = \"3.7.0\"\r\nappcompat = \"1.7.1\"\r\nmaterial = \"1.13.0\"\r\nactivity = \"1.12.0\"\r\nconstraintlayout = \"2.2.1\"\r\nkotlin = \"2.1.0\"\r\nworkRuntimeKtx = \"2.11.0\"\r\ncoreKtx = \"1.17.0\"\r\ncameraView = \"1.5.3\"\r\nroom = \"2.6.1\"\r\nroom3CommonJvm = \"3.0.0-alpha01\"\r\nroom3CommonJvmVersion = \"3.0.0-alpha01\"\r\nroomCommonJvm = \"2.8.4\"\r\nroomKtx = \"2.8.4\"\r\n\r\n[libraries]\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\next-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nespresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nappcompat = { group = \"androidx.appcompat\", name = \"appcompat\", version.ref = \"appcompat\" }\r\nmaterial = { group = \"com.google.android.material\", name = \"material\", version.ref = \"material\" }\r\nactivity = { group = \"androidx.activity\", name = \"activity\", version.ref = \"activity\" }\r\nconstraintlayout = { group = \"androidx.constraintlayout\", name = \"constraintlayout\", version.ref = \"constraintlayout\" }\r\nwork-runtime-ktx = { group = \"androidx.work\", name = \"work-runtime-ktx\", version.ref = \"workRuntimeKtx\" }\r\ncore-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\ncamera-view = { group = \"androidx.camera\", name = \"camera-view\", version.ref = \"cameraView\" }\r\nroom-runtime = { module = \"androidx.room:room-runtime\", version.ref = \"room\" }\r\nroom-compiler = { module = \"androidx.room:room-compiler\", version.ref = \"room\" }\r\nroom-ktx = { module = \"androidx.room:room-ktx\", version.ref = \"room\" }\r\nroom3-common-jvm = { group = \"androidx.room3\", name = \"room3-common-jvm\", version.ref = \"room3CommonJvmVersion\" }\r\nroom-common-jvm = { group = \"androidx.room\", name = \"room-common-jvm\", version.ref = \"roomCommonJvm\" }\r\nandroidx-room-ktx = { group = \"androidx.room\", name = \"room-ktx\", version.ref = \"roomKtx\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nandroid-library = { id = \"com.android.library\", version.ref = \"agp\" }\r\nkotlin-android = { id = \"org.jetbrains.kotlin.android\", version.ref = \"kotlin\" }\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../gradle/libs.versions.toml b/../gradle/libs.versions.toml
+--- a/../gradle/libs.versions.toml	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../gradle/libs.versions.toml	(date 1774270284517)
+@@ -9,13 +9,11 @@
+ constraintlayout = "2.2.1"
+ kotlin = "2.1.0"
+ workRuntimeKtx = "2.11.0"
++room = "2.8.4"
+ coreKtx = "1.17.0"
+ cameraView = "1.5.3"
+-room = "2.6.1"
+-room3CommonJvm = "3.0.0-alpha01"
+-room3CommonJvmVersion = "3.0.0-alpha01"
+-roomCommonJvm = "2.8.4"
+-roomKtx = "2.8.4"
++cameraCore = "1.5.3"
++coreKtxVersion = "1.18.0"
+ 
+ [libraries]
+ junit = { group = "junit", name = "junit", version.ref = "junit" }
+@@ -28,15 +26,13 @@
+ work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+ core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+ camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
++camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraCore" }
++androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
+ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+-room3-common-jvm = { group = "androidx.room3", name = "room3-common-jvm", version.ref = "room3CommonJvmVersion" }
+-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
+-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+ 
+ [plugins]
+ android-application = { id = "com.android.application", version.ref = "agp" }
+ android-library = { id = "com.android.library", version.ref = "agp" }
+-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
++kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.0.21" }
+ 
+Index: ../cognitive/src/main/java/debug_login/ApiService.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package debug_login\r\n\r\nimport bind_device.BindRequest\r\nimport bind_device.BindResponse\r\nimport persistense.behavior.DailyBehaviorEntity\r\nimport retrofit2.Response\r\nimport retrofit2.http.Body\r\nimport retrofit2.http.GET\r\nimport retrofit2.http.POST\r\nimport retrofit2.http.Query\r\nimport persistense.risk.DailyRiskEntity\r\n\r\n// 用于健康数据的请求\r\ndata class UpdateDailyHealthRequest(\r\n    val elder_account: String,\r\n    val date: String,  // 需要转为字符串格式\r\n    val data: Map<String, Any?>  // 或者直接传 DailyBehaviorEntity 并序列化\r\n)\r\n\r\n// 用于风险数据的请求\r\ndata class UpdateDailyRiskRequest(\r\n    val elder_account: String,\r\n    val date: String,\r\n    val data: Map<String, Any?>\r\n)\r\n\r\ninterface ApiService {\r\n    @POST(\"login\") // 替换为你的实际接口路径\r\n    suspend fun login(@Body request: LoginRequest): LoginResponse // 关键：suspend + 直接返回 LoginResponse\r\n\r\n    @POST(\"bind\")\r\n    suspend fun bind(@Body request: BindRequest): BindResponse\r\n\r\n/*    @POST(\"elder/updatedailyrisk\")\r\n    suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/\r\n\r\n/*    @POST(\"elder/updatedailyhealthrecord\")\r\n    suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/\r\n\r\n\r\n    @POST(\"elder/updatedailyhealthrecord\")\r\n    suspend fun postDailyBehavior(\r\n        @Body request: UpdateDailyHealthRequest\r\n    ): Response<Unit>\r\n\r\n    @POST(\"elder/updatedailyrisk\")\r\n    suspend fun postDailyRisk(\r\n        @Body request: UpdateDailyRiskRequest\r\n    ): Response<Unit>\r\n\r\n    @GET(\"elder/daily\")\r\n    suspend fun getDailyBehavior(\r\n        @Query(\"username\") child_account: String?, // 关键：account → child_account\r\n        @Query(\"elder_account\") account: String?, // 关键：account → elder_account\r\n        @Query(\"date\") date: String\r\n    ): DailyBehaviorEntity\r\n\r\n    // 2. 对应 /daily/all 接口（GetAllDailyHandler）\r\n    @GET(\"daily/all\")\r\n    suspend fun getAllDailyBehavior(\r\n        @Query(\"elder_account\") account: String // 关键：account → elder_account\r\n    ): List<DailyBehaviorEntity>\r\n\r\n    // 3. 对应 /elder/dailyrisk 接口（GetDailyRiskHandler）\r\n    @GET(\"elder/dailyrisk\")\r\n    suspend fun getDailyRisk(\r\n        @Query(\"username\") childAccount: String?, // 关键：account → child_account\r\n        @Query(\"elder_account\") account: String, // 关键：account → elder_account\r\n        @Query(\"date\") date: String\r\n    ): DailyRiskEntity\r\n\r\n    // 4. 对应 /daily/allrisk 接口（GetAllDailyRiskHandler）\r\n    @GET(\"daily/allrisk\")\r\n    suspend fun getAllDailyRisk(\r\n        @Query(\"elder_account\") account: String // 关键：account → elder_account\r\n    ): List<DailyRiskEntity>\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/debug_login/ApiService.kt b/../cognitive/src/main/java/debug_login/ApiService.kt
+--- a/../cognitive/src/main/java/debug_login/ApiService.kt	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../cognitive/src/main/java/debug_login/ApiService.kt	(date 1774269662573)
+@@ -31,13 +31,6 @@
+     @POST("bind")
+     suspend fun bind(@Body request: BindRequest): BindResponse
+ 
+-/*    @POST("elder/updatedailyrisk")
+-    suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/
+-
+-/*    @POST("elder/updatedailyhealthrecord")
+-    suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/
+-
+-
+     @POST("elder/updatedailyhealthrecord")
+     suspend fun postDailyBehavior(
+         @Body request: UpdateDailyHealthRequest
+@@ -75,4 +68,15 @@
+         @Query("elder_account") account: String // 关键：account → elder_account
+     ): List<DailyRiskEntity>
+ 
++    @GET()
++    suspend fun getBarrierInfo()
++
++    @POST()
++    suspend fun postBarrierInfo()
++
++    @GET()
++    suspend fun getElderMovement()
++
++    @POST()
++    suspend fun postElderMovement()
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/bridge/model/BarrierInfo.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridge/model/BarrierInfo.kt b/src/main/java/com/example/bridge/model/BarrierInfo.kt
+new file mode 100644
+--- /dev/null	(date 1774269662566)
++++ b/src/main/java/com/example/bridge/model/BarrierInfo.kt	(date 1774269662566)
+@@ -0,0 +1,6 @@
++package com.example.bridge.model
++
++data class BarrierInfo (val eldername : String,
++                   val lon: Double,
++                   val lat: Double,
++                   val radius: Double)
+\ No newline at end of file
+Index: ../cognitive/src/main/java/geobairrer/ElderMovement.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/geobairrer/ElderMovement.kt b/../cognitive/src/main/java/geobairrer/ElderMovement.kt
+new file mode 100644
+--- /dev/null	(date 1774269662575)
++++ b/../cognitive/src/main/java/geobairrer/ElderMovement.kt	(date 1774269662575)
+@@ -0,0 +1,7 @@
++package geobairrer
++
++data class ElderMovement (val childname: String,
++                          val lon: Double,
++                          val lat: Double,
++                          val time: Long,
++                          val status: String)
+Index: src/main/java/com/example/bridge/vm/GeoViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridge/vm/GeoViewModel.kt b/src/main/java/com/example/bridge/vm/GeoViewModel.kt
+new file mode 100644
+--- /dev/null	(date 1774269662571)
++++ b/src/main/java/com/example/bridge/vm/GeoViewModel.kt	(date 1774269662571)
+@@ -0,0 +1,158 @@
++package com.example.bridge.viewmodel
++
++import android.app.Application
++import androidx.lifecycle.AndroidViewModel
++import androidx.lifecycle.viewModelScope
++import kotlinx.coroutines.flow.MutableSharedFlow
++import kotlinx.coroutines.flow.MutableStateFlow
++import kotlinx.coroutines.flow.StateFlow
++import kotlinx.coroutines.flow.asSharedFlow
++import kotlinx.coroutines.flow.asStateFlow
++import kotlinx.coroutines.launch
++import com.example.bridge.model.BarrierInfo
++import com.example.bridge.model.ElderMovement
++import com.example.bridge.network.GeoNetworkRepository
++
++/**
++ * 数据变更类型（用于区分不同数据的更新）
++ */
++enum class DataChangeType {
++    BARRIER_INFO,    // 围栏信息变更
++    ELDER_MOVEMENT   // 老人轨迹变更
++}
++
++/**
++ * 围栏信息相关 UI 状态
++ */
++sealed class BarrierUiState {
++    object Idle : BarrierUiState()          // 初始状态
++    object Loading : BarrierUiState()       // 加载中
++    data class GetSuccess(val data: BarrierInfo) : BarrierUiState()  // 获取成功
++    data class PostSuccess(val msg: String = "围栏信息提交成功") : BarrierUiState() // 提交成功
++    data class Error(val msg: String) : BarrierUiState() // 错误状态
++}
++
++/**
++ * 老人轨迹相关 UI 状态
++ */
++sealed class MovementUiState {
++    object Idle : MovementUiState()
++    object Loading : MovementUiState()
++    data class GetSuccess(val data: ElderMovement) : MovementUiState()
++    data class PostSuccess(val msg: String = "老人轨迹提交成功") : MovementUiState()
++    data class Error(val msg: String) : MovementUiState()
++}
++
++class GeoViewModel(application: Application) : AndroidViewModel(application) {
++    // 仓库单例
++    private val geoRepo = GeoNetworkRepository
++
++    // ==================== 围栏信息状态（内部可变，外部只读） ====================
++    private val _barrierUiState = MutableStateFlow<BarrierUiState>(BarrierUiState.Idle)
++    val barrierUiState: StateFlow<BarrierUiState> = _barrierUiState.asStateFlow()
++
++    // ==================== 老人轨迹状态 ====================
++    private val _movementUiState = MutableStateFlow<MovementUiState>(MovementUiState.Idle)
++    val movementUiState: StateFlow<MovementUiState> = _movementUiState.asStateFlow()
++
++    // ==================== 新增：数据变更通知 Flow ====================
++    // 1. 通用通知（仅告知“有数据更新”，无具体类型）
++    private val _dataUpdated = MutableSharedFlow<Unit>(replay = 0)
++    val dataUpdated = _dataUpdated.asSharedFlow()
++
++    // 2. 带类型的通知（告知“某类数据更新”，便于 UI 区分处理）
++    private val _dataChanged = MutableSharedFlow<DataChangeType>(replay = 0)
++    val dataChanged = _dataChanged.asSharedFlow()
++
++    // ==================== 原有业务方法（增加数据变更通知） ====================
++    fun getBarrierInfo(childname: String) {
++        _barrierUiState.value = BarrierUiState.Loading
++
++        viewModelScope.launch {
++            geoRepo.getBarrierInfo(childname)
++                .collect { result ->
++                    result.onSuccess { barrierInfo ->
++                        _barrierUiState.value = BarrierUiState.GetSuccess(barrierInfo)
++                        // 发送数据变更通知
++                        notifyDataChanged(DataChangeType.BARRIER_INFO)
++                    }.onFailure { e ->
++                        _barrierUiState.value = BarrierUiState.Error(e.message ?: "获取围栏信息失败")
++                    }
++                }
++        }
++    }
++
++    fun postBarrierInfo(eldername: String, barrierInfo: BarrierInfo) {
++        _barrierUiState.value = BarrierUiState.Loading
++
++        viewModelScope.launch {
++            geoRepo.postBarrierInfo(eldername, barrierInfo)
++                .collect { result ->
++                    result.onSuccess {
++                        _barrierUiState.value = BarrierUiState.PostSuccess()
++                        // 发送数据变更通知（提交成功后，后端数据已更新）
++                        notifyDataChanged(DataChangeType.BARRIER_INFO)
++                    }.onFailure { e ->
++                        _barrierUiState.value = BarrierUiState.Error(e.message ?: "提交围栏信息失败")
++                    }
++                }
++        }
++    }
++
++    fun getElderMovement(eldername: String) {
++        _movementUiState.value = MovementUiState.Loading
++
++        viewModelScope.launch {
++            geoRepo.getElderMovement(eldername)
++                .collect { result ->
++                    result.onSuccess { elderMovement ->
++                        _movementUiState.value = MovementUiState.GetSuccess(elderMovement)
++                        // 发送数据变更通知
++                        notifyDataChanged(DataChangeType.ELDER_MOVEMENT)
++                    }.onFailure { e ->
++                        _movementUiState.value = MovementUiState.Error(e.message ?: "获取老人轨迹失败")
++                    }
++                }
++        }
++    }
++
++    fun postElderMovement(childname: String, elderMovement: ElderMovement) {
++        _movementUiState.value = MovementUiState.Loading
++
++        viewModelScope.launch {
++            geoRepo.postElderMovement(childname, elderMovement)
++                .collect { result ->
++                    result.onSuccess {
++                        _movementUiState.value = MovementUiState.PostSuccess()
++                        // 发送数据变更通知（提交成功后，后端数据已更新）
++                        notifyDataChanged(DataChangeType.ELDER_MOVEMENT)
++                    }.onFailure { e ->
++                        _movementUiState.value = MovementUiState.Error(e.message ?: "提交老人轨迹失败")
++                    }
++                }
++        }
++    }
++
++    // ==================== 新增：数据变更通知方法 ====================
++    /**
++     * 发送数据变更通知（内部封装，统一处理）
++     * @param type 变更的数据类型
++     */
++    private fun notifyDataChanged(type: DataChangeType) {
++        viewModelScope.launch {
++            // 发送带类型的通知
++            _dataChanged.emit(type)
++            // 发送通用通知（可选，根据 UI 需求选择）
++            _dataUpdated.emit(Unit)
++        }
++    }
++
++    // 可选：重置状态（如页面刷新、返回时）
++    fun resetBarrierState() {
++        _barrierUiState.value = BarrierUiState.Idle
++    }
++
++    fun resetMovementState() {
++        _movementUiState.value = MovementUiState.Idle
++    }
++}
+\ No newline at end of file
+Index: ../cognitive/src/main/java/repository/NetWorkRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package repository\r\n\r\nimport android.util.Log\r\nimport debug_login.RetrofitClient\r\nimport debug_login.UpdateDailyHealthRequest\r\nimport debug_login.UpdateDailyRiskRequest\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.flow.Flow\r\nimport kotlinx.coroutines.flow.flow\r\nimport kotlinx.coroutines.flow.flowOn\r\nimport persistense.behavior.DailyBehaviorEntity\r\nimport risk.model.DailyRiskResult\r\nimport risk.model.toResult\r\nimport user.UserManager\r\nimport java.time.LocalDate\r\nimport java.time.format.DateTimeFormatter\r\n\r\nprivate const val TAG = \"NetWorkRepository\"\r\nval DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE // 格式：yyyy-MM-dd\r\n\r\nobject NetWorkRepository {\r\n    fun updateDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity): Flow<Result<Int>> = flow {\r\n        try {\r\n            val dateStr = date.toString()\r\n\r\n            // 将实体转换为 Map\r\n            val dataMap = mapOf(\r\n                \"wake_time\" to record.wakeMinute,\r\n                \"sleep_time\" to record.sleepMinute,\r\n                \"schulte4\" to record.schulte16TimeSec,\r\n                \"schulte5\" to record.schulte25TimeSec,\r\n                \"voice_score\" to record.speechScore,\r\n                \"step_count\" to record.steps\r\n            )\r\n\r\n            Log.d(TAG, \"updateDailyBehavior: 将给后端post的日常数据是 $dateStr $dataMap ${dataMap[\"wake_time\"]} ${dataMap[\"voice_score\"]}\")\r\n\r\n            val request = UpdateDailyHealthRequest(\r\n                elder_account = account,\r\n                date = dateStr,\r\n                data = dataMap\r\n            )\r\n\r\n            val response = RetrofitClient.apiService.postDailyBehavior(request)\r\n            if (response.isSuccessful) {\r\n                emit(Result.success(response.code()))\r\n            } else {\r\n                // 处理非成功响应\r\n                val errorMsg = \"健康数据更新失败: ${response.code()} - ${response.errorBody()?.use { it.string() }}\"\r\n                Log.e(TAG, errorMsg)\r\n                emit(Result.failure(IllegalStateException(errorMsg)))\r\n            }\r\n        } catch (e: Exception) {\r\n            Log.e(\"NetWorkRepository\", \"健康数据更新异常: ${e.message}\")\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n    fun updateDailyRisk(account: String, date: LocalDate, riskResult: DailyRiskResult): Flow<Result<Int>> = flow {\r\n        try {\r\n            val dateStr = date.toString()\r\n\r\n            // 将风险结果转换为 Map\r\n            val dataMap = mutableMapOf<String, Any?>().apply {\r\n                put(\"overallRiskLevel\", riskResult.riskLevel)\r\n                put(\"overallRiskScore\", riskResult.riskScore)\r\n                put(\"schulteRisk\", riskResult.schulteRiskScore)\r\n                put(\"speechRisk\", riskResult.readRiskScore)\r\n                put(\"sleepRisk\", riskResult.scheduleRiskScore)\r\n                // 如果有其他字段也一并添加\r\n            }\r\n\r\n            val request = UpdateDailyRiskRequest(\r\n                elder_account = account,\r\n                date = dateStr,\r\n                data = dataMap\r\n            )\r\n\r\n            Log.d(TAG, \"发送风险数据: account=$account, date=$dateStr, data=$dataMap\")\r\n\r\n            val response = RetrofitClient.apiService.postDailyRisk(request)\r\n            if (response.isSuccessful) {\r\n                Log.d(TAG, \"数据更新成功，响应码: ${response.code()}\")\r\n                emit(Result.success(response.code()))\r\n            } else {\r\n                // 处理非成功响应\r\n                val errorMsg = \"数据更新失败: ${response.code()} - ${response.errorBody()?.use { it.string() }}\"\r\n                Log.e(TAG, errorMsg)\r\n                emit(Result.failure(IllegalStateException(errorMsg)))\r\n            }\r\n            /*if (response.isSuccessful) {\r\n                Log.d(TAG, \"风险数据更新成功\")\r\n            } else {\r\n                Log.e(TAG, \" 风险数据更新失败: ${response.code()} - ${response.errorBody()?.string()}\")\r\n            }*/\r\n        }catch (e: Exception) {\r\n            Log.e(TAG, \" 风险数据更新异常: ${e.message}\", e)\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n    fun getOtherDailyRisk(otheraccount: String?, date: LocalDate): Flow<Result<DailyRiskResult>> = flow {\r\n        try {\r\n            if (otheraccount == null) {\r\n                throw IllegalArgumentException(\"Account cannot be null\")\r\n            }\r\n            val response = RetrofitClient.apiService.getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))\r\n            // 发送成功结果\r\n            emit(Result.success(response.toResult()))\r\n        } catch (e: Exception) {\r\n            // 捕获所有异常，发送失败结果\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n    fun getOtherDailyBehavior(account: String?, date: LocalDate): Flow<Result<DailyBehaviorEntity>> = flow {\r\n        try {\r\n            if (account == null) {\r\n                throw IllegalArgumentException(\"Account cannot be null\")\r\n            }\r\n            val response = RetrofitClient.apiService.getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))\r\n            // 发送成功结果\r\n            emit(Result.success(response))\r\n        } catch (e: Exception) {\r\n            // 捕获所有异常，发送失败结果\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/repository/NetWorkRepository.kt b/../cognitive/src/main/java/repository/NetWorkRepository.kt
+--- a/../cognitive/src/main/java/repository/NetWorkRepository.kt	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../cognitive/src/main/java/repository/NetWorkRepository.kt	(date 1774269930453)
+@@ -1,9 +1,15 @@
+ package repository
+ 
+ import android.util.Log
++import debug_login.ApiService
++import debug_login.LoginRequest
++import debug_login.LoginResponse
++import Internet.RetrofitClient
+ import debug_login.RetrofitClient
+ import debug_login.UpdateDailyHealthRequest
+ import debug_login.UpdateDailyRiskRequest
++import geobairrer.BarrierInfo
++import geobairrer.ElderMovement
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.flow.Flow
+ import kotlinx.coroutines.flow.flow
+@@ -41,7 +47,7 @@
+                 data = dataMap
+             )
+ 
+-            val response = RetrofitClient.apiService.postDailyBehavior(request)
++            val response = RetrofitClient.createService(ApiService::class.java).postDailyBehavior(request)
+             if (response.isSuccessful) {
+                 emit(Result.success(response.code()))
+             } else {
+@@ -78,7 +84,7 @@
+ 
+             Log.d(TAG, "发送风险数据: account=$account, date=$dateStr, data=$dataMap")
+ 
+-            val response = RetrofitClient.apiService.postDailyRisk(request)
++            val response = RetrofitClient.createService(ApiService::class.java).postDailyRisk(request)
+             if (response.isSuccessful) {
+                 Log.d(TAG, "数据更新成功，响应码: ${response.code()}")
+                 emit(Result.success(response.code()))
+@@ -104,7 +110,7 @@
+             if (otheraccount == null) {
+                 throw IllegalArgumentException("Account cannot be null")
+             }
+-            val response = RetrofitClient.apiService.getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
++            val response = RetrofitClient.createService(ApiService::class.java).getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
+             // 发送成功结果
+             emit(Result.success(response.toResult()))
+         } catch (e: Exception) {
+@@ -118,7 +124,7 @@
+             if (account == null) {
+                 throw IllegalArgumentException("Account cannot be null")
+             }
+-            val response = RetrofitClient.apiService.getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
++            val response = RetrofitClient.createService(ApiService::class.java).getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
+             // 发送成功结果
+             emit(Result.success(response))
+         } catch (e: Exception) {
+@@ -127,4 +133,21 @@
+         }
+     }.flowOn(Dispatchers.IO)
+ 
++    fun getBarrierInfo(): Flow<Result<BarrierInfo>> = flow {
++        TODO()
++    }
++
++    fun postBarrierInfo(barrierInfo: BarrierInfo): Flow<Result<Int>> = flow {
++        TODO()
++
++    }
++
++    fun getElderMovement(): Flow<Result<ElderMovement>> = flow {
++        TODO()
++    }
++
++     fun postElderMovement(elderMovement: ElderMovement): Flow<Result<Int>> {
++        TODO()
++    }
++
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/bridge/network/GeoApiService.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridge/network/GeoApiService.kt b/src/main/java/com/example/bridge/network/GeoApiService.kt
+new file mode 100644
+--- /dev/null	(date 1774269662568)
++++ b/src/main/java/com/example/bridge/network/GeoApiService.kt	(date 1774269662568)
+@@ -0,0 +1,30 @@
++package com.example.bridge.network
++
++import com.example.bridge.model.BarrierInfo
++import com.example.bridge.model.ElderMovement
++import com.example.bridge.network.GeoNetworkRepository.BarrierInfoRequest
++import com.example.bridge.network.GeoNetworkRepository.ElderMovementRequest
++import kotlinx.coroutines.flow.Flow
++import retrofit2.http.Body
++import retrofit2.http.GET
++import retrofit2.http.POST
++import retrofit2.http.Query
++
++
++interface GeoApiService {
++    @GET("elder/barrierinfo")
++    suspend fun getBarrierInfo(
++        @Query("childname") youngname: String
++    ): BarrierInfo
++
++    @POST("elder/updatebarrierinfo")
++    suspend fun postBarrierInfo(@Body barrierInfoRequest: BarrierInfoRequest): Int
++
++    @GET("elder/eldermovement")
++    suspend fun getElderMovement(
++        @Query("eldername") eldername: String
++    ): ElderMovement
++
++    @POST("elder/updateeldermovement")
++    suspend fun postElderMovement(@Body elderMovementRequest: ElderMovementRequest): Int
++}
+\ No newline at end of file
+Index: src/main/java/com/example/bridge/model/ElderMovement.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridge/model/ElderMovement.kt b/src/main/java/com/example/bridge/model/ElderMovement.kt
+new file mode 100644
+--- /dev/null	(date 1774269662567)
++++ b/src/main/java/com/example/bridge/model/ElderMovement.kt	(date 1774269662567)
+@@ -0,0 +1,8 @@
++package com.example.bridge.model
++
++
++data class ElderMovement (val childname: String,
++                          val lon: Double,
++                          val lat: Double,
++                          val time: Long,
++                          val status: String)
+\ No newline at end of file
+Index: ../cognitive/src/main/java/debug_login/LoginRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package debug_login\r\n\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.flow.Flow\r\nimport kotlinx.coroutines.flow.flow\r\nimport kotlinx.coroutines.flow.flowOn\r\n\r\nclass LoginRepository {\r\n    // 登录请求封装为 Flow\r\n    fun login(username: String, password: String): Flow<Result<LoginResponse>> = flow {\r\n        try {\r\n            // 发起网络请求（suspend 函数，Retrofit 原生支持，无需适配器）\r\n            val request = LoginRequest(username, password)\r\n            val response = RetrofitClient.apiService.login(request)\r\n            // 发送成功结果\r\n            emit(Result.success(response))\r\n        } catch (e: Exception) {\r\n            // 捕获所有异常，发送失败结果\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO) // 指定网络请求在 IO 线程执行\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/debug_login/LoginRepository.kt b/../cognitive/src/main/java/debug_login/LoginRepository.kt
+--- a/../cognitive/src/main/java/debug_login/LoginRepository.kt	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../cognitive/src/main/java/debug_login/LoginRepository.kt	(date 1774269662574)
+@@ -4,6 +4,7 @@
+ import kotlinx.coroutines.flow.Flow
+ import kotlinx.coroutines.flow.flow
+ import kotlinx.coroutines.flow.flowOn
++import Internet.RetrofitClient
+ 
+ class LoginRepository {
+     // 登录请求封装为 Flow
+@@ -11,7 +12,7 @@
+         try {
+             // 发起网络请求（suspend 函数，Retrofit 原生支持，无需适配器）
+             val request = LoginRequest(username, password)
+-            val response = RetrofitClient.apiService.login(request)
++            val response = RetrofitClient.createService(ApiService::class.java).login(request)
+             // 发送成功结果
+             emit(Result.success(response))
+         } catch (e: Exception) {
+Index: ../cognitive/src/main/java/geobairrer/BarrierInfo.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/geobairrer/BarrierInfo.kt b/../cognitive/src/main/java/geobairrer/BarrierInfo.kt
+new file mode 100644
+--- /dev/null	(date 1774269662575)
++++ b/../cognitive/src/main/java/geobairrer/BarrierInfo.kt	(date 1774269662575)
+@@ -0,0 +1,6 @@
++package geobairrer
++
++class BarrierInfo (val eldername : String,
++                   val lon: Double,
++                   val lat: Double,
++                   val radius: Double)
+\ No newline at end of file
+Index: ../cognitive/src/main/java/debug_login/RetrofitClient.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/debug_login/RetrofitClient.kt b/../common/src/main/java/Internet/RetrofitClient.kt
+rename from ../cognitive/src/main/java/debug_login/RetrofitClient.kt
+rename to ../common/src/main/java/Internet/RetrofitClient.kt
+--- a/../cognitive/src/main/java/debug_login/RetrofitClient.kt	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../common/src/main/java/Internet/RetrofitClient.kt	(date 1774269662578)
+@@ -1,4 +1,4 @@
+-package debug_login
++package Internet
+ 
+ import retrofit2.Retrofit
+ import retrofit2.converter.gson.GsonConverterFactory
+@@ -15,8 +15,7 @@
+             .build()
+     }
+ 
+-    // 获取 ApiService 实例
+-    val apiService: ApiService by lazy {
+-        retrofit.create(ApiService::class.java)
++    fun <T> createService(serviceClass: Class<T>): T {
++        return retrofit.create(serviceClass)
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/bridge/network/GeoNetWorkReposity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridge/network/GeoNetWorkReposity.kt b/src/main/java/com/example/bridge/network/GeoNetWorkReposity.kt
+new file mode 100644
+--- /dev/null	(date 1774269662570)
++++ b/src/main/java/com/example/bridge/network/GeoNetWorkReposity.kt	(date 1774269662570)
+@@ -0,0 +1,93 @@
++package com.example.bridge.network
++
++import Internet.RetrofitClient
++import android.util.Log
++import com.example.bridge.model.BarrierInfo
++import com.example.bridge.model.ElderMovement
++import kotlinx.coroutines.flow.Flow
++import kotlinx.coroutines.flow.flow
++import kotlinx.coroutines.flow.catch
++
++private const val TAG = "GeoNetWorkReposity"
++
++
++object GeoNetworkRepository  {
++
++    // 抽取 Retrofit 服务（懒加载，首次使用时创建）
++    private val geoApiService by lazy {
++        RetrofitClient.createService(GeoApiService::class.java)
++    }
++
++    private fun <T> wrapRequest(
++        errorMsg: String,
++        request: suspend () -> T
++    ): Flow<Result<T>> = flow {
++        val result = request()
++        emit(Result.success(result))
++    }.catch { e ->
++        Log.d(TAG, "$errorMsg: ${e.message}", e)
++        emit(Result.failure(e))
++    }
++
++    private fun wrapPostRequest(
++        errorMsg: String,
++        request: suspend () -> Boolean // 假设接口返回 Boolean 表示是否成功
++    ): Flow<Result<Unit>> = flow {
++        val isSuccess = request()
++        if (isSuccess) {
++            emit(Result.success(Unit))
++        } else {
++            emit(Result.failure(IllegalStateException(errorMsg)))
++        }
++    }.catch { e ->
++        Log.d(TAG, "$errorMsg: ${e.message}", e)
++        emit(Result.failure(e))
++    }
++
++    data class ElderMovementRequest(
++        val childname: String,
++        val data: Map<String, Any?>
++    )
++
++    data class BarrierInfoRequest(
++        val eldername: String,
++        val data: Map<String, Any?>
++    )
++
++    fun getBarrierInfo(childname: String): Flow<Result<BarrierInfo>> =
++        wrapRequest("获取围栏信息失败") {
++            geoApiService.getBarrierInfo(childname)
++        }
++
++    fun postBarrierInfo(eldername: String, barrierInfo: BarrierInfo): Flow<Result<Unit>> =
++        wrapPostRequest("围栏信息发送失败") {
++            val dataMap = mapOf(
++                "eldername" to barrierInfo.eldername,
++                "lon" to barrierInfo.lon,
++                "lat" to barrierInfo.lat,
++                "radius" to barrierInfo.radius
++            )
++            val request = BarrierInfoRequest(eldername, dataMap)
++            val responseCode = geoApiService.postBarrierInfo(request)
++            responseCode == 200
++        }
++
++    fun getElderMovement(eldername: String): Flow<Result<ElderMovement>> =
++        wrapRequest("获取老人轨迹失败") {
++            geoApiService.getElderMovement(eldername)
++        }
++
++    fun postElderMovement(childname: String, elderMovement: ElderMovement): Flow<Result<Unit>> =
++        wrapPostRequest("老人轨迹发送失败") {
++            val dataMap = mapOf(
++                "childname" to elderMovement.childname,
++                "lon" to elderMovement.lon,
++                "lat" to elderMovement.lat,
++                "time" to elderMovement.time,
++                "status" to elderMovement.status
++            )
++            val request = ElderMovementRequest(childname, dataMap)
++            val responseCode = geoApiService.postElderMovement(request)
++            responseCode == 200
++        }
++}
+\ No newline at end of file
+Index: ../cognitive/src/main/java/bind_device/BindRepository.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package bind_device\r\n\r\nimport android.util.Log\r\nimport debug_login.RetrofitClient\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.flow.Flow\r\nimport kotlinx.coroutines.flow.flow\r\nimport kotlinx.coroutines.flow.flowOn\r\nimport persistense.behavior.DailyBehaviorEntity\r\nimport persistense.risk.DailyRiskEntity\r\n\r\nprivate const val TAG = \"BindRepository\"\r\n\r\nobject BindRepository {\r\n\r\n    fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{\r\n        try {\r\n            val request = BindRequest(request.musername, request.otherusername)\r\n            val response = RetrofitClient.apiService.bind(request)\r\n            emit(Result.success(response))\r\n        }\r\n        catch (e: Exception) {\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n    fun getOtherAllBehavior(account: String): Flow<Result<List<DailyBehaviorEntity>>> = flow {\r\n        try {\r\n            val response = RetrofitClient.apiService.getAllDailyBehavior(account)\r\n            Log.d(TAG, \"getOtherAllBehavior: 成功得到对方所有行为数据，该数据是 $response\")\r\n            emit(Result.success(response))\r\n        } catch (e: Exception) {\r\n            Log.d(TAG, \"getOtherAllBehavior: 得到对方所有行为数据出错\")\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n    fun getOtherAllRisk(account: String): Flow<Result<List<DailyRiskEntity>>> = flow {\r\n        try {\r\n            val response = RetrofitClient.apiService.getAllDailyRisk(account)\r\n            Log.d(TAG, \"getOtherAllRisk: 成功得到对方所有风险指数数据，该数据是 $response\")\r\n            emit(Result.success(response))\r\n        } catch (e: Exception) {\r\n            Log.d(TAG, \"getOtherAllRisk: 得到对方所有风险数据出错\")\r\n            emit(Result.failure(e))\r\n        }\r\n    }.flowOn(Dispatchers.IO)\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/src/main/java/bind_device/BindRepository.kt b/../cognitive/src/main/java/bind_device/BindRepository.kt
+--- a/../cognitive/src/main/java/bind_device/BindRepository.kt	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../cognitive/src/main/java/bind_device/BindRepository.kt	(date 1774269887200)
+@@ -1,13 +1,15 @@
+ package bind_device
+ 
+ import android.util.Log
+-import debug_login.RetrofitClient
++import debug_login.ApiService
++//import debug_login.RetrofitClient
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.flow.Flow
+ import kotlinx.coroutines.flow.flow
+ import kotlinx.coroutines.flow.flowOn
+ import persistense.behavior.DailyBehaviorEntity
+ import persistense.risk.DailyRiskEntity
++import Internet.RetrofitClient
+ 
+ private const val TAG = "BindRepository"
+ 
+@@ -16,7 +18,8 @@
+     fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{
+         try {
+             val request = BindRequest(request.musername, request.otherusername)
+-            val response = RetrofitClient.apiService.bind(request)
++           //val response = RetrofitClient.createService(ApiService::class.java).bind(request)
++            val response = Internet.RetrofitClient.createService(ApiService::class.java).bind(request)
+             emit(Result.success(response))
+         }
+         catch (e: Exception) {
+@@ -26,7 +29,7 @@
+ 
+     fun getOtherAllBehavior(account: String): Flow<Result<List<DailyBehaviorEntity>>> = flow {
+         try {
+-            val response = RetrofitClient.apiService.getAllDailyBehavior(account)
++            val response = RetrofitClient.createService(ApiService::class.java).getAllDailyBehavior(account)
+             Log.d(TAG, "getOtherAllBehavior: 成功得到对方所有行为数据，该数据是 $response")
+             emit(Result.success(response))
+         } catch (e: Exception) {
+@@ -37,7 +40,7 @@
+ 
+     fun getOtherAllRisk(account: String): Flow<Result<List<DailyRiskEntity>>> = flow {
+         try {
+-            val response = RetrofitClient.apiService.getAllDailyRisk(account)
++            val response = RetrofitClient.createService(ApiService::class.java).getAllDailyRisk(account)
+             Log.d(TAG, "getOtherAllRisk: 成功得到对方所有风险指数数据，该数据是 $response")
+             emit(Result.success(response))
+         } catch (e: Exception) {
+Index: ../cognitive/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'org.jetbrains.kotlin.android'\r\n    id 'org.jetbrains.kotlin.kapt'\r\n}\r\n\r\n/**\r\n * 是否 Debug 壳工程\r\n * isDebugCIP 建议在 gradle.properties 中定义\r\n */\r\ndef isDebug = Boolean.parseBoolean(isDebugCIP ?: \"true\")\r\n\r\n/*if (isDebug) {\r\n    apply plugin: 'com.android.application'\r\n} else {\r\n    apply plugin: 'com.android.library'\r\n}*/\r\n\r\nandroid {\r\n    namespace 'com.example.cognitive'\r\n    compileSdk 36\r\n\r\n    defaultConfig {\r\n        minSdk 26\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n\r\n        /*if (isDebug) {\r\n            applicationId \"com.example.cooperativeprojectsdemo\"\r\n        } else {\r\n            consumerProguardFiles \"consumer-rules.pro\"\r\n        }*/\r\n        consumerProguardFiles \"consumer-rules.pro\"\r\n        /*javaCompileOptions {\r\n            annotationProcessorOptions {\r\n                arguments = [\r\n                        // ARouter 配置（保持不变）\r\n                        AROUTER_MODULE_NAME: project.getName(),\r\n\r\n                        // Room 配置（追加到同一个 arguments 中，用逗号分隔）\r\n                        \"room.schemaLocation\": \"${projectDir}/schemas\",\r\n                        \"room.incremental\": \"true\"\r\n                ]\r\n            }\r\n        }*/\r\n\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles(\r\n                    getDefaultProguardFile('proguard-android-optimize.txt'),\r\n                    'proguard-rules.pro'\r\n            )\r\n        }\r\n    }\r\n\r\n    sourceSets {\r\n        main {\r\n            // 独立调试与集成调试时使用不同的 AndroidManifest.xml 文件\r\n            /*if (isDebug) {\r\n                manifest.srcFile 'src/debug/AndroidManifest.xml'\r\n            } else {\r\n                manifest.srcFile 'src/main/AndroidManifest.xml'\r\n            }*/\r\n            manifest.srcFile 'src/main/AndroidManifest.xml'\r\n        }\r\n    }\r\n\r\n\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_17\r\n        targetCompatibility JavaVersion.VERSION_17\r\n    }\r\n\r\n    // \uD83D\uDD11 Kotlin Options 必须写在 android {} 内\r\n    kotlinOptions {\r\n        jvmTarget = \"17\"\r\n        apiVersion = \"1.9\"\r\n        languageVersion = \"1.9\"\r\n    }\r\n}\r\n\r\nkapt {\r\n    correctErrorTypes = true\r\n    arguments {\r\n        arg(\"AROUTER_MODULE_NAME\", project.name)\r\n        arg(\"room.schemaLocation\", \"${projectDir}/schemas\")\r\n        arg(\"room.incremental\", \"true\")\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation project(':common')\r\n\r\n    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'\r\n\r\n    // retrofit\r\n    implementation 'com.squareup.retrofit2:retrofit:2.9.0'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n\r\n    // Splash启动页\r\n    implementation \"androidx.core:core-splashscreen:1.0.1\"\r\n\r\n    // 组件化\r\n    implementation \"com.alibaba:arouter-api:1.5.2\"\r\n    implementation libs.activity\r\n    implementation libs.camera.view\r\n    kapt \"com.alibaba:arouter-compiler:1.5.2\"\r\n\r\n    implementation \"androidx.fragment:fragment-ktx:1.6.2\"\r\n\r\n    // 协程\r\n    implementation \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3\"\r\n\r\n    // Room\r\n    implementation \"androidx.room:room-runtime:2.8.4\"\r\n    implementation \"androidx.room:room-ktx:2.8.4\"\r\n    kapt \"androidx.room:room-compiler:2.8.4\"\r\n\r\n    // Lifecycle\r\n    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.4'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4'\r\n    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.4'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.4'\r\n    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4'\r\n\r\n    // UI\r\n    implementation 'androidx.recyclerview:recyclerview:1.4.0'\r\n    implementation 'com.google.android.material:material:1.9.0'\r\n    implementation 'androidx.appcompat:appcompat:1.7.0'\r\n    implementation 'androidx.activity:activity-ktx:1.9.0'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n\r\n    // Tools\r\n    implementation 'com.belerweb:pinyin4j:2.5.0'\r\n    implementation 'com.github.squti:Android-Wave-Recorder:2.1.0'\r\n\r\n    // Debug\r\n    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'\r\n\r\n    // Modules\r\n    implementation project(':common')\r\n\r\n    // Test\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.2.1'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'\r\n\r\n    def camerax_version = \"1.3.3\"\r\n\r\n    implementation \"androidx.camera:camera-core:$camerax_version\"\r\n    implementation \"androidx.camera:camera-camera2:$camerax_version\"\r\n    implementation \"androidx.camera:camera-lifecycle:$camerax_version\"\r\n    implementation \"androidx.camera:camera-view:$camerax_version\"\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/../cognitive/build.gradle b/../cognitive/build.gradle
+--- a/../cognitive/build.gradle	(revision d08895d67bd941f77dc59a825d051ec8710f1856)
++++ b/../cognitive/build.gradle	(date 1774269662572)
+@@ -73,7 +73,7 @@
+         targetCompatibility JavaVersion.VERSION_17
+     }
+ 
+-    // 🔑 Kotlin Options 必须写在 android {} 内
++    // Kotlin Options 必须写在 android {} 内
+     kotlinOptions {
+         jvmTarget = "17"
+         apiVersion = "1.9"
+@@ -106,6 +106,7 @@
+     implementation "com.alibaba:arouter-api:1.5.2"
+     implementation libs.activity
+     implementation libs.camera.view
++    implementation libs.camera.core
+     kapt "com.alibaba:arouter-compiler:1.5.2"
+ 
+     implementation "androidx.fragment:fragment-ktx:1.6.2"
+diff --git a/src/main/java/com/example/bridge/geofence/GeofenceActivity.java b/src/main/java/com/example/bridge/geofence/GeofenceActivity.java
+new file mode 100644

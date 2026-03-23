@@ -17,8 +17,7 @@ import util.ItemSpacingDecoration
 import util.OnItemClickListener
 import kotlin.getValue
 
-
-private const val TAG = "HealthMonitoringFragmen"
+private const val TAG = "HealthMonitoringFragment"
 
 class HealthMonitoringFragment : Fragment() {
     private var mParam1: String? = null

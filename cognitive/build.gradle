@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
 }
@@ -8,7 +8,7 @@ plugins {
  * 是否 Debug 壳工程
  * isDebugCIP 建议在 gradle.properties 中定义
  */
-def isDebug = Boolean.parseBoolean(isDebugCIP ?: "true")
+def isDebug = Boolean.parseBoolean(isDebugCIP ?: "false")
 
 /*if (isDebug) {
     apply plugin: 'com.android.application'
@@ -91,8 +91,6 @@ kapt {
 }
 
 dependencies {
-    implementation project(':common')
-
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     // retrofit

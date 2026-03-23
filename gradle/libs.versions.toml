@@ -12,6 +12,7 @@ workRuntimeKtx = "2.11.0"
 coreKtx = "1.17.0"
 cameraView = "1.5.3"
 room = "2.6.1"
+room3 = "2.8.4"
 room3CommonJvm = "3.0.0-alpha01"
 room3CommonJvmVersion = "3.0.0-alpha01"
 roomCommonJvm = "2.8.4"
@@ -32,6 +33,9 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room3-common-jvm = { group = "androidx.room3", name = "room3-common-jvm", version.ref = "room3CommonJvmVersion" }
+room3-runtime = { module = "androidx.room:room-runtime", version.ref = "room3" }
+room3-compiler = { module = "androidx.room:room-compiler", version.ref = "room3" }
+room3-ktx = { module = "androidx.room:room-ktx", version.ref = "room3" }
 room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
