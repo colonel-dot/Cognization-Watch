@@ -11,6 +11,8 @@ kotlin = "2.1.0"
 workRuntimeKtx = "2.11.0"
 coreKtx = "1.17.0"
 cameraView = "1.5.3"
+cameraCore = "1.5.3"
+coreKtxVersion = "1.18.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -23,9 +25,11 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraCore" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.0.21" }
 

@@ -37,13 +37,6 @@ interface ApiService {
     @POST("bind")
     suspend fun bind(@Body request: BindRequest): BindResponse
 
-/*    @POST("elder/updatedailyrisk")
-    suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/
-
-/*    @POST("elder/updatedailyhealthrecord")
-    suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/
-
-
     @POST("elder/updatedailyhealthrecord")
     suspend fun postDailyBehavior(
         @Body request: UpdateDailyHealthRequest
@@ -81,4 +74,15 @@ interface ApiService {
         @Query("elder_account") account: String // 关键：account → elder_account
     ): List<DailyRiskEntity>
 
+    @GET()
+    suspend fun getBarrierInfo()
+
+    @POST()
+    suspend fun postBarrierInfo()
+
+    @GET
+    suspend fun getElderMovement()
+
+    @POST()
+    suspend fun postElderMovement()
 }

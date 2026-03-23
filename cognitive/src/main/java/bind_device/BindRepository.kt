@@ -1,6 +1,7 @@
 package bind_device
 
 import android.util.Log
+import debug_login.ApiService
 import debug_login.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +17,8 @@ object BindRepository {
     fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{
         try {
             val request = BindRequest(request.musername, request.otherusername)
-            val response = RetrofitClient.apiService.bind(request)
+           //val response = RetrofitClient.apiService.bind(request)
+            val response = Internet.RetrofitClient.createService(ApiService::class.java).bind(request)
             emit(Result.success(response))
         }
         catch (e: Exception) {
@@ -37,7 +39,7 @@ object BindRepository {
 
     fun getOtherAllRisk(account: String): Flow<Result<List<DailyRiskEntity>>> = flow {
         try {
-            val response = RetrofitClient.apiService.getAllDailyRisk(account)
+            val response = RetrofitClient.createService(ApiService::class.java).getAllDailyRisk(account)
             Log.d(TAG, "getOtherAllRisk: 成功得到对方所有风险指数数据，该数据是 $response")
             emit(Result.success(response))
         } catch (e: Exception) {

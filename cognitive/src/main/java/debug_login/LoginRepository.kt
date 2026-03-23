@@ -11,7 +11,7 @@ class LoginRepository {
         try {
             // 发起网络请求（suspend 函数，Retrofit 原生支持，无需适配器）
             val request = LoginRequest(username, password)
-            val response = RetrofitClient.apiService.login(request)
+            val response = RetrofitClient.createService(ApiService::class.java).login(request)
             // 发送成功结果
             emit(Result.success(response))
         } catch (e: Exception) {
