@@ -9,11 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.main.ConMainActivity
 import schulte.ui.SchulteGridActivity
 import util.ItemSpacingDecoration
-import util.OnItemClickListener
-
 
 class BrainTrainingFragment : Fragment() {
 
@@ -38,7 +35,7 @@ class BrainTrainingFragment : Fragment() {
         recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
         recyclerView.setAdapter(adapter)
 
-        adapter.setOnItemClickListener(OnItemClickListener { position: Int ->
+        adapter.setOnItemClickListener { position: Int ->
             var intent: Intent? = null
             intent = when (position) {
                 0 -> Intent(getContext(), SchulteGridActivity::class.java)
@@ -48,7 +45,7 @@ class BrainTrainingFragment : Fragment() {
             if (intent != null) {
                 startActivity(intent)
             }
-        })
+        }
 
         val itemSpacingDecoration = ItemSpacingDecoration(getContext(), 20, false)
         recyclerView.addItemDecoration(itemSpacingDecoration)

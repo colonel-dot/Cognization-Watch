@@ -6,8 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import persistense.DailyBehaviorEntity
-import risk.persistence.DailyRiskEntity
+import persistense.behavior.DailyBehaviorEntity
+import persistense.risk.DailyRiskEntity
 
 private const val TAG = "BindRepository"
 

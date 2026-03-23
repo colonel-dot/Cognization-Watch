@@ -1,6 +1,6 @@
 package risk.preprocess
 
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 import risk.model.NormalizedDailyBehavior
 
 object BehaviorNormalizer {

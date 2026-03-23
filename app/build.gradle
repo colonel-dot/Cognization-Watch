@@ -37,6 +37,11 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
 }
 
 kapt {
@@ -52,7 +57,7 @@ dependencies {
     implementation "com.alibaba:arouter-api:1.5.2"
     kapt "com.alibaba:arouter-compiler:1.5.2"
 
-    //implementation project(":bridge")
+    implementation project(":bridge")
     implementation project(":cognitive")
     implementation project(":common")
     implementation libs.appcompat

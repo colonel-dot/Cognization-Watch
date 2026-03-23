@@ -14,7 +14,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.util.List;
 
 import util.OnItemClickListener;
-import util.Util;
+import util.StringMap;
 
 public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonitoringRVAdapter.Holder> {
 
@@ -58,7 +58,7 @@ public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonito
         public void bindView(int position) {
             HealthMonitoringRVModel item = list.get(position);
             function.setText(item.getFunction());
-            data.setText(Util.map(item.getData(), item.getUnit()));
+            data.setText(StringMap.mapNumberWithUnit(item.getData(), item.getUnit()));
             progress.setProgress((int)(100 * item.getData() / item.getTarget()));
 
             itemView.setOnClickListener(v -> {

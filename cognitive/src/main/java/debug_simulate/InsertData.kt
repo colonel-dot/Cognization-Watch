@@ -2,8 +2,8 @@ package debug_simulate
 
 import android.content.Context
 import persistense.AppDatabase
-import persistense.DailyBehaviorEntity
-import risk.persistence.DailyRiskEntity
+import persistense.behavior.DailyBehaviorEntity
+import persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 object InsertData {

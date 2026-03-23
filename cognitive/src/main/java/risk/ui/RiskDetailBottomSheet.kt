@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.example.cognitive.R
-import risk.persistence.DailyRiskEntity
 import risk.vm.RiskViewModel
 import java.time.LocalDate
 

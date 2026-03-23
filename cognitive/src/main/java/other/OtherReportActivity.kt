@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import kotlinx.coroutines.launch
 import mine.ui.RecordRVAdapter
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 
 class OtherReportActivity : AppCompatActivity() {
 

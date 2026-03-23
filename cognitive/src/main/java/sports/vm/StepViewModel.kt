@@ -3,11 +3,9 @@ package sports.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import persistense.AppDatabase
 import java.time.LocalDate
 

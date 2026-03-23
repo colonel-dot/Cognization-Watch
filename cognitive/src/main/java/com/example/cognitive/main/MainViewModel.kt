@@ -1,21 +1,18 @@
 package com.example.cognitive.main
 
 import android.app.Application
-import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import debug_simulate.InsertData
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
 import repository.NetWorkRepository
 import repository.UpdateRepository
 import risk.work.DailyRiskCalculator
 import risk.model.toEntity
-import risk.model.toNormalized
 import risk.model.toNormalizedList
 import risk.model.toResult
 import risk.work.RiskConfigManager

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 
 private const val TAG = "RecordRVAdapter"
 

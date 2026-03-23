@@ -11,12 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import com.example.cognitive.main.ConMainActivity
 import schedule.ui.ScheduleActivity
 import sports.vm.StepViewModel
 import util.ItemSpacingDecoration
 import util.OnItemClickListener
 import kotlin.getValue
+
 
 private const val TAG = "HealthMonitoringFragmen"
 
@@ -67,7 +67,7 @@ class HealthMonitoringFragment : Fragment() {
         adapter.setOnItemClickListener(OnItemClickListener { position: Int ->
             when (position) {
                 1 -> {
-                    startActivity(Intent (getContext(), ScheduleActivity::class.java))
+                    startActivity(Intent(getContext(), ScheduleActivity::class.java))
                 }
             }
         })

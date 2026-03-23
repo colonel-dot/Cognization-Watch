@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import persistense.AppDatabase
-import persistense.DailyBehaviorDao
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 import user.UserManager
 
 private const val TAG = "UpdateRepository"

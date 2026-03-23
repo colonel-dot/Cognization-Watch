@@ -1,8 +1,6 @@
 package repository
 
 import android.util.Log
-import debug_login.LoginRequest
-import debug_login.LoginResponse
 import debug_login.RetrofitClient
 import debug_login.UpdateDailyHealthRequest
 import debug_login.UpdateDailyRiskRequest
@@ -10,12 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 import risk.model.DailyRiskResult
-import risk.model.RiskLevel
 import risk.model.toResult
-import risk.persistence.DailyRiskEntity
 import user.UserManager
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

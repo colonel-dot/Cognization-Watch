@@ -6,7 +6,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
 import kotlinx.coroutines.*
-import persistense.DailyBehaviorDao
+import persistense.behavior.DailyBehaviorDao
 import repository.UpdateRepository
 import java.time.LocalDate
 

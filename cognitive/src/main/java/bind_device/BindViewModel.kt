@@ -11,8 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import persistense.AppDatabase
-import persistense.DailyBehaviorEntity
-import risk.persistence.DailyRiskEntity
+import persistense.behavior.DailyBehaviorEntity
+import persistense.risk.DailyRiskEntity
 
 private const val TAG = "BindViewModel"
 

@@ -8,13 +8,10 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
-import mine.vm.MineRecordViewModel
 import schulte.data.SchulteGridCell
 import schulte.engine.SchulteGridEngine
 import schulte.vm.SchulteGameViewModel
@@ -27,14 +24,12 @@ class SchulteGridActivity : AppCompatActivity() {
     private var mParam1: String? = null
     private var mParam2: String? = null
 
-    // 视图控件
     private var time: TextView? = null
     private var grid: TextView? = null
     private var schulte: RecyclerView? = null
     private var pause: TextView? = null
     private var start: TextView? = null
 
-    // 核心逻辑对象
     private var timer: TimerHelper? = null
     private var engine: SchulteGridEngine? = null
     private var adapter: SchulteGridRVAdapter? = null
@@ -44,14 +39,13 @@ class SchulteGridActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 设置布局（复用原Fragment的布局文件）
         setContentView(R.layout.fragment_schulte_grid)
 
-        // 获取参数（替代Fragment的getArguments）
         if (getIntent() != null && getIntent().getExtras() != null) {
             mParam1 = getIntent().getStringExtra(ARG_PARAM1)
             mParam2 = getIntent().getStringExtra(ARG_PARAM2)
         }
+
         // 绑定视图
         bindView()
 
@@ -65,9 +59,6 @@ class SchulteGridActivity : AppCompatActivity() {
         bindClickListener()
     }
 
-    /**
-     * 绑定视图控件（Activity直接findViewById）
-     */
     private fun bindView() {
         time = findViewById<TextView?>(R.id.time)
         grid = findViewById<TextView?>(R.id.grid)
@@ -76,16 +67,13 @@ class SchulteGridActivity : AppCompatActivity() {
         start = findViewById<TextView?>(R.id.start)
     }
 
-    /**
-     * 初始化计时器
-     */
     private fun initTimer() {
         timer = TimerHelper()
-        timer!!.setOnTimerListener(OnTimerListener { `val`: Long ->
+        timer!!.setOnTimerListener { `val`: Long ->
             ms = `val`
             val second = Math.toIntExact(`val` / 1000)
             time!!.setText(second.toString())
-        })
+        }
     }
 
     /**
@@ -99,12 +87,10 @@ class SchulteGridActivity : AppCompatActivity() {
         for (i in 1..engine!!.getEnd()) {
             list.add(SchulteGridCell(i))
         }
-
         // 设置RecyclerView适配器
         adapter = SchulteGridRVAdapter(list)
         schulte!!.setAdapter(adapter)
 
-        // Item点击事件（核心游戏逻辑）
         adapter!!.setOnItemClickListener(OnItemClickListener { pos: Int ->
             val res = engine!!.click(adapter!!.getList().get(pos).getNum())
             if (res == -1) { // 点击错误
@@ -117,12 +103,11 @@ class SchulteGridActivity : AppCompatActivity() {
                 Log.d(TAG, "initGameEngine: 要保存并更新舒尔特成绩了")
                 viewModel!!.saveGameTime(if (engine!!.isFourSquared()) 4 else 5, ms)
                 mainViewModel.notifyRecordChanged()
-            } else if (res == 0) { // 点击正确，继续游戏
+            } else if (res == 0) { // 点击正确
                 grid!!.setText(engine!!.getCur().toString() + " / " + engine!!.getEnd())
             }
         })
 
-        // 设置网格布局（Activity中直接用this作为Context）
         val span = if (engine!!.isFourSquared()) 4 else 5
         schulte!!.setLayoutManager(GridLayoutManager(this, span))
     }

@@ -1,4 +1,3 @@
-/*
 package rtc;
 
 import android.Manifest;
@@ -22,12 +21,11 @@ import androidx.fragment.app.Fragment;
 import com.example.cognitive.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
-*/
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link VideoCallFragment#newInstance} factory method to
  * create an instance of this fragment.
- *//*
+ */
 
 public class VideoCallFragment extends Fragment {
     private static final String TAG = "VideoCallFragment";
@@ -45,8 +43,6 @@ public class VideoCallFragment extends Fragment {
     public VideoCallFragment() {
         // Required empty public constructor
     }
-
-    */
 /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -54,7 +50,7 @@ public class VideoCallFragment extends Fragment {
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment VideoCallFragment.
-     *//*
+     */
 
     // TODO: Rename and change types and number of parameters
     public static VideoCallFragment newInstance(String param1, String param2) {
@@ -176,4 +172,4 @@ public class VideoCallFragment extends Fragment {
         }
         return true;
     }
-}*/
+}

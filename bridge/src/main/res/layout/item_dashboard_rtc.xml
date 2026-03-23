@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="children.dashboard.ui.DashboardFragment"
+    android:background="@drawable/background_rounded"
+    android:backgroundTint="@color/white_background"
+    android:stateListAnimator="@animator/button_press"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/portrait"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/background_circle"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/like"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:stateListAnimator="@animator/button_press"
+        android:clickable="true"/>
+
+    <TextView
+        android:id="@+id/from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="Martha Johnson"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/portrait"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/status"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="Status: Active"
+        android:textColor="@color/cyan"
+        app:layout_constraintStart_toEndOf="@id/portrait"
+        app:layout_constraintTop_toBottomOf="@id/from"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="2dp"
+        />
+
+    <ImageView
+        android:id="@+id/answer"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_circle"
+        android:backgroundTint="@color/cyan"
+        android:clickable="true"
+        android:clipToOutline="true"
+        android:padding="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/call"
+        android:stateListAnimator="@animator/button_press"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/portrait"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/portrait"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

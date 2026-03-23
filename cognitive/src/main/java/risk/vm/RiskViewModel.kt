@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
-import risk.persistence.DailyRiskEntity
+import persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 class RiskViewModel(application: Application) : AndroidViewModel(application) {

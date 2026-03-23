@@ -1,7 +1,6 @@
 package risk.model
 
-import androidx.room.PrimaryKey
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 import java.time.LocalDate
 
 data class NormalizedDailyBehavior(

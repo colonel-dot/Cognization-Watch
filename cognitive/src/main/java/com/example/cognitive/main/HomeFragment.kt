@@ -9,21 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import collection.HealthMonitoringFragment
 import com.example.cognitive.R
 import game.BrainTrainingFragment
 import read_assessment.ui.ReadFragment
-import rtc.VideoCallFragment
 import sports.data.StepForegroundService
-import sports.vm.StepViewModel
+import rtc.VideoCallFragment
 import util.ItemSpacingDecoration
 import util.OnItemClickListener
 
@@ -32,26 +29,25 @@ class HomeFragment : Fragment() {
 
     private val cameraPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions(),
-            ActivityResultCallback { permissions: Map<String, Boolean> ->
-                var allGranted = true
-                for (isGranted in permissions.values) {
-                    if (!isGranted) {
-                        allGranted = false
-                        break
-                    }
-                }
-                if (allGranted) {
-                    startStepService()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "通知权限未授予，可能无法正常接收步数提醒",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions: Map<String, Boolean> ->
+            var allGranted = true
+            for (isGranted in permissions.values) {
+                if (!isGranted) {
+                    allGranted = false
+                    break
                 }
             }
-        )
+            if (allGranted) {
+                startStepService()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "通知权限未授予，可能无法正常接收步数提醒",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,7 +75,7 @@ class HomeFragment : Fragment() {
 
         val adapter = HomeRVAdapter(list)
         val recyclerView = view.findViewById<RecyclerView>(R.id.content)
-        recyclerView.layoutManager = LinearLayoutManager(context) // 简化Kotlin写法
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
         adapter.setOnItemClickListener(OnItemClickListener { position: Int ->

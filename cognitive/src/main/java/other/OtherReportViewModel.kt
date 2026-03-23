@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import persistense.AppDatabase
-import persistense.DailyBehaviorEntity
+import persistense.behavior.DailyBehaviorEntity
 import repository.NetWorkRepository
 import risk.model.toEntity
-import risk.persistence.DailyRiskEntity
+import persistense.risk.DailyRiskEntity
 import user.UserManager
 import java.time.LocalDate
 

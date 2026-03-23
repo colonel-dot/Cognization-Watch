@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".rtc.RtcActivity">
+    tools:context="rtc.RtcActivity">
 
     <com.tencent.rtmp.ui.TXCloudVideoView
-        android:id="@+id/rtc_video"
+        android:id="@+id/video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,14 +16,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.tencent.rtmp.ui.TXCloudVideoView
-        android:id="@+id/camera_video"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="90dp"
         android:layout_height="160dp"
-        android:background="@drawable/rounded_corners"
+        android:background="@drawable/background_rounded"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="70dp"
-        android:layout_marginEnd="15dp"/>
+        android:layout_marginEnd="15dp"
+        android:clipToOutline="true">
+
+        <com.tencent.rtmp.ui.TXCloudVideoView
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

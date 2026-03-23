@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.TextureView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,14 +27,13 @@ import com.tencent.trtc.TRTCCloudListener;
  * 因为 Debug 构建变体的程序版本号为 null
  * 版本号会传入 Camera 如果为空则会崩溃
  */
-public class RtcActivity extends AppCompatActivity
-        implements RtcContract.View {
+public class RtcActivity extends AppCompatActivity {
 
     private static final String TAG = "RtcActivity";
 
     private static final int PERMISSION_REQ_ID = 22;
 
-    private RtcPresenter presenter;
+    private RtcManager manager;
 
     /**
      * 按设备Android版本获得视频通话功能需要的权限
@@ -72,12 +70,16 @@ public class RtcActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rtc);
 
-        presenter = new RtcPresenter(this);
+        Intent intent = getIntent();
+        String userId = intent.getStringExtra("userId");
+
+        manager = new RtcManager(userId);
 
         if (checkPermissions()) {
-            initTrtcApplicationAndPresenter();
             bindView();
-            presenter.startVideoCall();
+            initTrtcApplicationAndPresenter();
+            mCloud.startLocalPreview(true, video);
+            manager.startVideoCall();
         } else {
             ActivityCompat.requestPermissions(
                     this, getRequiredPermissions(), PERMISSION_REQ_ID
@@ -93,9 +95,10 @@ public class RtcActivity extends AppCompatActivity
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (checkPermissions()) {
-            initTrtcApplicationAndPresenter();
             bindView();
-            presenter.startVideoCall();
+            initTrtcApplicationAndPresenter();
+            mCloud.startLocalPreview(true, video);
+            manager.startVideoCall();
         } else {
             Toast.makeText(RtcActivity.this, "缺少视频通话必要的权限", Toast.LENGTH_SHORT).show();
             openAppPermissionSettings();
@@ -105,15 +108,15 @@ public class RtcActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.detachView();
     }
 
-    private TXCloudVideoView rtcVideo;
-    private TXCloudVideoView cameraVideo;
+    private TRTCCloud mCloud;
+    private TXCloudVideoView video;
+    private TXCloudVideoView camera;
 
     private void bindView() {
-        rtcVideo = findViewById(R.id.rtc_video);
-        cameraVideo = findViewById(R.id.camera_video);
+        video = findViewById(R.id.video);
+        camera = findViewById(R.id.camera);
     }
 
     private void openAppPermissionSettings() {
@@ -124,8 +127,8 @@ public class RtcActivity extends AppCompatActivity
     }
 
     private void initTrtcApplicationAndPresenter() {
-        TRTCCloud cloud = TRTCCloud.sharedInstance(getApplicationContext());
-        cloud.addListener(new TRTCCloudListener() {
+        mCloud = TRTCCloud.sharedInstance(getApplicationContext());
+        mCloud.addListener(new TRTCCloudListener() {
             @Override
             public void onError(int errCode, String errMsg, Bundle extraInfo) {
                 super.onError(errCode, errMsg, extraInfo);
@@ -152,16 +155,11 @@ public class RtcActivity extends AppCompatActivity
             public void onUserVideoAvailable(String userId, boolean available) {
                 super.onUserVideoAvailable(userId, available);
                 Log.d(TAG, "initTrtcApplicationAndPresenter TRTCCloudListener: 对方视频流准备完成 开始推流");
-                cloud.startRemoteView(userId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG, rtcVideo);
-                cloud.startLocalPreview(true, cameraVideo);
+                mCloud.startRemoteView(userId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG, video);
+                mCloud.startLocalPreview(true, camera);
             }
         });
-        presenter.initCloud(cloud);
+        manager.initCloud(mCloud);
     }
 
-    @Override
-    public void startLocalPreview(TRTCCloud cloud) {
-        Log.d(TAG, "startLocalPreview");
-        cloud.startLocalPreview(true, rtcVideo);
-    }
 }

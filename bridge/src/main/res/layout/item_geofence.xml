@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_rounded"
+    android:backgroundTint="@color/grey_white"
+    android:stateListAnimator="@animator/button_press">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/green"
+        android:layout_marginStart="14dp"
+        android:background="@drawable/background_rounded_light"
+        android:backgroundTint="@color/light_green"
+        android:src="@drawable/moon"
+        android:padding="10dp"
+        android:stateListAnimator="@animator/button_press"
+        android:clickable="true"
+        />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stay inside the geofence for 10 minutes"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/time"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        app:layout_constraintVertical_chainStyle="packed"
+        />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="8:30 AM"
+        app:layout_constraintTop_toBottomOf="@id/status"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/status"
+        android:fontFamily="@font/harmonyos_sans_medium"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

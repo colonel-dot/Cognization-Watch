@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@drawable/background_rounded"
+    android:backgroundTint="@color/grey_white"
+    android:clickable="true"
+    android:elevation="2dp"
+    android:focusable="true"
+    android:stateListAnimator="@animator/button_press">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/record"
+        android:padding="6dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="85"
+        android:textColor="#111111"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/risk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/harmonyos_sans_medium"
+        android:text="Risk Score"
+        android:textColor="@color/grey"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/val"
+        app:layout_constraintStart_toEndOf="@id/val" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="3.16"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_regular"
+        android:text="Yesterday"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        android:layout_marginEnd="12dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

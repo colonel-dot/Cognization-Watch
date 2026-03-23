@@ -85,9 +85,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
                 // 数据库有 → 用数据库
                 applyScheduleToUI(
                     sleepHour = entity.sleepMinute!! / 60,
-                    sleepMinute = entity.sleepMinute % 60,
+                    sleepMinute = entity.sleepMinute!! % 60,
                     wakeHour = entity.wakeMinute!! / 60,
-                    wakeMinute = entity.wakeMinute % 60
+                    wakeMinute = entity.wakeMinute!! % 60
                 )
             }
 

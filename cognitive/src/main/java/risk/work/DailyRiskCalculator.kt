@@ -6,7 +6,7 @@ import risk.baseline.BaselineBuilder
 import risk.fusion.RiskFusion
 import risk.model.DailyRiskResult
 import risk.model.NormalizedDailyBehavior
-import risk.model.RiskLevel
+import persistense.risk.RiskLevel
 import risk.trend.TrendDetector
 import schulte.data.SchulteEvaluatorType
 import java.time.LocalDate
