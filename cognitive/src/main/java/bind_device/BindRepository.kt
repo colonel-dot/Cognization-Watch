@@ -2,13 +2,14 @@ package bind_device
 
 import android.util.Log
 import debug_login.ApiService
-import debug_login.RetrofitClient
+//import debug_login.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import persistense.DailyBehaviorEntity
 import risk.persistence.DailyRiskEntity
+import Internet.RetrofitClient
 
 private const val TAG = "BindRepository"
 
@@ -17,7 +18,7 @@ object BindRepository {
     fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow{
         try {
             val request = BindRequest(request.musername, request.otherusername)
-           //val response = RetrofitClient.apiService.bind(request)
+           //val response = RetrofitClient.createService(ApiService::class.java).bind(request)
             val response = Internet.RetrofitClient.createService(ApiService::class.java).bind(request)
             emit(Result.success(response))
         }
@@ -28,7 +29,7 @@ object BindRepository {
 
     fun getOtherAllBehavior(account: String): Flow<Result<List<DailyBehaviorEntity>>> = flow {
         try {
-            val response = RetrofitClient.apiService.getAllDailyBehavior(account)
+            val response = RetrofitClient.createService(ApiService::class.java).getAllDailyBehavior(account)
             Log.d(TAG, "getOtherAllBehavior: 成功得到对方所有行为数据，该数据是 $response")
             emit(Result.success(response))
         } catch (e: Exception) {

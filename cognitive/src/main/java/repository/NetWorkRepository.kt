@@ -4,7 +4,7 @@ import android.util.Log
 import debug_login.ApiService
 import debug_login.LoginRequest
 import debug_login.LoginResponse
-import debug_login.RetrofitClient
+import Internet.RetrofitClient
 import debug_login.UpdateDailyHealthRequest
 import debug_login.UpdateDailyRiskRequest
 import geobairrer.BarrierInfo

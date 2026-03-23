@@ -73,4 +73,11 @@ dependencies {
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.6.4'
 
     implementation 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.4"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.4"
+
 }

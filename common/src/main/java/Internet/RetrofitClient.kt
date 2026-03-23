@@ -15,7 +15,6 @@ object RetrofitClient {
             .build()
     }
 
-    // 3. 获取 ApiService 实例（泛型方法，复用性高）
     fun <T> createService(serviceClass: Class<T>): T {
         return retrofit.create(serviceClass)
     }

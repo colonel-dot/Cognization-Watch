@@ -26,6 +26,7 @@ import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.model.LatLng;
 import com.example.bridge.R;
+import com.example.bridge.network.GeoNetworkRepository;
 
 public class GeofenceActivity extends AppCompatActivity implements LocationFeature.LostStateListener, GeofenceManager.OnTraceReadyListener {
 

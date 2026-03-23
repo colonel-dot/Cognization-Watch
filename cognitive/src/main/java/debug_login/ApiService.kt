@@ -80,7 +80,7 @@ interface ApiService {
     @POST()
     suspend fun postBarrierInfo()
 
-    @GET
+    @GET()
     suspend fun getElderMovement()
 
     @POST()

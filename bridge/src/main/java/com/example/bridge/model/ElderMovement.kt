@@ -1,4 +1,5 @@
-package geobairrer
+package com.example.bridge.model
+
 
 data class ElderMovement (val childname: String,
                           val lon: Double,

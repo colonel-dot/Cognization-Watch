@@ -1,4 +1,0 @@
-package geobairrer
-
-class Simulate {
-}
