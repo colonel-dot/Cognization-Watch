@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 import persistense.AppDatabase;
 import persistense.risk.RiskRepository;
 import persistense.risk.DailyRiskEntity;
-import util.ItemSpacingDecoration;
+import com.example.bridge.util.ItemSpacingDecoration;
 
 /**
  * A simple {@link Fragment} subclass.

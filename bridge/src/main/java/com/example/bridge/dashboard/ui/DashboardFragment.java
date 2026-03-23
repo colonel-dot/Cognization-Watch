@@ -33,7 +33,7 @@ import persistense.behavior.DailyBehaviorEntity;
 import persistense.risk.RiskRepository;
 import persistense.risk.DailyRiskDao;
 import persistense.risk.DailyRiskEntity;
-import util.ItemSpacingDecoration;
+import com.example.bridge.util.ItemSpacingDecoration;
 
 public class DashboardFragment extends Fragment {
 

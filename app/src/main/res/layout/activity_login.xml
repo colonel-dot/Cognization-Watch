@@ -9,7 +9,7 @@
     android:padding="24dp"
     android:gravity="center_horizontal">
 
-    <com.example.cogwatch_ui.login.ui.view.TypewriterTextView
+    <com.example.cogwatch.login.ui.view.TypewriterTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="36dp"

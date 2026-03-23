@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import persistense.risk.DailyRiskEntity;
-import util.StringMap;
+import com.example.bridge.util.StringMap;
 
 public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder> {
 

@@ -16,8 +16,8 @@ import persistense.geofence.GeofenceItem;
 
 import java.util.List;
 
-import util.OnItemClickListener;
-import util.StringMap;
+import com.example.bridge.util.OnItemClickListener;
+import com.example.bridge.util.StringMap;
 
 public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Holder> {
     List<GeofenceItem> list;

@@ -29,8 +29,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 
-import util.ItemSpacingDecoration;
-import util.StringMap;
+import com.example.bridge.util.ItemSpacingDecoration;
+import com.example.bridge.util.StringMap;
 
 /**
  * A simple {@link Fragment} subclass.
