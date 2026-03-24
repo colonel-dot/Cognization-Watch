@@ -11,6 +11,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
@@ -48,7 +51,7 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="341e02d3e273a80500d5d83257ced855" />
+            android:value="064ec0c50c9ee1e3a2bc9ee0629966ab" />
         <service
             android:name="com.amap.api.location.APSService">
         </service>
@@ -71,7 +74,8 @@
             android:exported="false" />
         <service
             android:name="sports.data.StepForegroundService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:foregroundServiceType="health"/>
         <activity
             android:name="schedule.ui.ScheduleActivity"
             android:exported="false" />

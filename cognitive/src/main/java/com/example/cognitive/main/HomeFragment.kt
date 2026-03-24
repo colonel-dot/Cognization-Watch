@@ -18,6 +18,7 @@ import androidx.fragment.app.activityViewModels
 import collection.HealthMonitoringFragment
 import com.example.cognitive.R
 import game.BrainTrainingFragment
+import main.MainActivity
 import read_assessment.ui.ReadFragment
 import sports.data.StepForegroundService
 import rtc.VideoCallFragment
@@ -67,7 +68,7 @@ class HomeFragment : Fragment() {
             cameraPermissionLauncher.launch(requiredPermissions)
         }
 
-        val list: MutableList<HomeRVModel?> = ArrayList()
+        val list: MutableList<HomeRVModel> = ArrayList()
         list.add(HomeRVModel(R.drawable.brain, "认知测试", R.color.blue))
         list.add(HomeRVModel(R.drawable.game, "大脑训练", R.color.green))
         list.add(HomeRVModel(R.drawable.pulse, "健康数据监测", R.color.blue))
@@ -78,7 +79,7 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        adapter.setOnItemClickListener(OnItemClickListener { position: Int ->
+        adapter.setOnItemClickListener { position: Int ->
             val fragment = when (position) {
                 0 -> ReadFragment()
                 1 -> BrainTrainingFragment()
@@ -89,9 +90,9 @@ class HomeFragment : Fragment() {
 
             fragment?.let {
                 // 调用 Activity 的统一跳转方法
-                (requireActivity() as? ConMainActivity)?.switchFragment(it, addToBackStack = true)
+                (requireActivity() as? MainActivity)?.switchFragment(it, false)
             }
-        })
+        }
 
         val itemSpacingDecoration = ItemSpacingDecoration(context, 24, false)
         recyclerView.addItemDecoration(itemSpacingDecoration)
@@ -100,6 +101,7 @@ class HomeFragment : Fragment() {
     private val requiredPermissions: Array<String>
         get() = arrayOf(
             Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.ACTIVITY_RECOGNITION
         )
 
     private fun checkPermissions(): Boolean {

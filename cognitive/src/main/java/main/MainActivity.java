@@ -8,6 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.cognitive.R;
 import com.example.cognitive.main.HomeFragment;
@@ -16,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,26 +37,49 @@ public class MainActivity extends AppCompatActivity {
 
     private void initBottomNavigation() {
         bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
             if (item.getItemId() == R.id.home) {
-                selectedFragment = new HomeFragment();
+                currentFragment = new HomeFragment();
             } else if (item.getItemId() == R.id.history) {
                 // selectedFragment = HistoryFragment.newInstance("", "");
-                // For now, do nothing
                 return true;
             } else if (item.getItemId() == R.id.settings) {
                 // selectedFragment = SettingsFragment.newInstance("", "");
-                // For now, do nothing
                 return true;
             }
-            if (selectedFragment != null) {
+            if (currentFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, selectedFragment)
+                        .replace(R.id.fragment_container, currentFragment)
                         .commit();
             }
             return true;
         });
         // Set home as default selected
         bottomNavigation.setSelectedItemId(R.id.home);
+    }
+
+    public void switchFragment(Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (currentFragment == null) {
+            transaction.add(R.id.fragment_container, fragment).commit();
+            currentFragment = fragment;
+            return;
+        } else {
+            if (currentFragment == fragment) {
+                return;
+            }
+        }
+
+        if (fragment.isAdded()) {
+            transaction.hide(currentFragment).show(fragment).commit();
+        } else {
+            transaction.hide(currentFragment).add(R.id.fragment_container, fragment).commit();
+        }
+
+     /* if (addToBackStack) {
+           transaction.addToBackStack(null);
+        } */
+
+        currentFragment = fragment;
     }
 }

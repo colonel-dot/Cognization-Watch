@@ -99,19 +99,26 @@ public class GeofenceFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        android.util.Log.d("GeofenceFragment", "onViewCreated");
 
-        GeofenceRepository.initialize(requireContext());
+        try {
+            GeofenceRepository.initialize(requireContext());
 
-        bindView(view);
+            bindView(view);
 
-        initMAWebViewWrapper();
+            initMAWebViewWrapper();
 
-        initRecyclerView();
+            initRecyclerView();
 
-        /* TODO:
-            在本地存围栏信息，绘制在地图中
-            点击 RVItem 获取条目的坐标，绘制在地图中
-         */
+            /* TODO:
+                在本地存围栏信息，绘制在地图中
+                点击 RVItem 获取条目的坐标，绘制在地图中
+             */
+        } catch (Exception e) {
+            android.util.Log.e("GeofenceFragment", "Error in onViewCreated", e);
+            e.printStackTrace();
+            throw e; // rethrow
+        }
     }
 
     private void bindView(View view) {

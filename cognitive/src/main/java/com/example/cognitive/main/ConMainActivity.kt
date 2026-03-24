@@ -61,6 +61,7 @@ class ConMainActivity : AppCompatActivity() {
     }
 
     fun switchFragment(fragment: Fragment, addToBackStack: Boolean = false) {
+        android.util.Log.d(TAG, "switchFragment: " + fragment.javaClass.simpleName + ", addToBackStack: " + addToBackStack)
         val transaction = supportFragmentManager.beginTransaction()
 
         /*if (!addToBackStack) {

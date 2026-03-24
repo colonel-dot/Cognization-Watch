@@ -107,17 +107,24 @@ public class RecordFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        android.util.Log.d("RecordFragment", "onViewCreated");
 
-        bindView(view);
+        try {
+            bindView(view);
 
-        bindClickListener();
+            bindClickListener();
 
-        initLineChart();
+            initLineChart();
 
-        // Initialize test data in database
-        DataInitializer.INSTANCE.initializeTestData(requireContext());
+            // Initialize test data in database
+            DataInitializer.INSTANCE.initializeTestData(requireContext());
 
-        initRecyclerView();
+            initRecyclerView();
+        } catch (Exception e) {
+            android.util.Log.e("RecordFragment", "Error in onViewCreated", e);
+            e.printStackTrace();
+            throw e; // rethrow
+        }
     }
 
     private void bindView(View view) {

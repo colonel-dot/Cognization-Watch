@@ -17,6 +17,7 @@ import java.util.List;
 import util.OnItemClickListener;
 
 public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
+    private static final String TAG = "HomeRVAdapter";
     List<HomeRVModel> list;
 
     public HomeRVAdapter(List<HomeRVModel> list) {
@@ -61,6 +62,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onItemClick(position);
+                } else {
                 }
             });
         }

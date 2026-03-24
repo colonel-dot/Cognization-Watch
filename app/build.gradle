@@ -8,6 +8,15 @@ android {
     namespace 'com.example.cogwatch'
     compileSdk 36
 
+    signingConfigs {
+        release {
+            storeFile file("../release.jks")
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.cogwatch"
         minSdk 26
@@ -27,6 +36,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
