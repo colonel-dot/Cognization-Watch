@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
         bindClickListener();
 
-        title.animateText("Who you are?");
+        title.animateText("怎么称呼您?");
     }
 
     private void bindView() {

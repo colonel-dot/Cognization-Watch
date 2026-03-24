@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".elder.MainActivity">
+    tools:context="com.example.bridge.main.ChildrenActivity">
 
     <TextView
         android:id="@+id/title"
@@ -18,7 +18,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Children Dashboard"
+        android:text="信息接收台"
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -34,7 +34,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="View mom's states"
+        android:text="浏览长辈当前的认知水平"
         android:textColor="@color/grey"
         android:textSize="12sp"
         android:fontFamily="@font/harmonyos_sans_bold"

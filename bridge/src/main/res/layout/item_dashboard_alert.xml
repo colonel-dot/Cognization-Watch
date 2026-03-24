@@ -25,7 +25,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recent Alerts"
+        android:text="最近预警"
         android:textColor="@color/orange"
         android:textSize="18sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -60,7 +60,7 @@
             android:id="@+id/introduce"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Missed morning walk"
+            android:text="长辈离开守护范围"
             android:fontFamily="@font/harmonyos_sans_bold"
             />
     </LinearLayout>

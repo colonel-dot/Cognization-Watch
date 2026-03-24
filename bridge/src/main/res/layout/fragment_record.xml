@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".elder.MainActivity">
+    tools:context=".main.ChildrenActivity">
 
     <TextView
         android:id="@+id/title"
@@ -18,7 +18,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Data Reports"
+        android:text="数据报告"
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -34,7 +34,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="View detailed analytics and history"
+        android:text="详细查看和分析历史数据"
         android:textColor="@color/grey"
         android:textSize="12sp"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -50,7 +50,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/deep_grey"
-        android:text="Week"
+        android:text="7天"
         android:textColor="@color/white"
         android:gravity="center"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -70,7 +70,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/deep_grey"
-        android:text="15 days"
+        android:text="15天"
         android:textColor="@color/white"
         android:gravity="center"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -102,7 +102,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
-            android:text="Risk Chart"
+            android:text="风险曲线"
             android:textSize="18sp"
             android:fontFamily="@font/harmonyos_sans_bold"
             />
@@ -143,7 +143,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
-            android:text="Recent Detail"
+            android:text="历史数据"
             android:textSize="18sp"
             android:fontFamily="@font/harmonyos_sans_bold"
             />

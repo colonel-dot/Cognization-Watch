@@ -78,10 +78,10 @@ public class DashboardFragment extends Fragment {
         adapter.list = new java.util.ArrayList<>();
 
         // 初始化占位数据
-        adapter.list.add(new DashboardRtcItem("Forsee", "Active"));
+        adapter.list.add(new DashboardRtcItem("奥雷里亚诺", "在线"));
         adapter.list.add(new DashboardRiskItem(0.0, 0.0));
         adapter.list.add(new DashboardCollectionItem(0, 0.0));
-        adapter.list.add(new DashboardAlertItem("Missed morning walk"));
+        adapter.list.add(new DashboardAlertItem("长辈离开守护范围"));
 
         adapter.setOnRtcClickListener(position -> {
             // TODO RTC

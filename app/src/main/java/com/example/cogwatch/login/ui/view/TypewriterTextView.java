@@ -15,7 +15,7 @@ public class TypewriterTextView extends androidx.appcompat.widget.AppCompatTextV
 
     private CharSequence mOriginalText = "";
     private int mIndex;
-    private long mBaseDelay = 60;
+    private long mBaseDelay = 80;
     private boolean isCursorVisible = true;
     private final String mCursorSymbol = "|";
 
@@ -39,7 +39,12 @@ public class TypewriterTextView extends androidx.appcompat.widget.AppCompatTextV
                 long randomDelay = mBaseDelay + mRandom.nextInt((int) (mBaseDelay * 0.5));
                 if (mIndex > 0) {
                     char lastChar = mOriginalText.charAt(mIndex - 1);
-                    if (lastChar == ',' || lastChar == '，' || lastChar == '.' || lastChar == '。' || lastChar == '?') {
+                    if (lastChar == ','
+                            || lastChar == '，'
+                            || lastChar == '.'
+                            || lastChar == '。'
+                            || lastChar == '?'
+                            || lastChar == '？') {
                         randomDelay += 300;
                     }
                 }

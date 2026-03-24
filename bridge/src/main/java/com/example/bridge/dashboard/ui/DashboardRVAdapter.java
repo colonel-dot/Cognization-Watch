@@ -99,7 +99,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
         public void bindView(int position) {
             DashboardRtcItem dri = (DashboardRtcItem) list.get(position);
             from.setText(dri.getName());
-            status.setText("Status: " + dri.getStatus());
+            status.setText("状态：" + dri.getStatus());
 
             answer.setOnClickListener(v -> {
                 if (rtcListener != null) {
@@ -139,7 +139,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                                 ContextCompat.getColor(assess.getContext(), R.color.red)
                         )
                 );
-                assess.setText("High Risk");
+                assess.setText("高风险");
                 val.setTextColor(ContextCompat.getColor(assess.getContext(), R.color.red));
             } else if (risk < 70 && risk >= 40) {
                 assess.setBackgroundTintList(
@@ -147,7 +147,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                                 ContextCompat.getColor(assess.getContext(), R.color.orange)
                         )
                 );
-                assess.setText("Medium Risk");
+                assess.setText("中等风险");
                 val.setTextColor(ContextCompat.getColor(assess.getContext(), R.color.orange));
             } else if (risk < 40 && risk >= 0) {
                 assess.setBackgroundTintList(
@@ -155,17 +155,17 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                                 ContextCompat.getColor(assess.getContext(), R.color.cyan)
                         )
                 );
-                assess.setText("Low Risk");
+                assess.setText("低风险");
                 val.setTextColor(ContextCompat.getColor(assess.getContext(), R.color.cyan));
             }
 
             val.setText(String.valueOf(risk));
 
             if (dri.getYesterday() == 0) {
-                trend.setText("No data source");
+                trend.setText("没有数据源");
             } else {
                 trend.setText((int) Math.round(
-                        (dri.getRisk() - dri.getYesterday()) / dri.getYesterday() * 100) + "% from yesterday");
+                        (dri.getRisk() - dri.getYesterday()) / dri.getYesterday() * 100) + "% 据上周增长");
             }
         }
     }

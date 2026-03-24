@@ -38,9 +38,9 @@ public class StringMap {
 
         if (diff >= 0 && diff <= 60) {
             if (diff == 0) {
-                return "just now";
+                return "刚刚";
             }
-            return diff + " min ago";
+            return diff + " 分钟前";
         }
 
         return mapMinuteToTime(minuteOfDay);
@@ -62,28 +62,28 @@ public class StringMap {
         long diff = ChronoUnit.DAYS.between(today, targetDate);
 
         if (diff == 0) {
-            return "Today";
+            return "今日";
         } else if (diff == -1) {
-            return "Yesterday";
+            return "昨日";
         } else if (diff == 1) {
-            return "Tomorrow";
+            return "明日";
         } else {
             // 超出范围 → 返回星期
             switch (targetDate.getDayOfWeek()) {
                 case MONDAY:
-                    return "Monday";
+                    return "周一";
                 case TUESDAY:
-                    return "Tuesday";
+                    return "周二";
                 case WEDNESDAY:
-                    return "Wednesday";
+                    return "周三";
                 case THURSDAY:
-                    return "Thursday";
+                    return "周四";
                 case FRIDAY:
-                    return "Friday";
+                    return "周五";
                 case SATURDAY:
-                    return "Saturday";
+                    return "周六";
                 case SUNDAY:
-                    return "Sunday";
+                    return "周日";
                 default:
                     return "";
             }

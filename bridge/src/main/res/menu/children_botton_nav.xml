@@ -3,21 +3,21 @@
     <item
         android:id="@+id/dashboard"
         android:icon="@drawable/home"
-        android:title="Home"/>
+        android:title="控制台"/>
 
     <item
         android:id="@+id/data"
         android:icon="@drawable/history"
-        android:title="Data"/>
+        android:title="记录"/>
 
     <item
         android:id="@+id/geofence"
         android:icon="@drawable/map"
-        android:title="Geofence"/>
+        android:title="位置"/>
 
     <item
         android:id="@+id/profiles"
         android:icon="@drawable/profiles"
-        android:title="Profiles"/>
+        android:title="个人"/>
 
 </menu>

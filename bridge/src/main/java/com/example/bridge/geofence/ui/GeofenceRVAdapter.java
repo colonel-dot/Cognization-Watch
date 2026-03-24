@@ -67,7 +67,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
             }
 
             if (item.getStatus() == GeofenceItem.STATUS_IN) {
-                status.setText("Entered the geofence");
+                status.setText("进入守护范围");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_green))
                 );
@@ -75,7 +75,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.green))
                 );
             } else if (item.getStatus() == GeofenceItem.STATUS_OUT) {
-                status.setText("Left the geofence");
+                status.setText("离开守护范围");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_red))
                 );
@@ -83,7 +83,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.red))
                 );
             } else if (item.getStatus() == GeofenceItem.STATUS_STAYED) {
-                status.setText("Stayed in geofence");
+                status.setText("停留在守护范围10分钟");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_orange))
                 );
@@ -92,7 +92,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
                 );
             }
             else if (item.getStatus() == GeofenceItem.STATUS_LOCFAIL) {
-                status.setText("Location unavailable");
+                status.setText("位置无法获取");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_red))
                 );
@@ -100,7 +100,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.red))
                 );
             } else {
-                status.setText("Status unknown");
+                status.setText("状态不明");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_red))
                 );
