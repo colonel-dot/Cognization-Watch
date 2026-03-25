@@ -3,6 +3,8 @@ package util;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.common.util.OnTimerListener;
+
 public class TimerHelper {
 
     private long startTime;
@@ -29,7 +31,7 @@ public class TimerHelper {
         }
     };
 
-    private OnTimerListener listener;
+    private com.example.common.util.OnTimerListener listener;
 
     public void setOnTimerListener(OnTimerListener listener) {
         this.listener = listener;

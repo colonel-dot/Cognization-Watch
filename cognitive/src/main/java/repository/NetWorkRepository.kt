@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.behavior.DailyBehaviorEntity
 import risk.model.DailyRiskResult
 import risk.model.toResult
 import user.UserManager

@@ -1,6 +1,7 @@
 package rtc;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.cognitive.R;
+import com.example.common.rtc.RtcActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 
 /**
@@ -98,6 +100,8 @@ public class VideoCallFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_video_call, container, false);
     }
 
+    private View call;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -113,6 +117,17 @@ public class VideoCallFragment extends Fragment {
         } else {
             cameraPermissionLauncher.launch(getRequiredPermissions());
         }
+
+        call = view.findViewById(R.id.call);
+        call.setOnClickListener(v -> {
+            // TODO - 需要获取实际用户ID
+            // 临时使用占位符，确保键名正确
+            Intent intent = new Intent(getContext(), RtcActivity.class);
+            intent.putExtra("userId", "test_elder_user");
+            intent.putExtra("targetId", "test_child_user");
+            intent.putExtra("isElder", true);
+            startActivity(intent);
+        });
     }
 
     private void startPreview() {

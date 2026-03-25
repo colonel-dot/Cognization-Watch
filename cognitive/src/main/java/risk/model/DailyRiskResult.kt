@@ -1,7 +1,7 @@
 package risk.model
 
-import persistense.risk.RiskLevel
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.risk.RiskLevel
+import com.example.common.persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 data class DailyRiskResult(

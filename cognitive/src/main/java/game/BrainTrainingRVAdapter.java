@@ -14,7 +14,7 @@ import com.example.cognitive.R;
 
 import java.util.List;
 
-import util.OnItemClickListener;
+import com.example.common.util.OnItemClickListener;
 
 public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRVAdapter.Holder> {
     List<BrainTrainingRVModel> list;

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.map
-import persistense.AppDatabase
+import com.example.common.persistense.AppDatabase
 import java.time.LocalDate
 
 

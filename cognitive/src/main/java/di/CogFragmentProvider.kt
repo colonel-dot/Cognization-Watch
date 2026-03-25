@@ -2,7 +2,7 @@ package di
 
 import androidx.fragment.app.Fragment
 import com.example.cognitive.main.HomeFragment
-import provider.FragmentProvider
+import com.example.common.provider.FragmentProvider
 
 
 class CogFragmentProvider: FragmentProvider {

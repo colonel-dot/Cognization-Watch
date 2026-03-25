@@ -9,10 +9,8 @@ import android.util.Log;
 import com.amap.api.fence.GeoFence;
 import com.amap.api.fence.GeoFenceClient;
 import com.amap.api.location.DPoint;
-import persistense.geofence.GeofenceRepository;
-import persistense.geofence.GeofenceItem;
-
-import java.util.Calendar;
+import com.example.common.persistense.geofence.GeofenceRepository;
+import com.example.common.persistense.geofence.GeofenceItem;
 
 public class GeofenceReceiver extends BroadcastReceiver {
 
@@ -67,17 +65,14 @@ public class GeofenceReceiver extends BroadcastReceiver {
                 lng = center.getLongitude();
             }
 
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-            int minuteOfDay = hour * 60 + minute;
+            int minutes = Math.toIntExact(System.currentTimeMillis() / 1000 / 60);
 
             GeofenceItem item = new GeofenceItem(
-                0,
-                minuteOfDay,
-                lat,
-                lng,
-                localStatus
+                    0,
+                    minutes,
+                    lat,
+                    lng,
+                    localStatus
             );
 
             GeofenceRepository.insertEventBlocking(item);

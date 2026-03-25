@@ -1,6 +1,6 @@
 package risk.fusion
 
-import persistense.risk.RiskLevel
+import com.example.common.persistense.risk.RiskLevel
 import risk.model.*
 import java.time.LocalDate
 

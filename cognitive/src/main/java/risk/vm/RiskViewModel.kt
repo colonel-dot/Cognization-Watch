@@ -3,8 +3,8 @@ package risk.vm
 import android.app.Application
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 class RiskViewModel(application: Application) : AndroidViewModel(application) {

@@ -1,6 +1,7 @@
 package com.example.bridge.dashboard.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,19 +21,20 @@ import com.example.bridge.dashboard.item.DashboardCollectionItem;
 import com.example.bridge.dashboard.item.DashboardRiskItem;
 import com.example.bridge.dashboard.item.DashboardRtcItem;
 import com.example.cogwatch_ui.children.record.vm.RecordViewModel;
+import com.example.common.rtc.RtcActivity;
 
 import java.time.LocalDate;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import persistense.AppDatabase;
-import persistense.behavior.BehaviorRepository;
-import persistense.behavior.DailyBehaviorDao;
-import persistense.behavior.DailyBehaviorEntity;
-import persistense.risk.RiskRepository;
-import persistense.risk.DailyRiskDao;
-import persistense.risk.DailyRiskEntity;
+import com.example.common.persistense.AppDatabase;
+import com.example.common.persistense.behavior.BehaviorRepository;
+import com.example.common.persistense.behavior.DailyBehaviorDao;
+import com.example.common.persistense.behavior.DailyBehaviorEntity;
+import com.example.common.persistense.risk.RiskRepository;
+import com.example.common.persistense.risk.DailyRiskDao;
+import com.example.common.persistense.risk.DailyRiskEntity;
 import com.example.bridge.util.ItemSpacingDecoration;
 
 public class DashboardFragment extends Fragment {
@@ -84,8 +86,13 @@ public class DashboardFragment extends Fragment {
         adapter.list.add(new DashboardAlertItem("长辈离开守护范围"));
 
         adapter.setOnRtcClickListener(position -> {
-            // TODO RTC
-
+            // TODO RTC - 需要获取实际用户ID
+            // 临时使用占位符，确保键名正确
+            Intent intent = new Intent(getContext(), RtcActivity.class);
+            intent.putExtra("userId", "test_child_user");
+            intent.putExtra("targetId", "test_elder_user");
+            intent.putExtra("isElder", false);
+            startActivity(intent);
         });
 
         recyclerView.setLayoutManager(

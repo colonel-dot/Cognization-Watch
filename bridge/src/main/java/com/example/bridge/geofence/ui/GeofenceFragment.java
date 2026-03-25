@@ -22,10 +22,9 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.example.bridge.R;
 import com.example.bridge.geofence.map.bridge.MAWebViewWrapper;
 import com.example.bridge.geofence.map.view.MapWebView;
-import persistense.geofence.GeofenceRepository;
-import persistense.geofence.GeofenceItem;
+import com.example.common.persistense.geofence.GeofenceRepository;
+import com.example.common.persistense.geofence.GeofenceItem;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -159,7 +158,7 @@ public class GeofenceFragment extends Fragment {
                         itemMarker = aMap.addMarker(
                                 new MarkerOptions()
                                         .position(latLng)
-                                        .title(StringMap.mapMinuteToTime(item.getTimestamp()))
+                                        .title(StringMap.mapMinuteToRelativeTime(item.getTimestamp()))
                                         .snippet("Marker 内容") // TODO
                                         .draggable(false)
                                         .visible(true));
@@ -175,16 +174,13 @@ public class GeofenceFragment extends Fragment {
     private void insertSampleDataIfEmpty() {
         List<GeofenceItem> existing = GeofenceRepository.INSTANCE.getAllEventsBlocking();
         if (existing.isEmpty()) {
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minute = calendar.get(Calendar.MINUTE);
-            int minuteOfDay = hour * 60 + minute;
+            int minutesSince1970 = (int)(System.currentTimeMillis() / 1000 / 60);
 
             List<GeofenceItem> sampleItems = new ArrayList<>();
-            sampleItems.add(new GeofenceItem(0, minuteOfDay - 60, 34.261111, 108.942222, GeofenceItem.STATUS_IN));
-            sampleItems.add(new GeofenceItem(0, minuteOfDay - 30, 34.262050, 108.943100, GeofenceItem.STATUS_OUT));
-            sampleItems.add(new GeofenceItem(0, minuteOfDay - 15, 34.261600, 108.941700, GeofenceItem.STATUS_STAYED));
-            sampleItems.add(new GeofenceItem(0, minuteOfDay - 5, 34.260800, 108.942800, GeofenceItem.STATUS_IN));
+            sampleItems.add(new GeofenceItem(0, minutesSince1970 - 60, 34.261111, 108.942222, GeofenceItem.STATUS_IN));
+            sampleItems.add(new GeofenceItem(0, minutesSince1970 - 30, 34.262050, 108.943100, GeofenceItem.STATUS_OUT));
+            sampleItems.add(new GeofenceItem(0, minutesSince1970 - 15, 34.261600, 108.941700, GeofenceItem.STATUS_STAYED));
+            sampleItems.add(new GeofenceItem(0, minutesSince1970 - 5, 34.260800, 108.942800, GeofenceItem.STATUS_IN));
 
             for (GeofenceItem item : sampleItems) {
                 GeofenceRepository.insertEventBlocking(item);

@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import schulte.data.SchulteGridCell;
-import util.OnItemClickListener;
+import com.example.common.util.OnItemClickListener;
 
 public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdapter.Holder> {
 

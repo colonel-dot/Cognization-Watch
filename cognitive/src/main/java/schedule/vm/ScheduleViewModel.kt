@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
+import com.example.common.persistense.AppDatabase
 import repository.UpdateRepository
 import java.time.LocalDate
 import java.util.*

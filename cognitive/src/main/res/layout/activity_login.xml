@@ -35,7 +35,6 @@
             android:padding="16dp"
             android:textSize="24sp"
             android:clickable="true"
-
             android:text="子女端"/>
     </com.google.android.material.card.MaterialCardView>
 
@@ -89,7 +88,6 @@
             android:hint="密码"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_button"

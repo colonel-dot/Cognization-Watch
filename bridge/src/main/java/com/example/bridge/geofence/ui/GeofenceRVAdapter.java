@@ -12,9 +12,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
-import persistense.geofence.GeofenceItem;
+import com.example.common.persistense.geofence.GeofenceItem;
 
 import java.util.List;
+import java.util.Calendar;
 
 import com.example.bridge.util.OnItemClickListener;
 import com.example.bridge.util.StringMap;
@@ -44,6 +45,15 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
         return list.size();
     }
 
+    private int getMinuteOfDay(int timestamp) {
+        long timeMillis = timestamp * 60L * 1000L;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timeMillis);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        return hour * 60 + minute;
+    }
+
     class Holder extends RecyclerView.ViewHolder {
 
         ImageView icon;
@@ -60,7 +70,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
         public void bindView(int position) {
             GeofenceItem item = list.get(position);
 
-            if (StringMap.isDayTime(item.getTimestamp())) {
+            if (StringMap.isDayTime(getMinuteOfDay(item.getTimestamp()))) {
                 icon.setImageResource(R.drawable.sun);
             } else {
                 icon.setImageResource(R.drawable.moon);

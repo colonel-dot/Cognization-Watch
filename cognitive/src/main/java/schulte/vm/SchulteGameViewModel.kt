@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
+import com.example.common.persistense.AppDatabase
 import repository.UpdateRepository
 import risk.work.RiskConfigManager
 import schulte.data.SchulteEvaluatorType

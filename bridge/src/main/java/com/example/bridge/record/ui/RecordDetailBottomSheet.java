@@ -17,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.LocalDate;
 
-import persistense.risk.RiskLevel;
+import com.example.common.persistense.risk.RiskLevel;
 import com.example.bridge.util.StringMap;
 
 public class RecordDetailBottomSheet extends BottomSheetDialogFragment {

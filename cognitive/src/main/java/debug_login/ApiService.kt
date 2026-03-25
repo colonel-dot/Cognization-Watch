@@ -2,13 +2,13 @@ package debug_login
 
 import bind_device.BindRequest
 import bind_device.BindResponse
-import persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.behavior.DailyBehaviorEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.risk.DailyRiskEntity
 
 // 用于健康数据的请求
 data class UpdateDailyHealthRequest(

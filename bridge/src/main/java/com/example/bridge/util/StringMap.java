@@ -21,37 +21,63 @@ public class StringMap {
         }
     }
 
-    public static String mapMinuteToRelativeTime(Integer minuteOfDay) {
-        if (minuteOfDay == null) {
+    public static String mapMinuteToRelativeTime(Integer minutes) {
+        if (minutes == null) {
             return "null";
         }
 
-        Calendar calendar = Calendar.getInstance();
-        int nowMinuteOfDay = calendar.get(Calendar.HOUR_OF_DAY) * 60
-                + calendar.get(Calendar.MINUTE);
+        long timeMillis = minutes * 60L * 1000L;
 
-        int diff = nowMinuteOfDay - minuteOfDay;
+        Calendar now = Calendar.getInstance();
+        Calendar target = Calendar.getInstance();
+        target.setTimeInMillis(timeMillis);
 
-        if (diff < 0) {
-            diff += 1440;
+        long diffMinutes = (now.getTimeInMillis() - target.getTimeInMillis()) / (60 * 1000);
+
+        if (diffMinutes < 0) {
+            return "刚刚";
         }
 
-        if (diff >= 0 && diff <= 60) {
-            if (diff == 0) {
-                return "刚刚";
-            }
-            return diff + " 分钟前";
+        if (diffMinutes == 0) {
+            return "刚刚";
+        } else if (diffMinutes <= 60) {
+            return diffMinutes + " 分钟前";
         }
 
-        return mapMinuteToTime(minuteOfDay);
+        long diffDays = (now.getTimeInMillis() / (24L * 60 * 60 * 1000)) -
+                (target.getTimeInMillis() / (24L * 60 * 60 * 1000));
+
+        if (diffDays == 0) {
+            return String.format("%02d:%02d",
+                    target.get(Calendar.HOUR_OF_DAY),
+                    target.get(Calendar.MINUTE));
+        } else if (diffDays == 1) {
+            return "昨天 " + String.format("%02d:%02d",
+                    target.get(Calendar.HOUR_OF_DAY),
+                    target.get(Calendar.MINUTE));
+        } else if (diffDays <= 7) {
+            String[] weekDays = {"日","一","二","三","四","五","六"};
+            int dayOfWeek = target.get(Calendar.DAY_OF_WEEK);
+            return "周" + weekDays[dayOfWeek - 1] + " " +
+                    String.format("%02d:%02d",
+                            target.get(Calendar.HOUR_OF_DAY),
+                            target.get(Calendar.MINUTE));
+        } else {
+            return String.format("%d-%02d-%02d %02d:%02d",
+                    target.get(Calendar.YEAR),
+                    target.get(Calendar.MONTH) + 1,
+                    target.get(Calendar.DAY_OF_MONTH),
+                    target.get(Calendar.HOUR_OF_DAY),
+                    target.get(Calendar.MINUTE));
+        }
     }
 
-    public static String mapMinuteToTime(Integer minuteOfDay) {
-        if (minuteOfDay == null) {
+    public static String mapMinuteToTime(Integer minutes) {
+        if (minutes == null) {
             return "null";
         }
-        int hour = minuteOfDay / 60;
-        int minute = minuteOfDay % 60;
+        int hour = minutes / 60;
+        int minute = minutes % 60;
         return String.format("%02d:%02d", hour, minute);
     }
 

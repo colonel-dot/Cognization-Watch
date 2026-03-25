@@ -3,9 +3,9 @@ package com.example.cogwatch_ui.children.record.vm
 import android.app.Application
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
-import persistense.behavior.DailyBehaviorEntity
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 class RecordViewModel(application: Application) : AndroidViewModel(application) {

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import schulte.ui.SchulteGridActivity
-import util.ItemSpacingDecoration
+import com.example.common.util.ItemSpacingDecoration
 
 class BrainTrainingFragment : Fragment() {
 

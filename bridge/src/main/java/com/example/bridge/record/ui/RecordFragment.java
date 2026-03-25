@@ -37,9 +37,9 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import persistense.AppDatabase;
-import persistense.risk.RiskRepository;
-import persistense.risk.DailyRiskEntity;
+import com.example.common.persistense.AppDatabase;
+import com.example.common.persistense.risk.RiskRepository;
+import com.example.common.persistense.risk.DailyRiskEntity;
 import com.example.bridge.util.ItemSpacingDecoration;
 
 /**

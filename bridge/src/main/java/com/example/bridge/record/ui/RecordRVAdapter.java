@@ -13,7 +13,7 @@ import com.example.bridge.R;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import persistense.risk.DailyRiskEntity;
+import com.example.common.persistense.risk.DailyRiskEntity;
 import com.example.bridge.util.StringMap;
 
 public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder> {

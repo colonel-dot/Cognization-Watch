@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import schedule.ui.ScheduleActivity
 import sports.vm.StepViewModel
-import util.ItemSpacingDecoration
-import util.OnItemClickListener
+import com.example.common.util.ItemSpacingDecoration
+import com.example.common.util.OnItemClickListener
 import kotlin.getValue
 
 private const val TAG = "HealthMonitoringFragment"

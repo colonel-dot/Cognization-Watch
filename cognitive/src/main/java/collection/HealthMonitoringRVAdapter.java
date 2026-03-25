@@ -13,8 +13,8 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.List;
 
-import util.OnItemClickListener;
-import util.StringMap;
+import com.example.common.util.OnItemClickListener;
+import com.example.common.util.StringMap;
 
 public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonitoringRVAdapter.Holder> {
 

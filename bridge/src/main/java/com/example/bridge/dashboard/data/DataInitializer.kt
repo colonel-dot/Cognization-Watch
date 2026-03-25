@@ -4,10 +4,10 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
-import persistense.behavior.DailyBehaviorEntity
-import persistense.risk.RiskLevel
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.risk.RiskLevel
+import com.example.common.persistense.risk.DailyRiskEntity
 import java.time.LocalDate
 
 object DataInitializer {

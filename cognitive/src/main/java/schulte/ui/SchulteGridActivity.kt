@@ -15,9 +15,8 @@ import com.example.cognitive.main.MainViewModel
 import schulte.data.SchulteGridCell
 import schulte.engine.SchulteGridEngine
 import schulte.vm.SchulteGameViewModel
-import util.OnItemClickListener
-import util.OnTimerListener
-import util.TimerHelper
+import com.example.common.util.OnItemClickListener
+import com.example.common.util.TimerHelper
 import kotlin.getValue
 
 class SchulteGridActivity : AppCompatActivity() {

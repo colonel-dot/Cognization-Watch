@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 intent = new Intent(this, ChildrenActivity.class);
                 startActivity(intent);
             }
+            finish();
         });
     }
 }

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import mine.data.MineRecordModel
-import persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.behavior.DailyBehaviorEntity
 import java.time.LocalDate
 
 private const val TAG = "MineRecordViewModel"

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew :bridge:compileDebugJavaWithJavac --no-daemon --console=plain)",
+      "Bash(./gradlew :bridge:compileDebugJavaWithJavac --no-daemon --stacktrace)",
+      "Bash(./gradlew :bridge:compileDebugJavaWithJavac --no-daemon)",
+      "Bash(./gradlew assembleDebug --no-daemon)",
+      "Bash(mkdir -p common/src/main/java/com/example/common/util)",
+      "Bash(mv common/src/main/kotlin/com/example/common/util/GenerateTestUserSig.java common/src/main/java/com/example/common/util/)",
+      "Bash(mkdir -p common/src/main/java/com/example/common/rtc)",
+      "Bash(mv common/src/main/kotlin/com/example/common/rtc/*.java common/src/main/java/com/example/common/rtc/)",
+      "Bash(./gradlew :common:compileDebugJavaWithJavac)"
+    ]
+  }
+}

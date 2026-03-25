@@ -24,8 +24,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.coroutines.launch
 import mine.vm.MineRecordViewModel
-import persistense.AppDatabase
-import persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.behavior.DailyBehaviorEntity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

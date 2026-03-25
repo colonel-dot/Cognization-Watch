@@ -22,8 +22,7 @@ import main.MainActivity
 import read_assessment.ui.ReadFragment
 import sports.data.StepForegroundService
 import rtc.VideoCallFragment
-import util.ItemSpacingDecoration
-import util.OnItemClickListener
+import com.example.common.util.ItemSpacingDecoration
 
 class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()

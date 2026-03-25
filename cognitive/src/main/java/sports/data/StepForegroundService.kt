@@ -9,7 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.cognitive.R
-import persistense.AppDatabase
+import com.example.common.persistense.AppDatabase
 
 private const val TAG = "StepForegroundService"
 

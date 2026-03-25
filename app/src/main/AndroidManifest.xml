@@ -13,10 +13,17 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-feature
         android:name="android.hardware.microphone"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".CogwatchApp"
@@ -62,6 +69,11 @@
                 <action android:name="com.example.GEOFENCE_ACTION"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.example.common.rtc.RtcActivity"
+            android:exported="false">
+        </activity>
 
         <activity
             android:name="other.OtherReportActivity"

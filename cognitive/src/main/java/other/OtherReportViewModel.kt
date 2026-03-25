@@ -10,11 +10,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import persistense.AppDatabase
-import persistense.behavior.DailyBehaviorEntity
+import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.behavior.DailyBehaviorEntity
 import repository.NetWorkRepository
 import risk.model.toEntity
-import persistense.risk.DailyRiskEntity
+import com.example.common.persistense.risk.DailyRiskEntity
 import user.UserManager
 import java.time.LocalDate
 
