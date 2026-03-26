@@ -88,8 +88,10 @@ class HomeFragment : Fragment() {
             }
 
             fragment?.let {
-                // 调用 Activity 的统一跳转方法
-                (requireActivity() as? MainActivity)?.switchFragment(it, false)
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
 
