@@ -1,15 +1,18 @@
 package schedule.ui
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cognitive.R
 
 class WheelAdapter(val origin: List<String>) :
     RecyclerView.Adapter<WheelAdapter.VH>() {
 
-    private val loopMultiplier = 200
+    private val loopMultiplier = 200 // 调小后滑动在短时间内无法停止
     val data = List(origin.size * loopMultiplier) {
         origin[it % origin.size]
     }
@@ -19,6 +22,7 @@ class WheelAdapter(val origin: List<String>) :
     inner class VH(val tv: TextView) : RecyclerView.ViewHolder(tv)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        var font: Typeface? = ResourcesCompat.getFont(parent.context, R.font.harmonyos_sans_bold)
         val tv = TextView(parent.context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -26,6 +30,7 @@ class WheelAdapter(val origin: List<String>) :
             )
             gravity = Gravity.CENTER
             textSize = 18f
+            typeface = font
         }
         return VH(tv)
     }

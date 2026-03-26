@@ -36,7 +36,7 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
     private lateinit var recordRV: RecyclerView
     private lateinit var lineChart: LineChart
     // 声明适配器为全局变量，方便在监听中刷新数据
-    private lateinit var recordAdapter: RecordRVAdapter
+    private lateinit var recordAdapter: RecordRVAdapterOld
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,10 +66,10 @@ class MineRecordFragment :  Fragment(R.layout.fragment_mine_record){
 
     private fun initRecyclerView(){
         recordRV.layoutManager = LinearLayoutManager(requireContext())
-        recordAdapter = RecordRVAdapter(mutableListOf())
+        recordAdapter = RecordRVAdapterOld(mutableListOf())
         recordRV.adapter = recordAdapter
 
-        recordAdapter.setOnItemClickListener(object : RecordRVAdapter.OnItemClickListener {
+        recordAdapter.setOnItemClickListener(object : RecordRVAdapterOld.OnItemClickListener {
             override fun onItemClick(position: Int, record: DailyBehaviorEntity) {
 
                 val date = record.date   // LocalDate

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import kotlinx.coroutines.launch
-import mine.ui.RecordRVAdapter
+import mine.ui.RecordRVAdapterOld
 import com.example.common.persistense.behavior.DailyBehaviorEntity
 
 class OtherReportActivity : AppCompatActivity() {
@@ -23,7 +23,7 @@ class OtherReportActivity : AppCompatActivity() {
 
     private lateinit var recordRV: RecyclerView
     // 声明适配器为全局变量，方便在监听中刷新数据
-    private lateinit var recordAdapter: RecordRVAdapter
+    private lateinit var recordAdapter: RecordRVAdapterOld
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +46,10 @@ class OtherReportActivity : AppCompatActivity() {
 
     private fun initRecyclerView(){
         recordRV.layoutManager = LinearLayoutManager(this)
-        recordAdapter = RecordRVAdapter(mutableListOf())
+        recordAdapter = RecordRVAdapterOld(mutableListOf())
         recordRV.adapter = recordAdapter
 
-        recordAdapter.setOnItemClickListener(object : RecordRVAdapter.OnItemClickListener {
+        recordAdapter.setOnItemClickListener(object : RecordRVAdapterOld.OnItemClickListener {
             override fun onItemClick(position: Int, record: DailyBehaviorEntity) {
                 val date = record.date   // LocalDate
                 val sheet = risk.ui.RiskDetailBottomSheet.newInstance(date)

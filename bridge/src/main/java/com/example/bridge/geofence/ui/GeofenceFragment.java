@@ -100,24 +100,18 @@ public class GeofenceFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         android.util.Log.d("GeofenceFragment", "onViewCreated");
 
-        try {
-            GeofenceRepository.initialize(requireContext());
+        GeofenceRepository.initialize(requireContext());
 
-            bindView(view);
+        bindView(view);
 
-            initMAWebViewWrapper();
+        initMAWebViewWrapper();
 
-            initRecyclerView();
+        initRecyclerView();
 
-            /* TODO:
-                在本地存围栏信息，绘制在地图中
-                点击 RVItem 获取条目的坐标，绘制在地图中
-             */
-        } catch (Exception e) {
-            android.util.Log.e("GeofenceFragment", "Error in onViewCreated", e);
-            e.printStackTrace();
-            throw e; // rethrow
-        }
+        /* TODO:
+            在本地存围栏信息，绘制在地图中
+            点击 RVItem 获取条目的坐标，绘制在地图中
+         */
     }
 
     private void bindView(View view) {
@@ -132,6 +126,21 @@ public class GeofenceFragment extends Fragment {
         aMapWrapper.onCreate();
         aMapWrapper.getMapAsyn(map -> {
             aMap = map;
+
+            List<GeofenceItem> items = GeofenceRepository.INSTANCE.getAllEventsBlocking();
+            if (aMap != null && items.size() > 0) {
+                GeofenceItem item = items.get(0);
+                LatLng latLng = new LatLng(item.getLat(), item.getLng());
+                if (itemMarker != null) itemMarker.remove();
+                itemMarker = aMap.addMarker(
+                        new MarkerOptions()
+                                .position(latLng)
+                                .title(StringMap.mapMinuteToRelativeTime(item.getTimestamp()))
+                                .snippet("Marker 内容") // TODO
+                                .draggable(false)
+                                .visible(true));
+                aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
+            }
         });
     }
 

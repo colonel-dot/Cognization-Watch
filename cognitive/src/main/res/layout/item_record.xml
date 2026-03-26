@@ -1,76 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="70dp"
+    android:background="@drawable/background_rounded"
+    android:backgroundTint="@color/grey_white"
+    android:clickable="true"
+    android:elevation="2dp"
+    android:focusable="true"
+    android:stateListAnimator="@animator/button_press">
 
     <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:id="@+id/record_icon"
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/record"
+        android:padding="6dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_renzhi"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/record_steps"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="步数：10000步"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@id/record_icon"
-        app:layout_constraintTop_toBottomOf="@id/record_schulte"
-        android:layout_marginStart="12dp"
-        />
-
-    <TextView
-        android:id="@+id/record_schedule"
+        android:id="@+id/val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/record_steps"
-        app:layout_constraintTop_toBottomOf="@id/record_steps"
-        android:text="起床时间：07:00  睡觉时间21：00"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/record_read"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/record_steps"
-            app:layout_constraintTop_toTopOf="@id/record_steps"
-            android:text="朗读评分：95分"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:layout_marginStart="12dp"
-            />
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="85"
+        android:textColor="#111111"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@id/icon"
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="@id/icon"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"/>
 
     <TextView
+        android:id="@+id/risk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/record_schulte"
-        app:layout_constraintStart_toEndOf="@id/record_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="12dp"
-        android:text="舒尔特成绩：99"
-        android:textColor="@color/black"
-        android:textSize="16sp"/>
-
-    <TextView
-        android:id="@+id/record_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/record_steps"
-        app:layout_constraintBottom_toBottomOf="@id/record_icon"
-        android:text="日期"
-        android:textStyle="bold"
-        android:textColor="@color/black"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="4dp"
+        android:fontFamily="@font/harmonyos_sans_medium"
+        android:text="风险指数"
+        android:textColor="@color/grey"
         android:textSize="14sp"
-        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/val"
+        app:layout_constraintStart_toEndOf="@id/val" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_bold"
+        android:text="3.16"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_regular"
+        android:text="昨日"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        android:layout_marginEnd="12dp"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

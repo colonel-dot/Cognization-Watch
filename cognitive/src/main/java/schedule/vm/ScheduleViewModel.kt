@@ -163,13 +163,13 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun onBedTimeSelected(hour: String, minute: String, hourPos: Int, minutePos: Int) {
-        _bedTimeText.value = "睡觉时间: $hour:$minute"
+        _bedTimeText.value = "睡觉时间  $hour:$minute"
         bedHourPos = hourPos
         bedMinutePos = minutePos
     }
 
     fun onWakeTimeSelected(hour: String, minute: String, hourPos: Int, minutePos: Int) {
-        _wakeTimeText.value = "起床时间: $hour:$minute"
+        _wakeTimeText.value = "起床时间  $hour:$minute"
         wakeHourPos = hourPos
         wakeMinutePos = minutePos
     }

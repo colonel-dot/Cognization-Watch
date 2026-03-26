@@ -14,6 +14,8 @@ import com.example.cognitive.R;
 import com.example.cognitive.main.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import mine.ui.RecordFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
@@ -40,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.home) {
                 currentFragment = new HomeFragment();
             } else if (item.getItemId() == R.id.history) {
-                // selectedFragment = HistoryFragment.newInstance("", "");
-                return true;
+                currentFragment = RecordFragment.newInstance("", "");
             } else if (item.getItemId() == R.id.settings) {
                 // selectedFragment = SettingsFragment.newInstance("", "");
                 return true;

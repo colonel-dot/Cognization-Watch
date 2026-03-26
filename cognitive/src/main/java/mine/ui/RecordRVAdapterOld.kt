@@ -10,7 +10,7 @@ import com.example.common.persistense.behavior.DailyBehaviorEntity
 
 private const val TAG = "RecordRVAdapter"
 
-class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.Adapter<RecordRVAdapter.VH>() {
+class RecordRVAdapterOld(val list: MutableList<DailyBehaviorEntity>): RecyclerView.Adapter<RecordRVAdapterOld.VH>() {
 
 
     inner class VH(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -26,7 +26,7 @@ class RecordRVAdapter(val list: MutableList<DailyBehaviorEntity>): RecyclerView.
         viewType: Int
     ): VH {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_record, parent, false) // 第三个参数必须是false，标准！
+            .inflate(R.layout.item_record_old, parent, false) // 第三个参数必须是false，标准！
         return VH(itemView)
     }
 

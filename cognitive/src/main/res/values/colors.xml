@@ -42,5 +42,6 @@
     <color name="red">#F44336</color>
     <color name="purple">#8A2BE2</color>
     <color name="light_purple">#F4EBFF</color>
+    <color name="deep_grey">#3A4454</color>
 
 </resources>
