@@ -1,4 +1,4 @@
-package debug_login
+package network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,8 +15,7 @@ object RetrofitClient {
             .build()
     }
 
-    // 获取 ApiService 实例
-    val apiService: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
+    fun <T> createService(serviceClass: Class<T>): T {
+        return retrofit.create(serviceClass)
     }
 }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import network.RetrofitClient
 
 class LoginRepository {
     // 登录请求封装为 Flow
@@ -11,7 +12,7 @@ class LoginRepository {
         try {
             // 发起网络请求（suspend 函数，Retrofit 原生支持，无需适配器）
             val request = LoginRequest(username, password)
-            val response = RetrofitClient.apiService.login(request)
+            val response = RetrofitClient.createService(ApiService::class.java).login(request)
             // 发送成功结果
             emit(Result.success(response))
         } catch (e: Exception) {

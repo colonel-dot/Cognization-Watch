@@ -1,7 +1,7 @@
 package repository
 
 import android.util.Log
-import debug_login.RetrofitClient
+import network.RetrofitClient
 import debug_login.UpdateDailyHealthRequest
 import debug_login.UpdateDailyRiskRequest
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import com.example.common.persistense.behavior.DailyBehaviorEntity
+import debug_login.ApiService
 import risk.model.DailyRiskResult
 import risk.model.toResult
 import user.UserManager
@@ -41,7 +42,7 @@ object NetWorkRepository {
                 data = dataMap
             )
 
-            val response = RetrofitClient.apiService.postDailyBehavior(request)
+            val response = RetrofitClient.createService(ApiService::class.java).postDailyBehavior(request)
             if (response.isSuccessful) {
                 emit(Result.success(response.code()))
             } else {
@@ -78,7 +79,7 @@ object NetWorkRepository {
 
             Log.d(TAG, "发送风险数据: account=$account, date=$dateStr, data=$dataMap")
 
-            val response = RetrofitClient.apiService.postDailyRisk(request)
+            val response = RetrofitClient.createService(ApiService::class.java).postDailyRisk(request)
             if (response.isSuccessful) {
                 Log.d(TAG, "数据更新成功，响应码: ${response.code()}")
                 emit(Result.success(response.code()))
@@ -104,7 +105,7 @@ object NetWorkRepository {
             if (otheraccount == null) {
                 throw IllegalArgumentException("Account cannot be null")
             }
-            val response = RetrofitClient.apiService.getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
+            val response = RetrofitClient.createService(ApiService::class.java).getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
             // 发送成功结果
             emit(Result.success(response.toResult()))
         } catch (e: Exception) {
@@ -118,7 +119,7 @@ object NetWorkRepository {
             if (account == null) {
                 throw IllegalArgumentException("Account cannot be null")
             }
-            val response = RetrofitClient.apiService.getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
+            val response = RetrofitClient.createService(ApiService::class.java).getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
             // 发送成功结果
             emit(Result.success(response))
         } catch (e: Exception) {
