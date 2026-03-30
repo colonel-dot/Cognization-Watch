@@ -1,4 +1,4 @@
-package debug_simulate
+package com.example.common.login.simulate
 
 import android.content.Context
 import com.example.common.persistense.AppDatabase
@@ -143,7 +143,7 @@ object InsertData {
     )
 
     fun init(context: Context) {
-        db = AppDatabase.getDatabase(context)
+        db = AppDatabase.Companion.getDatabase(context)
     }
 
     suspend fun insertBehaviorData() {

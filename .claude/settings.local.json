@@ -9,7 +9,12 @@
       "Bash(mv common/src/main/kotlin/com/example/common/util/GenerateTestUserSig.java common/src/main/java/com/example/common/util/)",
       "Bash(mkdir -p common/src/main/java/com/example/common/rtc)",
       "Bash(mv common/src/main/kotlin/com/example/common/rtc/*.java common/src/main/java/com/example/common/rtc/)",
-      "Bash(./gradlew :common:compileDebugJavaWithJavac)"
+      "Bash(./gradlew :common:compileDebugJavaWithJavac)",
+      "Bash(./gradlew :app:compileDebugJavaWithJavac)",
+      "Bash(./gradlew :app:compileDebugJavaWithJavac -x :cognitive:compileDebugKotlin)",
+      "Bash(./gradlew :app:compileDebugKotlin --no-daemon)",
+      "Bash(./gradlew :app:compileDebugKotlin --console=plain)",
+      "Bash(./gradlew :cognitive:compileDebugJavaWithJavac --console=plain)"
     ]
   }
 }

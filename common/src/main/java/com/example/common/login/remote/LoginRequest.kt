@@ -1,4 +1,4 @@
-package debug_login
+package com.example.common.login.remote
 
 data class LoginRequest(
     var username: String,

@@ -1,4 +1,4 @@
-package debug_login
+package com.example.common.login.remote
 
 class LoginResponse {
     // 仅需 Getter（Setter 可选，因为是解析后端返回数据）

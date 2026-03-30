@@ -2,7 +2,7 @@ package user
 
 import android.content.Context
 import bind_device.BindStatusManager
-import debug_login.LoginStatusManager
+import com.example.common.login.remote.LoginStatusManager
 
 object UserManager {
 

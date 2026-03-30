@@ -1,4 +1,4 @@
-package debug_splash
+package com.example.cogwatch.splash
 
 import android.content.Intent
 import android.os.Build
@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.cognitive.R
 import com.example.cognitive.main.ConMainActivity
-import debug_login.LoginActivity
-import debug_login.LoginStatusManager
+import com.example.cogwatch.R
+import com.example.cogwatch.login.ui.LoginActivity
+import com.example.common.login.remote.LoginStatusManager
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

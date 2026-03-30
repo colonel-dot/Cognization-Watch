@@ -1,4 +1,4 @@
-package debug_login
+package com.example.common.login.remote
 
 import android.content.Context
 import android.content.SharedPreferences

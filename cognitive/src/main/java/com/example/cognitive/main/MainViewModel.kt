@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import debug_simulate.InsertData
+import com.example.common.login.simulate.InsertData
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
 import repository.NetWorkRepository
