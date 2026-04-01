@@ -14,7 +14,6 @@ class StepViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = AppDatabase.getDatabase(application).dailyBehaviorDao()
 
-
     val stepCount: LiveData<Double> = dao.observeBehaviorByDate(LocalDate.now())
         .map { entity ->
             entity.steps?.toDouble() ?: 0.0

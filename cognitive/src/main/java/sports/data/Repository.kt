@@ -39,12 +39,20 @@ class StepRepository(
         }
 
         stepCounter?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+            try {
+                sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to register sensor listener", e)
+            }
         }
     }
 
     fun stop() {
-        sensorManager.unregisterListener(this)
+        try {
+            sensorManager.unregisterListener(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to unregister sensor listener", e)
+        }
 
         // Service 结束前强制落库
         runBlocking {
@@ -56,33 +64,45 @@ class StepRepository(
 
 
     private suspend fun initToday() {
-        todayDate = LocalDate.now()
-        val entity = dao.getOrInitTodayBehavior(todayDate)
+        try {
+            todayDate = LocalDate.now()
+            val entity = dao.getOrInitTodayBehavior(todayDate)
 
-        // 从数据库恢复（防止 Service 重启）
-        todaySteps = entity.steps ?: 0
+            // 从数据库恢复（防止 Service 重启）
+            todaySteps = entity.steps ?: 0
 
-        todayBaseCounter = 0f
-        dirty = false
+            todayBaseCounter = 0f
+            dirty = false
+        } catch (e: Exception) {
+            Log.e(TAG, "initToday failed", e)
+        }
     }
 
     private suspend fun onNewDay(newDate: LocalDate) {
-        flushToDb()
+        try {
+            flushToDb()
 
-        todayDate = newDate
-        dao.getOrInitTodayBehavior(newDate)
+            todayDate = newDate
+            dao.getOrInitTodayBehavior(newDate)
 
-        todayBaseCounter = 0f
-        todaySteps = 0
-        dirty = false
+            todayBaseCounter = 0f
+            todaySteps = 0
+            dirty = false
+        } catch (e: Exception) {
+            Log.e(TAG, "onNewDay failed", e)
+        }
     }
 
 
     private fun startFlushTicker() {
         scope.launch {
-            while (isActive) {
-                delay(30_000)
-                flushToDb()
+            try {
+                while (isActive) {
+                    delay(30_000)
+                    flushToDb()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "startFlushTicker failed", e)
             }
         }
     }
@@ -90,11 +110,13 @@ class StepRepository(
     private suspend fun flushToDb() {
         if (!dirty) return
 
-        Log.d(TAG, "flushToDb() steps=$todaySteps")
-
-        UpdateRepository.updateSteps(steps = todaySteps)
-
-        dirty = false
+        try {
+            Log.d(TAG, "flushToDb() steps=$todaySteps")
+            UpdateRepository.updateSteps(steps = todaySteps)
+            dirty = false
+        } catch (e: Exception) {
+            Log.e(TAG, "flushToDb failed", e)
+        }
     }
 
 

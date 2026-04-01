@@ -17,12 +17,10 @@ import android.content.res.ColorStateList
 import com.example.cogwatch.R
 import com.example.cogwatch.login.ui.view.TypewriterTextView
 import com.example.cogwatch.login.remote.LoginRepository
-import com.example.common.login.remote.LoginResponse
 import com.example.common.login.remote.LoginStatusManager
 import com.example.bridge.main.ChildrenActivity
-import com.example.cognitive.main.ConMainActivity
 import kotlinx.coroutines.launch
-import kotlin.Result
+import main.MainActivity
 
 private const val TAG = "LoginActivity"
 private const val IDENTITY_ELDER = "elder"
@@ -104,7 +102,11 @@ class LoginActivity : AppCompatActivity() {
                         if (loginResponse.code == 200) {
                             Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
                             LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
-                            val intent = Intent(this@LoginActivity, ConMainActivity::class.java)
+                            val intent = if (identity.equals(IDENTITY_ELDER)) {
+                                Intent(this@LoginActivity, MainActivity::class.java)
+                            } else {
+                                Intent(this@LoginActivity, ChildrenActivity::class.java)
+                            }
                             startActivity(intent)
                             finish()
                         } else {
@@ -123,7 +125,11 @@ class LoginActivity : AppCompatActivity() {
     private fun fakelogin() {
         val userName = username.text.toString()
         LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
-        val intent = Intent(this@LoginActivity, ConMainActivity::class.java)
+        val intent = if (identity.equals(IDENTITY_ELDER)) {
+            Intent(this@LoginActivity, MainActivity::class.java)
+        } else {
+            Intent(this@LoginActivity, ChildrenActivity::class.java)
+        }
         startActivity(intent)
         finish()
     }

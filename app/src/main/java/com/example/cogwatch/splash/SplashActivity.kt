@@ -8,10 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.cognitive.main.ConMainActivity
 import com.example.cogwatch.R
 import com.example.cogwatch.login.ui.LoginActivity
 import com.example.common.login.remote.LoginStatusManager
+import main.MainActivity
+import com.example.bridge.main.ChildrenActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,27 +29,23 @@ class SplashActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        //debug_login()
         checkLoginStatusAndJump()
 
     }
 
     private fun checkLoginStatusAndJump() {
         val intent = if (LoginStatusManager.isLogin(this)) {
-            // 已登录，跳主界面
-            Intent(this, ConMainActivity::class.java)
+            // 已登录 跳主界面
+            if (LoginStatusManager.isElder(this)) {
+                Intent(this, MainActivity::class.java)
+            } else {
+                Intent(this, ChildrenActivity::class.java)
+            }
         } else {
-            // 未登录，跳登录界面
+            // 未登录 跳登录界面
             Intent(this, LoginActivity::class.java)
         }
         startActivity(intent)
-        finish() // 关闭启动页，避免返回时重新进入
-    }
-
-    private fun debug_login() {
-            // 直接跳登录界面，绕过登录状态检查
-            val intent = Intent(this, ConMainActivity::class.java)
-            startActivity(intent)
-            finish()
+        finish()
     }
 }

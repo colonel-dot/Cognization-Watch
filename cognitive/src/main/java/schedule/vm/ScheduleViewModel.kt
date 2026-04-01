@@ -36,6 +36,9 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     private val _wakeTimeText = MutableLiveData<String>()
     val wakeTimeText: LiveData<String> = _wakeTimeText
 
+    private val _scheduleHours = MutableLiveData<Double>()
+    val scheduleHours: LiveData<Double> = _scheduleHours
+
     var bedHourPos = 0
     var bedMinutePos = 0
     var wakeHourPos = 0
@@ -147,6 +150,17 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         wakeHour: Int,
         wakeMinute: Int
     ) {
+        val sleepMinuteOfDay = sleepHour * 60 + sleepMinute
+        val wakeMinuteOfDay = wakeHour * 60 + wakeMinute
+
+        // 计算睡眠时长
+        val hours = if (wakeMinuteOfDay > sleepMinuteOfDay) {
+            (wakeMinuteOfDay - sleepMinuteOfDay) / 60.0
+        } else {
+            (24 * 60 - sleepMinuteOfDay + wakeMinuteOfDay) / 60.0
+        }
+        _scheduleHours.value = hours
+
         onBedTimeSelected(
             String.format("%02d", sleepHour),
             String.format("%02d", sleepMinute),

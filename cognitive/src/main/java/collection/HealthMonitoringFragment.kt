@@ -2,7 +2,6 @@ package collection
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import schedule.ui.ScheduleActivity
+import schedule.vm.ScheduleViewModel
 import sports.vm.StepViewModel
 import com.example.common.util.ItemSpacingDecoration
 import com.example.common.util.OnItemClickListener
-import kotlin.getValue
-
-private const val TAG = "HealthMonitoringFragment"
 
 class HealthMonitoringFragment : Fragment() {
     private var mParam1: String? = null
     private var mParam2: String? = null
 
     private val stepsViewModel: StepViewModel by viewModels()
-
+    private val scheduleViewModel: ScheduleViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,22 +40,27 @@ class HealthMonitoringFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated:这里接收到的步数是${stepsViewModel.stepCount.value}")
+
         val list: MutableList<HealthMonitoringRVModel?> = ArrayList<HealthMonitoringRVModel?>()
         val recyclerView = view.findViewById<RecyclerView?>(R.id.content)
 
-
         list.add(HealthMonitoringRVModel("今日步数", 0.toDouble(), 10000.0, "steps"))
-        list.add(HealthMonitoringRVModel("作息时间", 7.2, 10.0, "hours"))
-        list.add(HealthMonitoringRVModel("静息心率", 64.0, 80.0, "bpm/min"))
-        list.add(HealthMonitoringRVModel("血压", 71.0, 90.0, "mmHg"))
+        list.add(HealthMonitoringRVModel("作息时间", 0.0, 10.0, "hours"))
 
         val adapter = HealthMonitoringRVAdapter(list)
 
         recyclerView.adapter = adapter
+
+        // 观察步数数据
         stepsViewModel.stepCount.observe(viewLifecycleOwner) { steps ->
             list[0] = list[0]?.copy(data = steps)
             adapter.notifyItemChanged(0)
+        }
+
+        // 观察作息时间数据 - 从 ScheduleViewModel 读取
+        scheduleViewModel.scheduleHours.observe(viewLifecycleOwner) { hours ->
+            list[1] = list[1]?.copy(data = hours ?: 0.0)
+            adapter.notifyItemChanged(1)
         }
 
         recyclerView.setLayoutManager(LinearLayoutManager(getContext()))

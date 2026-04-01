@@ -6,16 +6,19 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,14 +28,17 @@ import com.example.cognitive.main.MainViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import mine.ui.RecordFragment;
+import settings.SettingsFragment;
 import sports.data.StepForegroundService;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static String TAG = "MainActivity";
+
     private BottomNavigationView bottomNavigation;
     private Fragment currentFragment;
     private MainViewModel mainViewModel;
-    private static final int REQ_NOTIFY = 100;
+    private ActivityResultLauncher<String[]> multiplePermissionLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,30 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.navigation);
 
-        checkAndRequestNotificationPermission();
+        // 初始化权限请求 Launcher
+        multiplePermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                permissions -> {
+                    Log.d(TAG, "权限请求结果: " + permissions);
+                    boolean isActivityRecognitionGranted = true;
+                    // 检查 ACTIVITY_RECOGNITION 权限是否被授予
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        Boolean activityRecognitionResult = permissions.get(Manifest.permission.ACTIVITY_RECOGNITION);
+                        if (activityRecognitionResult != null && !activityRecognitionResult) {
+                            isActivityRecognitionGranted = false;
+                        }
+                    }
+
+                    if (isActivityRecognitionGranted) {
+                        Log.d(TAG, "必要权限已获得，准备启动服务");
+                        startStepService();
+                    } else {
+                        Toast.makeText(this, "需要活动识别权限才能计步", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        checkAndRequestPermissions();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
@@ -55,17 +84,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigation() {
-        bottomNavigation.setOnItemSelectedListener(item -> {
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            Fragment selectFragment = null;
+            Log.d(TAG, "bottomNavigation.setOnItemSelectedListener");
             if (item.getItemId() == R.id.home) {
-                currentFragment = new HomeFragment();
+                selectFragment = new HomeFragment();
             } else if (item.getItemId() == R.id.history) {
-                currentFragment = RecordFragment.newInstance("", "");
+                selectFragment = RecordFragment.newInstance("", "");
             } else if (item.getItemId() == R.id.settings) {
-                // selectedFragment = SettingsFragment.newInstance("", "");
-                return true;
+                selectFragment = SettingsFragment.newInstance("", "");
             }
-            if (currentFragment != null) {
-                switchFragment(currentFragment, false);
+            if (selectFragment != null) {
+                switchFragment(selectFragment, false);
             }
             return true;
         });
@@ -73,55 +103,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void switchFragment(Fragment fragment, boolean addToBackStack) {
+        // 清除回退栈，防止 Fragment 重叠
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         if (currentFragment == null) {
-            transaction.add(R.id.fragment_container, fragment).commit();
-            currentFragment = fragment;
-            return;
+            transaction.add(R.id.fragment_container, fragment);
         } else {
-            if (currentFragment == fragment) {
-                return;
+            if (currentFragment == fragment) return;
+
+            transaction.hide(currentFragment);
+
+            if (fragment.isAdded()) {
+                transaction.show(fragment);
+            } else {
+                transaction.add(R.id.fragment_container, fragment);
             }
         }
 
-        if (fragment.isAdded()) {
-            transaction.hide(currentFragment).show(fragment).commit();
-        } else {
-            transaction.hide(currentFragment).add(R.id.fragment_container, fragment).commit();
-        }
-
-     /* if (addToBackStack) {
-           transaction.addToBackStack(null);
-        } */
-
+        transaction.commit();
         currentFragment = fragment;
     }
 
-    private void checkAndRequestNotificationPermission() {
+    private void checkAndRequestPermissions() {
+        Log.d(TAG, "checkAndRequestPermissions");
+        java.util.List<String> permissionsToRequest = new java.util.ArrayList<>();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.ACTIVITY_RECOGNITION);
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        REQ_NOTIFY);
+                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS);
             }
+        }
+
+        if (!permissionsToRequest.isEmpty()) {
+            // 使用 ActivityResultLauncher 请求权限
+            multiplePermissionLauncher.launch(permissionsToRequest.toArray(new String[0]));
+        } else {
+            startStepService();
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQ_NOTIFY) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startStepService();
-            } else {
-                Toast.makeText(this, "用户权限被拒绝", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private void startStepService() {
+        Log.d(TAG, "startStepService");
         Intent intent = new Intent(this, StepForegroundService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);

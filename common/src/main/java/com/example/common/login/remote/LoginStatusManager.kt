@@ -46,4 +46,9 @@ object LoginStatusManager {
         saveLoginStatus(context, false, "")
     }
 
+    fun isElder(context: Context): Boolean {
+        if (!isLogin(context)) return false;
+        return getLoginSP(context).getString(KEY_IDENTITY, "") == "elder"
+    }
+
 }
