@@ -13,20 +13,27 @@ import android.view.ViewGroup;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.bridge.R;
-import com.example.bridge.dashboard.data.DataInitializer;
 import com.example.bridge.dashboard.item.DashboardAlertItem;
 import com.example.bridge.dashboard.item.DashboardCollectionItem;
 import com.example.bridge.dashboard.item.DashboardRiskItem;
 import com.example.bridge.dashboard.item.DashboardRtcItem;
 import com.example.cogwatch_ui.children.record.vm.RecordViewModel;
+import com.example.bridge.main.ChildrenActivity;
 import com.example.common.rtc.RtcActivity;
 
 import java.time.LocalDate;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import android.widget.Toast;
+import android.util.Log;
+
+import com.example.common.login.remote.LoginStatusManager;
+import com.example.common.bind_device.BindStatusManager;
 
 import com.example.common.persistense.AppDatabase;
 import com.example.common.persistense.behavior.BehaviorRepository;
@@ -43,6 +50,7 @@ public class DashboardFragment extends Fragment {
     private String param2;
 
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefresh;
     private DashboardRVAdapter adapter;
     private RecordViewModel viewModel;
 
@@ -73,6 +81,7 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.content);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
 
         viewModel = new ViewModelProvider(this).get(RecordViewModel.class);
 
@@ -86,13 +95,29 @@ public class DashboardFragment extends Fragment {
         adapter.list.add(new DashboardAlertItem("长辈离开守护范围"));
 
         adapter.setOnRtcClickListener(position -> {
-            // TODO RTC - 需要获取实际用户ID
-            // 临时使用占位符，确保键名正确
+            // 获取实际用户ID
+            String userId = LoginStatusManager.INSTANCE.getLoggedInUserId(requireContext());
+            // 获取对方ID
+            String targetId = BindStatusManager.INSTANCE.getBindStatus().getSecond();
+
+            if (userId == null || userId.isEmpty() || targetId == null || targetId.isEmpty()) {
+                Log.e("DashboardFragment", "用户ID或对方ID为空，无法发起RTC通话");
+                Toast.makeText(getContext(), "请先登录并绑定设备", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Log.d("DashboardFragment", "发起RTC通话: userId=" + userId + ", targetId=" + targetId);
             Intent intent = new Intent(getContext(), RtcActivity.class);
-            intent.putExtra("userId", "test_child_user");
-            intent.putExtra("targetId", "test_elder_user");
+            intent.putExtra("userId", userId);
+            intent.putExtra("targetId", targetId);
             intent.putExtra("isElder", false);
             startActivity(intent);
+        });
+
+        adapter.setOnAlertClickListener(position -> {
+            if (getActivity() instanceof ChildrenActivity) {
+                ((ChildrenActivity) getActivity()).switchToGeofenceFragment();
+            }
         });
 
         recyclerView.setLayoutManager(
@@ -104,13 +129,16 @@ public class DashboardFragment extends Fragment {
         new ItemSpacingDecoration(requireContext(), 20, false);
         recyclerView.addItemDecoration(decoration);
 
-        // Initialize test data in database
-        DataInitializer.INSTANCE.initializeTestData(requireContext());
+        // 设置下拉刷新
+        swipeRefresh.setOnRefreshListener(() -> {
+            // 刷新数据，刷新状态会在数据加载完成后自动结束
+            loadDashboardDataWithRefreshComplete();
+        });
 
-        loadDashboardData();
     }
 
-    private void loadDashboardData() {
+    /** 加载数据并在下拉刷新完成后结束刷新状态 */
+    private void loadDashboardDataWithRefreshComplete() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
@@ -146,9 +174,11 @@ public class DashboardFragment extends Fragment {
                         adapter.list.set(2, new DashboardCollectionItem(todaySteps, todaySleepHours));
                     }
                     adapter.notifyDataSetChanged();
+                    swipeRefresh.setRefreshing(false); // 结束刷新状态
                 });
             } catch (Exception e) {
                 e.printStackTrace();
+                requireActivity().runOnUiThread(() -> swipeRefresh.setRefreshing(false));
             }
         });
         executor.shutdown();

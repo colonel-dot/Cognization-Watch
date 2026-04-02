@@ -13,85 +13,86 @@ import java.time.LocalDate
 object DataInitializer {
 
     fun initializeTestData(context: Context) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val database = AppDatabase.Companion.getDatabase(context)
-            val behaviorDao = database.dailyBehaviorDao()
-            val riskDao = database.dailyRiskDao()
-
-            val today = LocalDate.now()
-
-            // Insert DailyBehaviorEntity data for past 15 days with larger variations
-            for (i in 0 until 15) {
-                val date = today.minusDays(i.toLong())
-
-                // Create more varied data to produce larger risk score fluctuations
-                // Using sine wave patterns to create natural-looking variations
-                val sinValue = Math.sin(i * Math.PI / 7.0)
-                val cosValue = Math.cos(i * Math.PI / 5.0)
-
-                // Wake time: varies between 5:00 AM (300) to 10:00 AM (600)
-                val wakeMinute = 450 + (sinValue * 150).toInt()
-                // Sleep time: varies between 9:00 PM (1260) to 1:00 AM (1500)
-                val sleepMinute = 1380 + (cosValue * 120).toInt()
-
-                // Schulte test times: varies between good (15s) and poor (50s) performance
-                val schulte16TimeSec = 20.0 + sinValue * 35.0
-                val schulte25TimeSec = 35.0 + cosValue * 35.0
-
-                // Speech score: varies between 0.5 and 1.0
-                val speechScore = 0.8 + sinValue * 0.5
-
-                // Steps: varies between 2000 and 16000
-                val steps = 9000 + (sinValue * 7000).toInt()
-
-                // Active time: varies between 1200s (20min) and 9000s (2.5 hours)
-                val activeTime = 4500 + (cosValue * 3900).toInt()
-
-                // Rest time: varies between 5-10 hours
-                val restTime = 28800 + (sinValue * 9000).toInt()
-
-                val behaviorEntity = DailyBehaviorEntity(
-                    date = date,
-                    wakeMinute = wakeMinute,
-                    sleepMinute = sleepMinute,
-                    schulte16TimeSec = schulte16TimeSec,
-                    schulte25TimeSec = schulte25TimeSec,
-                    speechScore = speechScore,
-                    steps = steps,
-                    activeTime = activeTime,
-                    restTime = restTime
-                )
-
-                // Insert or replace
-                behaviorDao.insert(behaviorEntity)
-
-                // Create corresponding risk data
-                // Predefined risk scores for larger variations (0.15 to 0.9)
-                val targetRiskScores = listOf(
-                    0.15, 0.3, 0.6, 0.25, 0.7, 0.4, 0.8, 0.5, 0.85, 0.35, 0.75, 0.45, 0.65, 0.2, 0.9
-                )
-                val riskScore = targetRiskScores[i]
-                val riskLevel = when {
-                    riskScore < 0.3 -> RiskLevel.认知情况正常
-                    riskScore < 0.6 -> RiskLevel.认知情况存在轻度风险
-                    else -> RiskLevel.认知能力有明显下滑趋势
-                }
-
-                val riskEntity = DailyRiskEntity(
-                    date = date,
-                    riskScore = riskScore,
-                    riskLevel = riskLevel,
-                    sleepRisk = calculateSleepRisk(wakeMinute, sleepMinute),
-                    schulteRisk = calculateSchulteRisk(schulte16TimeSec, schulte25TimeSec),
-                    stepsRisk = calculateStepsRisk(steps, activeTime),
-                    speechRisk = calculateSpeechRisk(speechScore),
-                    alerted = false,
-                    explanations = generateExplanations(riskLevel, date)
-                )
-
-                riskDao.insert(riskEntity)
-            }
-        }
+        // TODO: 假数据生成逻辑，已注释
+        // CoroutineScope(Dispatchers.IO).launch {
+        //     val database = AppDatabase.Companion.getDatabase(context)
+        //     val behaviorDao = database.dailyBehaviorDao()
+        //     val riskDao = database.dailyRiskDao()
+        //
+        //     val today = LocalDate.now()
+        //
+        //     // Insert DailyBehaviorEntity data for past 15 days with larger variations
+        //     for (i in 0 until 15) {
+        //         val date = today.minusDays(i.toLong())
+        //
+        //         // Create more varied data to produce larger risk score fluctuations
+        //         // Using sine wave patterns to create natural-looking variations
+        //         val sinValue = Math.sin(i * Math.PI / 7.0)
+        //         val cosValue = Math.cos(i * Math.PI / 5.0)
+        //
+        //         // Wake time: varies between 5:00 AM (300) to 10:00 AM (600)
+        //         val wakeMinute = 450 + (sinValue * 150).toInt()
+        //         // Sleep time: varies between 9:00 PM (1260) to 1:00 AM (1500)
+        //         val sleepMinute = 1380 + (cosValue * 120).toInt()
+        //
+        //         // Schulte test times: varies between good (15s) and poor (50s) performance
+        //         val schulte16TimeSec = 20.0 + sinValue * 35.0
+        //         val schulte25TimeSec = 35.0 + cosValue * 35.0
+        //
+        //         // Speech score: varies between 0.5 and 1.0
+        //         val speechScore = 0.8 + sinValue * 0.5
+        //
+        //         // Steps: varies between 2000 and 16000
+        //         val steps = 9000 + (sinValue * 7000).toInt()
+        //
+        //         // Active time: varies between 1200s (20min) and 9000s (2.5 hours)
+        //         val activeTime = 4500 + (cosValue * 3900).toInt()
+        //
+        //         // Rest time: varies between 5-10 hours
+        //         val restTime = 28800 + (sinValue * 9000).toInt()
+        //
+        //         val behaviorEntity = DailyBehaviorEntity(
+        //             date = date,
+        //             wakeMinute = wakeMinute,
+        //             sleepMinute = sleepMinute,
+        //             schulte16TimeSec = schulte16TimeSec,
+        //             schulte25TimeSec = schulte25TimeSec,
+        //             speechScore = speechScore,
+        //             steps = steps,
+        //             activeTime = activeTime,
+        //             restTime = restTime
+        //         )
+        //
+        //         // Insert or replace
+        //         behaviorDao.insert(behaviorEntity)
+        //
+        //         // Create corresponding risk data
+        //         // Predefined risk scores for larger variations (0.15 to 0.9)
+        //         val targetRiskScores = listOf(
+        //             0.15, 0.3, 0.6, 0.25, 0.7, 0.4, 0.8, 0.5, 0.85, 0.35, 0.75, 0.45, 0.65, 0.2, 0.9
+        //         )
+        //         val riskScore = targetRiskScores[i]
+        //         val riskLevel = when {
+        //             riskScore < 0.3 -> RiskLevel.认知情况正常
+        //             riskScore < 0.6 -> RiskLevel.认知情况存在轻度风险
+        //             else -> RiskLevel.认知能力有明显下滑趋势
+        //         }
+        //
+        //         val riskEntity = DailyRiskEntity(
+        //             date = date,
+        //             riskScore = riskScore,
+        //             riskLevel = riskLevel,
+        //             sleepRisk = calculateSleepRisk(wakeMinute, sleepMinute),
+        //             schulteRisk = calculateSchulteRisk(schulte16TimeSec, schulte25TimeSec),
+        //             stepsRisk = calculateStepsRisk(steps, activeTime),
+        //             speechRisk = calculateSpeechRisk(speechScore),
+        //             alerted = false,
+        //             explanations = generateExplanations(riskLevel, date)
+        //         )
+        //
+        //         riskDao.insert(riskEntity)
+        //     }
+        // }
     }
 
     private fun calculateRiskScore(

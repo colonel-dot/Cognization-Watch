@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,6 +22,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.cognitive.R;
+import com.example.common.bind_device.BindStatusManager;
+import com.example.common.login.remote.LoginStatusManager;
 import com.example.common.rtc.RtcActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -120,12 +124,22 @@ public class VideoCallFragment extends Fragment {
 
         call = view.findViewById(R.id.call);
         call.setOnClickListener(v -> {
-            // TODO - 需要获取实际用户ID
-            // 临时使用占位符，确保键名正确
+            // 获取实际用户ID
+            String userId = LoginStatusManager.INSTANCE.getLoggedInUserId(requireContext());
+            // 获取对方ID
+            String targetId = BindStatusManager.INSTANCE.getBindStatus().getSecond();
+
+            if (userId == null || userId.isEmpty() || targetId == null || targetId.isEmpty()) {
+                Log.e("DashboardFragment", "用户ID或对方ID为空，无法发起RTC通话");
+                Toast.makeText(getContext(), "请先登录并绑定设备", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Log.d("DashboardFragment", "发起RTC通话: userId=" + userId + ", targetId=" + targetId);
             Intent intent = new Intent(getContext(), RtcActivity.class);
-            intent.putExtra("userId", "test_elder_user");
-            intent.putExtra("targetId", "test_child_user");
-            intent.putExtra("isElder", true);
+            intent.putExtra("userId", userId);
+            intent.putExtra("targetId", targetId);
+            intent.putExtra("isElder", false);
             startActivity(intent);
         });
     }

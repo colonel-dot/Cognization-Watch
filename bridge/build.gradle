@@ -76,6 +76,8 @@ dependencies {
 
     implementation "com.google.android.material:material:1.11.0"
 
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
     // arouter 注解处理器
     kapt 'com.alibaba:arouter-compiler:1.5.2'
 }

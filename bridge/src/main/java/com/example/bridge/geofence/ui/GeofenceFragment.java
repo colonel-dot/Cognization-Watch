@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +87,7 @@ public class GeofenceFragment extends Fragment {
     }
 
     private TextView location; // inside
+    private SwipeRefreshLayout swipeRefresh;
     private RecyclerView record;
     private GeofenceRVAdapter adapter;
 
@@ -117,6 +119,7 @@ public class GeofenceFragment extends Fragment {
     private void bindView(View view) {
         location = view.findViewById(R.id.location);
         map = view.findViewById(R.id.map);
+        swipeRefresh = view.findViewById(R.id.swipe_refresh);
         record = view.findViewById(R.id.record);
     }
 
@@ -152,8 +155,15 @@ public class GeofenceFragment extends Fragment {
         ItemSpacingDecoration itemSpacingDecoration = new ItemSpacingDecoration(requireContext(), 6, 20, 6, false);
         record.addItemDecoration(itemSpacingDecoration);
 
+        swipeRefresh.setOnRefreshListener(this::refreshData);
+        swipeRefresh.setColorSchemeResources(android.R.color.holo_blue_light);
+
+        refreshData();
+    }
+
+    private void refreshData() {
         new Thread(() -> {
-            insertSampleDataIfEmpty(); // fake data
+            // insertSampleDataIfEmpty(); // 注释掉假数据逻辑
 
             List<GeofenceItem> items = GeofenceRepository.INSTANCE.getAllEventsBlocking();
             if (getActivity() != null) {
@@ -175,6 +185,7 @@ public class GeofenceFragment extends Fragment {
                     });
 
                     adapter.notifyDataSetChanged();
+                    swipeRefresh.setRefreshing(false);
                 });
             }
         }).start();

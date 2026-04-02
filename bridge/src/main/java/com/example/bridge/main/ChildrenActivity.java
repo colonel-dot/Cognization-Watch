@@ -92,57 +92,66 @@ public class ChildrenActivity extends AppCompatActivity {
     private void initBottomNavigation() {
         android.util.Log.d("ChildrenActivity", "initBottomNavigation");
         bottomNavigation.setOnItemSelectedListener(item -> {
-            android.util.Log.d("ChildrenActivity", "Bottom nav item selected: " + item.getItemId());
-
-            String targetTag = null;
-            Fragment selectedFragment = null;
-
-            if (item.getItemId() == R.id.dashboard) {
-                targetTag = "DASHBOARD";
-                selectedFragment = DashboardFragment.newInstance("", "");
-                android.util.Log.d("ChildrenActivity", "Dashboard selected");
-            } else if (item.getItemId() == R.id.data) {
-                targetTag = "DATA";
-                selectedFragment = RecordFragment.newInstance("", "");
-                android.util.Log.d("ChildrenActivity", "Data selected");
-            } else if (item.getItemId() == R.id.geofence) {
-                targetTag = "GEOFENCE";
-                selectedFragment = GeofenceFragment.newInstance("", "");
-                android.util.Log.d("ChildrenActivity", "Geofence selected");
-            } else if (item.getItemId() == R.id.profiles) {
-                targetTag = "PROFILES";
-                selectedFragment = ProfilesFragment.newInstance("", "");
-                android.util.Log.d("ChildrenActivity", "Profiles selected");
-            }
-
-            Fragment currentFragment = getSupportFragmentManager()
-                    .findFragmentById(R.id.fragment_container);
-            android.util.Log.d("ChildrenActivity", "Current fragment: " + currentFragment + ", tag: " + (currentFragment != null ? currentFragment.getTag() : "null"));
-
-            if (currentFragment != null && currentFragment.getTag() != null
-                    && currentFragment.getTag().equals(targetTag)) {
-                android.util.Log.d("ChildrenActivity", "Already on target fragment, skipping");
-                return false;
-            }
-
-            if (selectedFragment != null) {
-                android.util.Log.d("ChildrenActivity", "Committing fragment transaction for tag: " + targetTag);
-                try {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, selectedFragment, targetTag)
-                            .commit();
-                    android.util.Log.d("ChildrenActivity", "Fragment transaction committed");
-                } catch (Exception e) {
-                    android.util.Log.e("ChildrenActivity", "Error committing fragment transaction", e);
-                    e.printStackTrace();
-                }
-            } else {
-                android.util.Log.e("ChildrenActivity", "selectedFragment is null!");
-            }
-
+            switchFragment(item.getItemId());
             return true;
         });
 
         bottomNavigation.setSelectedItemId(R.id.dashboard);
+    }
+
+    /** 切换到底部导航对应的 Fragment，并更新导航栏选中状态 */
+    public void switchToGeofenceFragment() {
+        bottomNavigation.setSelectedItemId(R.id.geofence);
+    }
+
+    /** 根据 itemId 切换 Fragment */
+    private void switchFragment(int itemId) {
+        android.util.Log.d("ChildrenActivity", "Bottom nav item selected: " + itemId);
+
+        String targetTag = null;
+        Fragment selectedFragment = null;
+
+        if (itemId == R.id.dashboard) {
+            targetTag = "DASHBOARD";
+            selectedFragment = DashboardFragment.newInstance("", "");
+            android.util.Log.d("ChildrenActivity", "Dashboard selected");
+        } else if (itemId == R.id.data) {
+            targetTag = "DATA";
+            selectedFragment = RecordFragment.newInstance("", "");
+            android.util.Log.d("ChildrenActivity", "Data selected");
+        } else if (itemId == R.id.geofence) {
+            targetTag = "GEOFENCE";
+            selectedFragment = GeofenceFragment.newInstance("", "");
+            android.util.Log.d("ChildrenActivity", "Geofence selected");
+        } else if (itemId == R.id.profiles) {
+            targetTag = "PROFILES";
+            selectedFragment = ProfilesFragment.newInstance("", "");
+            android.util.Log.d("ChildrenActivity", "Profiles selected");
+        }
+
+        Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        android.util.Log.d("ChildrenActivity", "Current fragment: " + currentFragment + ", tag: " + (currentFragment != null ? currentFragment.getTag() : "null"));
+
+        if (currentFragment != null && currentFragment.getTag() != null
+                && currentFragment.getTag().equals(targetTag)) {
+            android.util.Log.d("ChildrenActivity", "Already on target fragment, skipping");
+            return;
+        }
+
+        if (selectedFragment != null) {
+            android.util.Log.d("ChildrenActivity", "Committing fragment transaction for tag: " + targetTag);
+            try {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment, targetTag)
+                        .commit();
+                android.util.Log.d("ChildrenActivity", "Fragment transaction committed");
+            } catch (Exception e) {
+                android.util.Log.e("ChildrenActivity", "Error committing fragment transaction", e);
+                e.printStackTrace();
+            }
+        } else {
+            android.util.Log.e("ChildrenActivity", "selectedFragment is null!");
+        }
     }
 }

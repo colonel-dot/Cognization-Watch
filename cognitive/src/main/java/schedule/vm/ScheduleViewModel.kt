@@ -99,13 +99,21 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-    fun refreshBySystemEvents() {
+    fun refreshBySystemEvents(onComplete: (() -> Unit)? = null) {
         viewModelScope.launch {
             val entity = dailyBehaviorDao.getOrInitTodayBehavior(today)
 
-            // 只要用户已经设置过，就绝不再用系统推断
+            // 只要用户已经设置过，就从数据库读取而非用系统推断
             if (entity.wakeMinute!! > 1e-5 || entity.sleepMinute!! > 1e-5) {
                 hasInitBySystemEvents = true
+                // 从数据库读取并更新UI
+                applyScheduleToUI(
+                    sleepHour = entity.sleepMinute!! / 60,
+                    sleepMinute = entity.sleepMinute!! % 60,
+                    wakeHour = entity.wakeMinute!! / 60,
+                    wakeMinute = entity.wakeMinute!! % 60
+                )
+                onComplete?.invoke()
                 return@launch
             }
 
@@ -137,6 +145,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             )
 
             hasInitBySystemEvents = true
+            onComplete?.invoke()
         }
     }
 

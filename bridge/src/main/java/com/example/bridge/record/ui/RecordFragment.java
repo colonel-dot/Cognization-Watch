@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -100,6 +101,7 @@ public class RecordFragment extends Fragment {
     private TextView half;
     private LineChart lineChart;
     private RecyclerView record;
+    private SwipeRefreshLayout swipeRefresh;
     private RecordRVAdapter adapter;
     private List<DailyRiskEntity> riskDataList = new ArrayList<>();
     private int selectedDays = 15;
@@ -116,9 +118,6 @@ public class RecordFragment extends Fragment {
 
             initLineChart();
 
-            // Initialize test data in database
-            DataInitializer.INSTANCE.initializeTestData(requireContext());
-
             initRecyclerView();
         } catch (Exception e) {
             android.util.Log.e("RecordFragment", "Error in onViewCreated", e);
@@ -132,6 +131,7 @@ public class RecordFragment extends Fragment {
         half = view.findViewById(R.id.half);
         record = view.findViewById(R.id.record);
         lineChart = view.findViewById(R.id.lineChart);
+        swipeRefresh = view.findViewById(R.id.swipeRefresh);
     }
 
     private void bindClickListener() {
@@ -146,6 +146,39 @@ public class RecordFragment extends Fragment {
             loadRiskDataFromDatabase();
         });
         updateButtonAppearance();
+
+        // 设置下拉刷新
+        swipeRefresh.setOnRefreshListener(() -> {
+            // 刷新数据，刷新状态会在数据加载完成后自动结束
+            loadRiskDataFromDatabaseWithRefreshComplete();
+        });
+    }
+
+    /** 加载数据并在下拉刷新完成后结束刷新状态 */
+    private void loadRiskDataFromDatabaseWithRefreshComplete() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                AppDatabase database = AppDatabase.Companion.getDatabase(requireContext());
+                @NotNull LocalDate fromDate = LocalDate.now().minusDays(selectedDays - 1);
+                List<DailyRiskEntity> list = RiskRepository.INSTANCE.getFromBlocking(database.dailyRiskDao(), fromDate);
+
+                // Reverse to show latest first
+                List<DailyRiskEntity> result = new ArrayList<>(list);
+                Collections.reverse(result);
+
+                requireActivity().runOnUiThread(() -> {
+                    riskDataList = result;
+                    adapter.setList(result);
+                    updateLineChartData(result);
+                    swipeRefresh.setRefreshing(false); // 结束刷新状态
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                requireActivity().runOnUiThread(() -> swipeRefresh.setRefreshing(false));
+            }
+        });
+        executor.shutdown();
     }
 
     private void updateButtonAppearance() {

@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
@@ -192,22 +194,35 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
     class AlertHolder extends Holder {
 
         TextView introduce;
+        LinearLayout tip;
 
         public AlertHolder(@NonNull View itemView) {
             super(itemView);
             introduce = itemView.findViewById(R.id.introduce);
+            tip = itemView.findViewById(R.id.tip);
         }
 
         @Override
         public void bindView(int position) {
             DashboardAlertItem dai = (DashboardAlertItem) list.get(position);
             introduce.setText(dai.getTip());
+
+            tip.setOnClickListener(v -> {
+                if (alertListener != null) {
+                    alertListener.onItemClick(position);
+                }
+            });
         }
     }
 
     private OnItemClickListener rtcListener;
+    private OnItemClickListener alertListener;
 
     public void setOnRtcClickListener(OnItemClickListener rtcListener) {
         this.rtcListener = rtcListener;
+    }
+
+    public void setOnAlertClickListener(OnItemClickListener alertListener) {
+        this.alertListener = alertListener;
     }
 }
