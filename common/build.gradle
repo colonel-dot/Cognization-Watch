@@ -13,6 +13,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
     }
 
     buildTypes {
@@ -60,4 +66,13 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     implementation 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+
+    // ARouter 核心库
+    api 'com.alibaba:arouter-api:1.5.2'
+
+    // ARouter 注解处理器 (Kotlin 项目用 kapt)
+    kapt 'com.alibaba:arouter-compiler:1.5.2'
+
+    // Material Components for Android
+    implementation "com.google.android.material:material:1.11.0"
 }

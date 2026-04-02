@@ -15,6 +15,12 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a" // 支持 armeabi-v7a 32bit 和 arm64-v8a 64bit 架构
         }
+
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
     }
 
     buildTypes {
@@ -69,4 +75,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation "com.google.android.material:material:1.11.0"
+
+    // arouter 注解处理器
+    kapt 'com.alibaba:arouter-compiler:1.5.2'
 }

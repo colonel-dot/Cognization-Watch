@@ -1,4 +1,4 @@
-package bind_device
+package com.example.common.bind_device
 
 import android.content.Context
 import android.content.SharedPreferences

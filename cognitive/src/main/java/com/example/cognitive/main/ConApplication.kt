@@ -2,7 +2,7 @@ package com.example.cognitive.main
 
 import android.app.Application
 import android.content.Context
-import bind_device.BindStatusManager
+import com.example.common.bind_device.BindStatusManager
 import user.UserManager
 
 class ConApplication: Application() {

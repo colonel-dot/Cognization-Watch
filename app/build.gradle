@@ -31,6 +31,12 @@ android {
                 arguments = [ AROUTER_MODULE_NAME : project.getName() ]
             }
         }
+
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
     }
 
     buildTypes {
@@ -64,7 +70,7 @@ kapt {
 
 dependencies {
 
-    implementation "com.alibaba:arouter-api:1.5.2"
+    // arouter 注解处理器
     kapt "com.alibaba:arouter-compiler:1.5.2"
 
     implementation project(":bridge")
@@ -94,4 +100,8 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-ktx:2.6.1"
+
+    // by viewModels()
+    implementation "androidx.fragment:fragment-ktx:1.6.2"
+    implementation "androidx.activity:activity-ktx:1.8.2"
 }

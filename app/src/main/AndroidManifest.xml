@@ -100,7 +100,7 @@
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity
-            android:name="bind_device.BindActivity"
+            android:name=".bind_device.BindActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"/>

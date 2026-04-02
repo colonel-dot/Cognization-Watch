@@ -43,6 +43,11 @@ android {
             }
         }*/
 
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
     }
 
     buildTypes {
@@ -148,4 +153,7 @@ dependencies {
     implementation "androidx.camera:camera-camera2:$camerax_version"
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:$camerax_version"
+
+    // arouter 注解处理器
+    kapt 'com.alibaba:arouter-compiler:1.5.2'
 }

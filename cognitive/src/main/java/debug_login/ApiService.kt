@@ -1,7 +1,5 @@
 package debug_login
 
-import bind_device.BindRequest
-import bind_device.BindResponse
 import com.example.common.persistense.behavior.DailyBehaviorEntity
 import retrofit2.Response
 import retrofit2.http.Body
@@ -30,15 +28,11 @@ interface ApiService {
     @POST("login") // 替换为你的实际接口路径
     suspend fun login(@Body request: LoginRequest): LoginResponse // 关键：suspend + 直接返回 LoginResponse
 
-    @POST("bind")
-    suspend fun bind(@Body request: BindRequest): BindResponse
-
 /*    @POST("elder/updatedailyrisk")
     suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult)*/
 
 /*    @POST("elder/updatedailyhealthrecord")
     suspend fun postDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity)*/
-
 
     @POST("elder/updatedailyhealthrecord")
     suspend fun postDailyBehavior(
@@ -57,12 +51,6 @@ interface ApiService {
         @Query("date") date: String
     ): DailyBehaviorEntity
 
-    // 2. 对应 /daily/all 接口（GetAllDailyHandler）
-    @GET("daily/all")
-    suspend fun getAllDailyBehavior(
-        @Query("elder_account") account: String // 关键：account → elder_account
-    ): List<DailyBehaviorEntity>
-
     // 3. 对应 /elder/dailyrisk 接口（GetDailyRiskHandler）
     @GET("elder/dailyrisk")
     suspend fun getDailyRisk(
@@ -70,11 +58,4 @@ interface ApiService {
         @Query("elder_account") account: String, // 关键：account → elder_account
         @Query("date") date: String
     ): DailyRiskEntity
-
-    // 4. 对应 /daily/allrisk 接口（GetAllDailyRiskHandler）
-    @GET("daily/allrisk")
-    suspend fun getAllDailyRisk(
-        @Query("elder_account") account: String // 关键：account → elder_account
-    ): List<DailyRiskEntity>
-
 }

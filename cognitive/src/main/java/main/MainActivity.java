@@ -22,9 +22,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.callback.NavigationCallback;
+import com.alibaba.android.arouter.facade.template.IProvider;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.cognitive.R;
 import com.example.cognitive.main.HomeFragment;
 import com.example.cognitive.main.MainViewModel;
+import com.example.common.login.LoginPopupProvider;
+import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import mine.ui.RecordFragment;
@@ -81,6 +87,48 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         initBottomNavigation();
+
+        ARouter.getInstance()
+                .build(RouterPaths.POPUP_LOGIN)
+                .navigation(this, new NavigationCallback() {
+                    @Override
+                    public void onFound(Postcard postcard) {
+                        Log.d(TAG, "路由找到: " + postcard.getPath());
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+                        Log.e(TAG, "路由未找到: " + postcard.getPath());
+                        Toast.makeText(MainActivity.this, "路由未找到: " + postcard.getPath(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+                        Log.w(TAG, "路由被拦截: " + postcard.getPath());
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+                        Log.d(TAG, "路由到达: " + postcard.getPath());
+                        // 获取 IProvider 并调用 showPopup()
+                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+                        if (provider instanceof LoginPopupProvider) {
+                            ((LoginPopupProvider) provider).showPopup();
+                        }
+                    }
+                });
+        // 直接获取并调用（备用方案，确保弹窗能弹出）
+        try {
+            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+            if (provider != null) {
+                // 确保 init 被调用
+                provider.init(this);
+                provider.showPopup();
+                Log.d(TAG, "弹窗已显示");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "获取 IProvider 失败", e);
+        }
     }
 
     private void initBottomNavigation() {

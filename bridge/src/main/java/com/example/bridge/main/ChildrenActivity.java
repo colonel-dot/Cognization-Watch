@@ -1,6 +1,8 @@
 package com.example.bridge.main;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,14 +11,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.facade.Postcard;
+import com.alibaba.android.arouter.facade.callback.NavigationCallback;
+import com.alibaba.android.arouter.facade.template.IProvider;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.bridge.R;
 import com.example.bridge.dashboard.ui.DashboardFragment;
 import com.example.bridge.geofence.ui.GeofenceFragment;
 import com.example.bridge.profiles.ProfilesFragment;
 import com.example.bridge.record.ui.RecordFragment;
+import com.example.common.login.LoginPopupProvider;
+import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ChildrenActivity extends AppCompatActivity {
+
+    private static final String TAG = "ChildrenActivity";
 
     private BottomNavigationView bottomNavigation;
 
@@ -34,6 +44,49 @@ public class ChildrenActivity extends AppCompatActivity {
         bottomNavigation = findViewById(R.id.navigation);
 
         initBottomNavigation();
+
+        ARouter.getInstance()
+                .build(RouterPaths.POPUP_LOGIN)
+                .greenChannel()
+                .navigation(this, new NavigationCallback() {
+                    @Override
+                    public void onFound(Postcard postcard) {
+                        Log.d(TAG, "路由找到: " + postcard.getPath());
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+                        Log.e(TAG, "路由未找到: " + postcard.getPath());
+                        Toast.makeText(ChildrenActivity.this, "路由未找到: " + postcard.getPath(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+                        Log.w(TAG, "路由被拦截: " + postcard.getPath());
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+                        Log.d(TAG, "路由到达: " + postcard.getPath());
+                        // 获取 IProvider 并调用 showPopup()
+                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+                        if (provider instanceof LoginPopupProvider) {
+                            ((LoginPopupProvider) provider).showPopup();
+                        }
+                    }
+                });
+        // 直接获取并调用（备用方案，确保弹窗能弹出）
+        try {
+            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+            if (provider != null) {
+                // 确保 init 被调用
+                provider.init(this);
+                provider.showPopup();
+                Log.d(TAG, "弹窗已显示");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "获取 IProvider 失败", e);
+        }
     }
 
     private void initBottomNavigation() {

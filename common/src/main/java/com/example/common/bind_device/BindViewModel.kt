@@ -1,4 +1,4 @@
-package bind_device
+package com.example.common.bind_device
 
 import android.app.Application
 import android.content.Context
@@ -40,6 +40,7 @@ class BindViewModel(application: Application) : AndroidViewModel(application) {
 
     fun bind(bindname: String) {
         viewModelScope.launch {
+            // TODO: bindname
             val mname = getApplication<Application>()
                 .getSharedPreferences("login_status", Context.MODE_PRIVATE)
                 .getString("username", "") ?: ""

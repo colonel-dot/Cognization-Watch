@@ -1,4 +1,4 @@
-package bind_device
+package com.example.common.bind_device
 
 data class BindRequest (
     val musername: String,

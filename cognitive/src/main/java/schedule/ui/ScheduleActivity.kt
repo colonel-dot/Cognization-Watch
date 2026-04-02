@@ -140,7 +140,7 @@ class ScheduleActivity : AppCompatActivity() {
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
-        // 设置观察者（包括滚轮同步）
+        // 设置观察者
         setupObservers()
     }
 

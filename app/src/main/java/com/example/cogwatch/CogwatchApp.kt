@@ -5,7 +5,7 @@ import android.util.Log
 import com.alibaba.android.arouter.BuildConfig
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.cognitive.main.ConApplication
-import bind_device.BindStatusManager
+import com.example.common.bind_device.BindStatusManager
 import user.UserManager
 
 class CogwatchApp: Application() {
