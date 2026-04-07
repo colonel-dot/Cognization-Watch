@@ -17,8 +17,8 @@ import com.example.common.persistense.geofence.GeofenceItem;
 import java.util.List;
 import java.util.Calendar;
 
-import com.example.bridge.util.OnItemClickListener;
-import com.example.bridge.util.StringMap;
+import com.example.common.util.OnItemClickListener;
+import com.example.common.util.StringMap;
 
 public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Holder> {
     List<GeofenceItem> list;
@@ -101,7 +101,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.orange))
                 );
             }
-            else if (item.getStatus() == GeofenceItem.STATUS_LOCFAIL) {
+            else if (item.getStatus() == GeofenceItem.STATUS_LOCAL) {
                 status.setText("位置无法获取");
                 icon.setBackgroundTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(icon.getContext(), R.color.light_red))

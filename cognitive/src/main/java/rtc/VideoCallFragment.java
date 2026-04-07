@@ -36,12 +36,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 public class VideoCallFragment extends Fragment {
     private static final String TAG = "VideoCallFragment";
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private PreviewView previewView;
@@ -58,7 +56,6 @@ public class VideoCallFragment extends Fragment {
      * @return A new instance of fragment VideoCallFragment.
      */
 
-    // TODO: Rename and change types and number of parameters
     public static VideoCallFragment newInstance(String param1, String param2) {
         VideoCallFragment fragment = new VideoCallFragment();
         Bundle args = new Bundle();

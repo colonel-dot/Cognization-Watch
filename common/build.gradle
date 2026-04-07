@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    // 引用 libs 目录下的 jar 包（使用 api 使依赖可传递）
+    api fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

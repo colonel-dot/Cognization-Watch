@@ -139,7 +139,7 @@ class ReadFragment : Fragment() {
         mic.setOnClickListener {
             if (checkPermissions()) {
                 startRecord()
-                startAllVoiceAnimation() // 启动录音+动画
+                startAllVoiceAnimation() // 启动录音 + 动画
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
@@ -147,18 +147,18 @@ class ReadFragment : Fragment() {
 
         stop.setOnClickListener {
             viewModel.stopRecord()
-            stopAllVoiceAnimation() // 停止录音+动画
-        }
-
-        result.setOnClickListener {
-            // 修复8：安全调用评估方法，避免空指针
+            stopAllVoiceAnimation() // 停止录音 + 动画
+            // 停止后自动触发评估
             speakText?.let { text ->
+                result.text = "评估中..."
                 viewModel.evaluateSpeech(text, "zh-CHS")
                 mainViewModel.notifyRecordChanged()
             } ?: run {
-                Toast.makeText(requireContext(), "暂无朗读文本，无法评估", Toast.LENGTH_SHORT).show()
+                result.text = "暂无朗读文本"
             }
         }
+
+        // result 不再需要点击触发评估，评估结果会通过 observe 自动更新
     }
 
     private fun observeViewModel() {
@@ -217,6 +217,6 @@ class ReadFragment : Fragment() {
             return fragment
         }
 
-        private const val TAG = "ReadFragment" // 修正TAG名称，与类名一致
+        private const val TAG = "ReadFragment"
     }
 }

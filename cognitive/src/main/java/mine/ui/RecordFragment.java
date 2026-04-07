@@ -39,7 +39,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import mine.test.DataInitializer;
-import util.ItemSpacingDecoration;
+import com.example.common.util.ItemSpacingDecoration;
 
 /**
  * A simple {@link Fragment} subclass.

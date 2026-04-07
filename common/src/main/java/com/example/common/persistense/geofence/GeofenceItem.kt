@@ -12,10 +12,10 @@ data class GeofenceItem(
     val status: Int     // 状态码
 ) {
     companion object {
-        const val STATUS_IN = 1      // 进入围栏
-        const val STATUS_OUT = 2     // 离开围栏
-        const val STATUS_STAYED = 3  // 停留在围栏内10分钟
-        const val STATUS_LOCFAIL = 4 // 定位失败
-        const val STATUS_UNKNOWN = 0 // 未知状态
+        const val STATUS_IN = 1         // 进入围栏
+        const val STATUS_OUT = 2        // 离开围栏
+        const val STATUS_STAYED = 3     // 停留在围栏内10分钟
+        const val STATUS_LOCAL = 4      // 定位失败
+        const val STATUS_UNKNOWN = 0    // 未知状态
     }
 }

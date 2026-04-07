@@ -75,10 +75,10 @@
             android:name="com.amap.api.location.APSService">
         </service>
         <receiver
-            android:name="com.example.bridge.geofence.receiver.GeofenceReceiver"
+            android:name="geofence.receiver.GeofenceReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.GEOFENCE_ACTION"/>
+                <action android:name="com.location.apis.geofence.broadcast"/>
             </intent-filter>
         </receiver>
 

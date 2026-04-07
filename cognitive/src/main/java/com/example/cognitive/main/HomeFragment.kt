@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
         list.add(HomeRVModel(R.drawable.brain, "认知测试", R.color.blue))
         list.add(HomeRVModel(R.drawable.game, "大脑训练", R.color.green))
         list.add(HomeRVModel(R.drawable.pulse, "健康数据监测", R.color.blue))
-        list.add(HomeRVModel(R.drawable.video, "AR视频通话", R.color.orange))
+        list.add(HomeRVModel(R.drawable.video, "视频通话", R.color.orange))
 
         val adapter = HomeRVAdapter(list)
         val recyclerView = view.findViewById<RecyclerView>(R.id.content)

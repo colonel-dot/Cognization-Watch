@@ -1,7 +1,7 @@
 package com.example.common.bind_device
 
 import android.util.Log
-import network.RetrofitClient
+import com.example.common.repository.network.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -1,17 +1,11 @@
 package com.example.cogwatch.login.remote
 
 import debug_login.ApiService
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import network.RetrofitClient
+import com.example.common.repository.network.RetrofitClient
 import com.example.common.login.remote.LoginRequest
 import com.example.common.login.remote.LoginResponse
 

@@ -28,10 +28,9 @@ import com.example.bridge.dashboard.item.DashboardRtcItem;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.example.bridge.util.GenerateAutoAvatar;
-import com.example.bridge.util.OnItemClickListener;
-import com.example.bridge.util.StringMap;
+import com.example.common.util.GenerateAutoAvatar;
+import com.example.common.util.OnItemClickListener;
+import com.example.common.util.StringMap;
 
 public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.Holder> {
 

@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
 import com.example.common.persistense.AppDatabase;
 import com.example.common.persistense.risk.RiskRepository;
 import com.example.common.persistense.risk.DailyRiskEntity;
-import com.example.bridge.util.ItemSpacingDecoration;
+import com.example.common.util.ItemSpacingDecoration;
 
 /**
  * A simple {@link Fragment} subclass.

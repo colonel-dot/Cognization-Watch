@@ -15,7 +15,6 @@ public class GeofenceManager {
     public static final String GEOFENCE_BROADCAST_ACTION = "com.location.apis.geofence.broadcast";
 
     private GeoFenceClient mGeoFenceClient;
-    private String id = ""; // 本地化
 
     public GeofenceManager(Context context) {
         mGeoFenceClient = new GeoFenceClient(context);
@@ -28,18 +27,16 @@ public class GeofenceManager {
         // 删除所有围栏 mGeoFenceClient.removeGeoFence();
     }
 
-    public Status CreateKeywordGeofence(String keyword /* 行政区划关键字 */, String custom) {
-        if (custom.equals(id)) return Status.REPEATED_CREATION;
+    public Status CreateKeywordGeofence(Context context, String keyword /* 行政区划关键字 */, String custom) {
+        if (custom.equals(GeofenceStatusManager.getFenceCustomId(context))) return Status.REPEATED_CREATION;
         // 关键字合法性校验
         mGeoFenceClient.addGeoFence(keyword, custom);
-        id = custom;
         return Status.SUCCESS;
     }
 
-    public Status CreateLatLngGeofence(DPoint latLng, float radius /* 0 - 50000m */, String custom) {
-        if (custom.equals(id)) return Status.REPEATED_CREATION;
+    public Status CreateLatLngGeofence(Context context, DPoint latLng, float radius /* 0(3000) - 50000m */, String custom) {
+        if (custom.equals(GeofenceStatusManager.getFenceCustomId(context))) return Status.REPEATED_CREATION;
         mGeoFenceClient.addGeoFence(latLng, radius, custom);
-        id = custom;
         return Status.SUCCESS;
     }
 

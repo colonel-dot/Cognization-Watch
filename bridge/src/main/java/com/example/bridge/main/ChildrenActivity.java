@@ -52,6 +52,12 @@ public class ChildrenActivity extends AppCompatActivity {
                     @Override
                     public void onFound(Postcard postcard) {
                         Log.d(TAG, "路由找到: " + postcard.getPath());
+                        // 获取 IProvider 并调用 showPopup()
+                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+                        provider.init(ChildrenActivity.this);
+                        if (provider instanceof LoginPopupProvider) {
+                            ((LoginPopupProvider) provider).showPopup();
+                        }
                     }
 
                     @Override
@@ -68,25 +74,20 @@ public class ChildrenActivity extends AppCompatActivity {
                     @Override
                     public void onArrival(Postcard postcard) {
                         Log.d(TAG, "路由到达: " + postcard.getPath());
-                        // 获取 IProvider 并调用 showPopup()
-                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
-                        if (provider instanceof LoginPopupProvider) {
-                            ((LoginPopupProvider) provider).showPopup();
-                        }
                     }
                 });
-        // 直接获取并调用（备用方案，确保弹窗能弹出）
-        try {
-            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
-            if (provider != null) {
-                // 确保 init 被调用
-                provider.init(this);
-                provider.showPopup();
-                Log.d(TAG, "弹窗已显示");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "获取 IProvider 失败", e);
-        }
+//        // 直接获取并调用（备用方案，确保弹窗能弹出）
+//        try {
+//            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+//            if (provider != null) {
+//                // 确保 init 被调用
+//                provider.init(this);
+//                provider.showPopup();
+//                Log.d(TAG, "弹窗已显示");
+//            }
+//        } catch (Exception e) {
+//            Log.e(TAG, "获取 IProvider 失败", e);
+//        }
     }
 
     private void initBottomNavigation() {
@@ -121,7 +122,7 @@ public class ChildrenActivity extends AppCompatActivity {
             android.util.Log.d("ChildrenActivity", "Data selected");
         } else if (itemId == R.id.geofence) {
             targetTag = "GEOFENCE";
-            selectedFragment = GeofenceFragment.newInstance("", "");
+            selectedFragment = new GeofenceFragment();
             android.util.Log.d("ChildrenActivity", "Geofence selected");
         } else if (itemId == R.id.profiles) {
             targetTag = "PROFILES";

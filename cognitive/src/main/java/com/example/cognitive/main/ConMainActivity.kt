@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.cognitive.R
+import geofence.vm.CognitiveGeofenceViewModel
 import mine.ui.MineRecordFragment
 import sports.data.StepForegroundService
 
@@ -28,6 +29,7 @@ class ConMainActivity : AppCompatActivity() {
     private lateinit var btnCall: View
     private var currentFragment: Fragment? = null
     private val mainViewModel: MainViewModel by viewModels()
+    private val geofenceViewModel: CognitiveGeofenceViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +60,9 @@ class ConMainActivity : AppCompatActivity() {
         homeFragment = HomeFragment()
         switchFragment(homeFragment)
         initBottomClick()
+
+        // 初始化围栏监控
+        (application as ConApplication).initGeofenceMonitoring(geofenceViewModel)
     }
 
     fun switchFragment(fragment: Fragment, addToBackStack: Boolean = false) {

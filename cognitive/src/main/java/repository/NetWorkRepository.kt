@@ -1,7 +1,7 @@
 package repository
 
 import android.util.Log
-import network.RetrofitClient
+import com.example.common.repository.network.RetrofitClient
 import debug_login.UpdateDailyHealthRequest
 import debug_login.UpdateDailyRiskRequest
 import kotlinx.coroutines.Dispatchers

@@ -29,6 +29,9 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.cognitive.R;
 import com.example.cognitive.main.HomeFragment;
 import com.example.cognitive.main.MainViewModel;
+import com.example.common.bind_device.BindStatusManager;
+import com.example.common.persistense.geofence.GeofenceRepository;
+import geofence.vm.CognitiveGeofenceViewModel;
 import com.example.common.login.LoginPopupProvider;
 import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private Fragment currentFragment;
     private MainViewModel mainViewModel;
+    private CognitiveGeofenceViewModel geofenceViewModel;
     private ActivityResultLauncher<String[]> multiplePermissionLauncher;
 
     @Override
@@ -85,8 +89,16 @@ public class MainActivity extends AppCompatActivity {
         checkAndRequestPermissions();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        geofenceViewModel = new ViewModelProvider(this).get(CognitiveGeofenceViewModel.class);
 
         initBottomNavigation();
+
+        // 初始化围栏监控
+        GeofenceRepository.INSTANCE.initialize(this);
+        String otherId = BindStatusManager.INSTANCE.getBindStatus().second;
+        if (otherId != null && !otherId.isEmpty()) {
+            geofenceViewModel.pullAndCreateGeofence(otherId);
+        }
 
         ARouter.getInstance()
                 .build(RouterPaths.POPUP_LOGIN)
@@ -94,6 +106,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFound(Postcard postcard) {
                         Log.d(TAG, "路由找到: " + postcard.getPath());
+                        // 获取 IProvider 并调用 showPopup()
+                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
+                        provider.init(MainActivity.this);
+                        if (provider instanceof LoginPopupProvider) {
+                            ((LoginPopupProvider) provider).showPopup();
+                        }
                     }
 
                     @Override
@@ -110,25 +128,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onArrival(Postcard postcard) {
                         Log.d(TAG, "路由到达: " + postcard.getPath());
-                        // 获取 IProvider 并调用 showPopup()
-                        IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
-                        if (provider instanceof LoginPopupProvider) {
-                            ((LoginPopupProvider) provider).showPopup();
-                        }
                     }
                 });
-        // 直接获取并调用（备用方案，确保弹窗能弹出）
-        try {
-            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
-            if (provider != null) {
-                // 确保 init 被调用
-                provider.init(this);
-                provider.showPopup();
-                Log.d(TAG, "弹窗已显示");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "获取 IProvider 失败", e);
-        }
     }
 
     private void initBottomNavigation() {

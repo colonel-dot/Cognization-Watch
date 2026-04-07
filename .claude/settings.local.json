@@ -14,7 +14,14 @@
       "Bash(./gradlew :app:compileDebugJavaWithJavac -x :cognitive:compileDebugKotlin)",
       "Bash(./gradlew :app:compileDebugKotlin --no-daemon)",
       "Bash(./gradlew :app:compileDebugKotlin --console=plain)",
-      "Bash(./gradlew :cognitive:compileDebugJavaWithJavac --console=plain)"
+      "Bash(./gradlew :cognitive:compileDebugJavaWithJavac --console=plain)",
+      "mcp__pencil__get_editor_state",
+      "mcp__pencil__get_guidelines",
+      "mcp__pencil__batch_design",
+      "mcp__pencil__get_screenshot",
+      "Bash(cmd //c \"type D:\\\\\\\\AndroidStudioProjects\\\\\\\\Cognization-Watch\\\\\\\\bridge\\\\\\\\src\\\\\\\\main\\\\\\\\java\\\\\\\\com\\\\\\\\example\\\\\\\\bridge\\\\\\\\geofence\\\\\\\\ui\\\\\\\\GenofenceDialogFragment.java\")",
+      "Bash(powershell:*)",
+      "Bash(git rm:*)"
     ]
   }
 }

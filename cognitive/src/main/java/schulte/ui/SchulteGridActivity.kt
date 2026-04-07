@@ -105,8 +105,8 @@ class SchulteGridActivity : AppCompatActivity() {
             } else if (res == 1) { // 游戏完成
                 timer!!.stop()
                 engine!!.stop()
-                start!!.setText("")
-                pause!!.setText("开始")
+                start!!.setText("开始")
+                pause!!.setText("暂停")
                 showFinishedDialog()
                 Log.d(TAG, "initGameEngine: 要保存并更新舒尔特成绩了")
                 viewModel!!.saveGameTime(if (engine!!.isFourSquared()) 4 else 5, ms)
