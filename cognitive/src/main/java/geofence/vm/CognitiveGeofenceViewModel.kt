@@ -45,6 +45,21 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
                 }
             }
         })
+
+        // 尝试从本地恢复围栏（应用重启时）
+        tryRestoreFromLocal()
+    }
+
+    /**
+     * 尝试从本地存储恢复围栏
+     */
+    private fun tryRestoreFromLocal() {
+        val restored = geofenceManager.restoreGeofenceIfExists()
+        if (restored) {
+            Log.d(TAG, "Geofence restored from local storage")
+            _initState.value = GeofenceInitState.Success(geofenceManager.getSavedBarrierInfo()!!)
+            isInitialized = true
+        }
     }
 
     /**

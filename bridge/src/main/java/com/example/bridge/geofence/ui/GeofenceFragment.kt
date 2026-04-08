@@ -35,6 +35,8 @@ import com.example.common.util.ItemSpacingDecoration
 import com.example.common.util.StringMap
 import kotlinx.coroutines.launch
 import com.example.common.geofence.model.ElderMovement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.Timer
 import java.util.TimerTask
 
@@ -163,8 +165,8 @@ class GeofenceFragment : Fragment() {
     /**
      * 处理老人轨迹数据（将事件存入本地数据库并刷新UI）
      */
-    private fun handleElderMovement(movement: ElderMovement) {
-        val localStatus = when (movement.status) {
+    private suspend fun handleElderMovement(movement: ElderMovement) {
+        val localStatus = when (movement.status?: "") {
             "IN" -> GeofenceItem.STATUS_IN
             "OUT" -> GeofenceItem.STATUS_OUT
             "STAYED" -> GeofenceItem.STATUS_STAYED
@@ -183,8 +185,10 @@ class GeofenceFragment : Fragment() {
         GeofenceRepository.insertEventBlocking(item)
         Log.d("GeofenceFragment", "老人轨迹事件已存入本地: status=${movement.status}, lat=${movement.lat}, lng=${movement.lon}")
 
-        // 刷新UI
-        refreshData()
+        withContext(Dispatchers.Main) {
+            // 只有 UI 刷新才切回主线程
+            refreshData()
+        }
     }
 
     /**

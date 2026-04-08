@@ -69,7 +69,19 @@ class BindViewModel(application: Application) : AndroidViewModel(application) {
                         onFailure = { e ->
                             // 绑定请求失败（网络异常等）
                             Log.d(TAG, "bind:${e.message}")
-                            _bindAndLoadState.emit(BindAndLoadState.BindFailure)
+                            if (e.message.equals("HTTP 403 Forbidden")) {
+                                BindStatusManager.saveBindStatus(
+                                    getApplication(),
+                                    true,
+                                    bindname
+                                )
+                                Log.d(TAG, "bind: 重复绑定成功，开始加载数据")
+                                _bindAndLoadState.emit(BindAndLoadState.BindSuccess)
+
+                                loadOtherData(bindname)
+                            } else {
+                                _bindAndLoadState.emit(BindAndLoadState.BindFailure)
+                            }
                         }
                     )
                 }

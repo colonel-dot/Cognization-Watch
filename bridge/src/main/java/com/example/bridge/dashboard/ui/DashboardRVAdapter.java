@@ -85,14 +85,12 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
 
         ImageView portrait;
         TextView from;
-        TextView status;
         ImageView answer;
 
         public RtcHolder(@NonNull View itemView) {
             super(itemView);
             portrait = itemView.findViewById(R.id.portrait);
             from = itemView.findViewById(R.id.from);
-            status = itemView.findViewById(R.id.status);
             answer = itemView.findViewById(R.id.answer);
         }
 
@@ -100,7 +98,6 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
         public void bindView(int position) {
             DashboardRtcItem dri = (DashboardRtcItem) list.get(position);
             from.setText(dri.getName());
-            status.setText("状态：" + dri.getStatus());
 
             answer.setOnClickListener(v -> {
                 if (rtcListener != null) {

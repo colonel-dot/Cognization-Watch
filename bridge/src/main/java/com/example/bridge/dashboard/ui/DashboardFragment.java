@@ -92,7 +92,7 @@ public class DashboardFragment extends Fragment {
         adapter.list = new java.util.ArrayList<>();
 
         // 初始化占位数据
-        adapter.list.add(new DashboardRtcItem("没有数据源", "未知"));
+        adapter.list.add(new DashboardRtcItem("没有数据源"));
         adapter.list.add(new DashboardRiskItem(0.0, 0.0));
         adapter.list.add(new DashboardCollectionItem(0, 0.0));
         adapter.list.add(new DashboardAlertItem("没有数据源"));
@@ -170,6 +170,8 @@ public class DashboardFragment extends Fragment {
         Context context = getContext();
         if (context == null) throw new Exception("context is null");
 
+        String username = LoginStatusManager.INSTANCE.getLoggedInUserId(context);
+
         AppDatabase database = AppDatabase.Companion.getDatabase(context);
         DailyRiskDao riskDao = database.dailyRiskDao();
         DailyBehaviorDao behaviorDao = database.dailyBehaviorDao();
@@ -206,11 +208,14 @@ public class DashboardFragment extends Fragment {
             alertTip = "没有数据源";
         }
 
-        return new DashboardData(todayRiskScore, yesterdayRiskScore, todaySteps, todaySleepHours, alertTip);
+        return new DashboardData(username, todayRiskScore, yesterdayRiskScore, todaySteps, todaySleepHours, alertTip);
     }
 
     /** 更新 Dashboard UI 数据 */
     private void updateDashboardUI(DashboardData data) {
+        if (adapter.list.size() > 0) {
+            adapter.list.set(0, new DashboardRtcItem(data.username));
+        }
         if (adapter.list.size() > 1) {
             adapter.list.set(1, new DashboardRiskItem(data.todayRiskScore, data.yesterdayRiskScore));
         }
@@ -225,13 +230,15 @@ public class DashboardFragment extends Fragment {
 
     /** Dashboard 数据封装类 */
     private static class DashboardData {
+
+        String username;
         double todayRiskScore;
         double yesterdayRiskScore;
         int todaySteps;
         double todaySleepHours;
         String alertTip;
 
-        DashboardData(double todayRiskScore, double yesterdayRiskScore, int todaySteps,
+        DashboardData(String username, double todayRiskScore, double yesterdayRiskScore, int todaySteps,
                       double todaySleepHours, String alertTip) {
             this.todayRiskScore = todayRiskScore;
             this.yesterdayRiskScore = yesterdayRiskScore;

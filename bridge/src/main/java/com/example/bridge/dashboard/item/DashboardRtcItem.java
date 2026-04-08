@@ -3,11 +3,9 @@ package com.example.bridge.dashboard.item;
 public class DashboardRtcItem implements DashboardItem {
 
     private String name;
-    private String status;
 
-    public DashboardRtcItem(String name, String status) {
+    public DashboardRtcItem(String name) {
         this.name = name;
-        this.status = status;
     }
 
     @Override
@@ -19,7 +17,4 @@ public class DashboardRtcItem implements DashboardItem {
         return name;
     }
 
-    public String getStatus() {
-        return status;
-    }
 }
