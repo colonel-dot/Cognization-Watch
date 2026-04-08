@@ -18,19 +18,4 @@
         android:name="android.hardware.microphone"
         android:required="true" />
 
-    <!-- Geofence Receiver -->
-    <receiver
-        android:name="geofence.receiver.GeofenceReceiver"
-        android:exported="false">
-        <intent-filter>
-            <action android:name="com.location.apis.geofence.broadcast"/>
-        </intent-filter>
-    </receiver>
-
-    <!-- AMap Location Service -->
-    <service
-        android:name="com.amap.api.location.APSService"
-        android:enabled="true"
-        android:exported="false" />
-
 </manifest>

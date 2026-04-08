@@ -14,13 +14,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.core.content.ContextCompat
 import android.content.res.ColorStateList
-import com.alibaba.android.arouter.launcher.ARouter
 import com.example.cogwatch.R
 import com.example.cogwatch.login.ui.view.TypewriterTextView
 import com.example.cogwatch.login.remote.LoginRepository
 import com.example.common.login.remote.LoginStatusManager
 import com.example.bridge.main.ChildrenActivity
-import com.example.common.router.RouterPaths
 import kotlinx.coroutines.launch
 import main.MainActivity
 
@@ -84,8 +82,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener {
-            fakelogin()
-            // login()
+            // fakelogin()
+            login()
         }
     }
 

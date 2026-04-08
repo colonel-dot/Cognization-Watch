@@ -37,9 +37,9 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
     init {
         // 设置围栏创建回调
         geofenceManager.setFenceListener(object : GeoFenceListener {
-            override fun onGeoFenceCreate(geoFence: GeoFence?, errorCode: Int, errorMsg: String?) {
-                if (errorCode == 0 && geoFence != null) {
-                    Log.d(TAG, "Geofence created successfully: ${geoFence.fenceId}")
+            override fun onGeoFenceCreateFinished(geoFenceList: MutableList<GeoFence>?, errorCode: Int, errorMsg: String?) {
+                if (errorCode == 0 && !geoFenceList.isNullOrEmpty()) {
+                    Log.d(TAG, "Geofence created successfully: ${geoFenceList[0].fenceId}")
                 } else {
                     Log.e(TAG, "Geofence create failed: $errorCode - $errorMsg")
                 }

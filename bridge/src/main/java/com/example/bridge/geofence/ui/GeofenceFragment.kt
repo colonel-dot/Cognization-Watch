@@ -26,6 +26,7 @@ import com.example.common.geofence.model.BarrierInfo
 import com.example.bridge.geofence.vm.GeoViewModel
 import com.example.bridge.geofence.map.bridge.MAWebViewWrapper
 import com.example.bridge.geofence.map.view.MapWebView
+import com.example.bridge.geofence.vm.FenceUiState
 import com.example.common.persistense.geofence.GeofenceItem
 import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.login.remote.LoginStatusManager
@@ -100,10 +101,10 @@ class GeofenceFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.barrierUiState.collect { state ->
                 when (state) {
-                    is GeoViewModel.FenceUiState.PostSuccess -> {
+                    is FenceUiState.PostSuccess -> {
                         Log.d("GeofenceFragment", "围栏信息发送到远端成功")
                     }
-                    is GeoViewModel.FenceUiState.Error -> {
+                    is FenceUiState.Error -> {
                         Log.e("GeofenceFragment", "围栏信息发送到远端失败: ${state.msg}")
                     }
                     else -> {}

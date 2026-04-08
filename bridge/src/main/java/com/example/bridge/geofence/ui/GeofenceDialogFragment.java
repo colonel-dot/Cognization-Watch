@@ -12,6 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.example.bridge.R;
 import com.example.bridge.geofence.feature.GeofenceManager;
 import com.example.bridge.geofence.feature.GeofenceStatusManager;
@@ -93,46 +97,65 @@ public class GeofenceDialogFragment extends DialogFragment {
 
         btnConfirm.setOnClickListener(v -> {
             int radius = Math.max(seekBar.getProgress(), 3000);
-            createFence((float) radius);
+            try {
+                createFence((float) radius);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
-    private void createFence(float radius) {
-        // TODO: 获取实际位置（目前使用固定坐标，或从地图/定位获取）
-        // 这里参考 GeofenceManager.CreateLatLngGeofence 的用法
-        // 需要 DPoint (高德 DPoint)，可从定位或地图中心获取
-        // 临时使用默认坐标，后续应从地图/定位获取
-        com.amap.api.location.DPoint defaultPoint = new com.amap.api.location.DPoint(34.261111, 108.942222);
-        String customId = "fence_" + System.currentTimeMillis();
+    private void createFence(float radius) throws Exception {
+        // 使用高德定位 SDK 获取当前设备位置
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        option.setOnceLocation(true);
 
-        GeofenceManager.Status status = geofenceManager.CreateLatLngGeofence(
-            requireContext(),
-            defaultPoint,
-            radius,
-            customId
-        );
+        AMapLocationClient locationClient = new AMapLocationClient(requireContext());
+        locationClient.setLocationOption(option);
+        locationClient.setLocationListener(location -> {
+            locationClient.stopLocation();
+            locationClient.onDestroy();
 
-        if (status == GeofenceManager.Status.SUCCESS) {
-            // 保存围栏信息到 GeofenceStatusManager
-            GeofenceStatusManager.saveFenceInfo(
-                requireContext(),
-                customId,
-                radius,
-                defaultPoint.getLatitude(),
-                defaultPoint.getLongitude()
-            );
-            GeofenceStatusManager.setFenceEnabled(requireContext(), true);
+            if (location.getErrorCode() == 0) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
 
-            Toast.makeText(getContext(), "围栏创建成功", Toast.LENGTH_SHORT).show();
-            if (listener != null) {
-                listener.onFenceCreated(customId, defaultPoint.getLatitude(), defaultPoint.getLongitude(), radius);
+                com.amap.api.location.DPoint currentPoint = new com.amap.api.location.DPoint(latitude, longitude);
+                String customId = "fence_" + System.currentTimeMillis();
+
+                GeofenceManager.Status status = geofenceManager.CreateLatLngGeofence(
+                    requireContext(),
+                    currentPoint,
+                    radius,
+                    customId
+                );
+
+                if (status == GeofenceManager.Status.SUCCESS) {
+                    GeofenceStatusManager.saveFenceInfo(
+                        requireContext(),
+                        customId,
+                        radius,
+                        latitude,
+                        longitude
+                    );
+                    GeofenceStatusManager.setFenceEnabled(requireContext(), true);
+
+                    Toast.makeText(getContext(), "围栏创建成功", Toast.LENGTH_SHORT).show();
+                    if (listener != null) {
+                        listener.onFenceCreated(customId, latitude, longitude, radius);
+                    }
+                    dismiss();
+                } else if (status == GeofenceManager.Status.REPEATED_CREATION) {
+                    Toast.makeText(getContext(), "围栏已存在，请勿重复创建", Toast.LENGTH_SHORT).show();
+                } else if (status == GeofenceManager.Status.FAILURE) {
+                    Toast.makeText(getContext(), "围栏创建失败", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "定位失败: " + location.getErrorInfo(), Toast.LENGTH_SHORT).show();
             }
-            dismiss();
-        } else if (status == GeofenceManager.Status.REPEATED_CREATION) {
-            Toast.makeText(getContext(), "围栏已存在，请勿重复创建", Toast.LENGTH_SHORT).show();
-        } else if (status == GeofenceManager.Status.FAILURE) {
-            Toast.makeText(getContext(), "围栏创建失败", Toast.LENGTH_SHORT).show();
-        }
+        });
+        locationClient.startLocation();
     }
 
     @Override

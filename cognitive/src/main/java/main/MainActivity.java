@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 初始化围栏监控
         GeofenceRepository.INSTANCE.initialize(this);
-        String otherId = BindStatusManager.INSTANCE.getBindStatus().second;
+        String otherId = BindStatusManager.INSTANCE.getBindStatus().getSecond();
         if (otherId != null && !otherId.isEmpty()) {
             geofenceViewModel.pullAndCreateGeofence(otherId);
         }

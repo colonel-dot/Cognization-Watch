@@ -65,7 +65,7 @@ class CognitiveGeofenceManager(context: Context) {
      * 删除指定围栏
      */
     fun removeGeofence(customId: String) {
-        geoFenceClient.removeGeoFence(customId)
+        geoFenceClient.removeGeoFence()
         if (currentFenceId == customId) {
             currentFenceId = null
         }
