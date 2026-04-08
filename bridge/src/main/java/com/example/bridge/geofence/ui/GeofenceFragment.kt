@@ -27,12 +27,16 @@ import com.example.bridge.geofence.vm.GeoViewModel
 import com.example.bridge.geofence.map.bridge.MAWebViewWrapper
 import com.example.bridge.geofence.map.view.MapWebView
 import com.example.bridge.geofence.vm.FenceUiState
+import com.example.bridge.geofence.vm.MovementUiState
 import com.example.common.persistense.geofence.GeofenceItem
 import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.util.ItemSpacingDecoration
 import com.example.common.util.StringMap
 import kotlinx.coroutines.launch
+import com.example.common.geofence.model.ElderMovement
+import java.util.Timer
+import java.util.TimerTask
 
 class GeofenceFragment : Fragment() {
 
@@ -48,6 +52,9 @@ class GeofenceFragment : Fragment() {
     private var aMap: AMap? = null
 
     private var itemMarker: Marker? = null
+
+    // 定时轮询老人轨迹
+    private var pollTimer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,14 +88,29 @@ class GeofenceFragment : Fragment() {
         if (!GeofenceStatusManager.isFenceEnabled(requireContext())) {
             showGeofenceDialog()
         }
+
+        // 启动轮询老人轨迹
+        startPollTimer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (pollTimer == null) {
+            startPollTimer()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopPollTimer()
     }
 
     private fun showGeofenceDialog() {
         val dialog = GeofenceDialogFragment()
-        dialog.setOnFenceCreatedListener { customId, lat, lng, radius ->
-            Log.d("GeofenceFragment", "围栏创建成功，半径: $radius")
-            // 发送到远端
-            sendBarrierInfoToRemote(customId, lat, lng, radius)
+        dialog.setOnFenceCreatedListener { lat, lng, radius ->
+            Log.d("GeofenceFragment", "围栏参数获取成功: lat=$lat, lng=$lng, radius=$radius")
+            // 发送到绑定设备
+            sendBarrierInfoToRemote(lat, lng, radius)
         }
         dialog.show(childFragmentManager, "GeofenceDialog")
     }
@@ -111,15 +133,90 @@ class GeofenceFragment : Fragment() {
                 }
             }
         }
+
+        // 观察老人轨迹数据
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.movementUiState.collect { state ->
+                when (state) {
+                    is MovementUiState.GetSuccess -> {
+                        Log.d("GeofenceFragment", "收到老人轨迹数据: ${state.data}")
+                        handleElderMovement(state.data)
+                    }
+                    is MovementUiState.Error -> {
+                        Log.e("GeofenceFragment", "获取老人轨迹失败: ${state.msg}")
+                    }
+                    else -> {}
+                }
+            }
+        }
     }
 
     /**
      * 将围栏信息发送到远端服务器
      */
-    private fun sendBarrierInfoToRemote(customId: String, lat: Double, lng: Double, radius: Float) {
+    private fun sendBarrierInfoToRemote(lat: Double, lng: Double, radius: Float) {
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         val barrierInfo = BarrierInfo(eldername, lng, lat, radius.toDouble())
         viewModel.postBarrierInfo(eldername, barrierInfo)
+    }
+
+    /**
+     * 处理老人轨迹数据（将事件存入本地数据库并刷新UI）
+     */
+    private fun handleElderMovement(movement: ElderMovement) {
+        val localStatus = when (movement.status) {
+            "IN" -> GeofenceItem.STATUS_IN
+            "OUT" -> GeofenceItem.STATUS_OUT
+            "STAYED" -> GeofenceItem.STATUS_STAYED
+            else -> GeofenceItem.STATUS_UNKNOWN
+        }
+
+        val minutes = (movement.time / 1000 / 60).toInt()
+        val item = GeofenceItem(
+            id = 0,
+            timestamp = minutes,
+            lat = movement.lat,
+            lng = movement.lon,
+            status = localStatus
+        )
+
+        GeofenceRepository.insertEventBlocking(item)
+        Log.d("GeofenceFragment", "老人轨迹事件已存入本地: status=${movement.status}, lat=${movement.lat}, lng=${movement.lon}")
+
+        // 刷新UI
+        refreshData()
+    }
+
+    /**
+     * 启动定时轮询老人轨迹
+     */
+    private fun startPollTimer() {
+        pollTimer?.cancel()
+        pollTimer = Timer()
+        pollTimer?.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                pollElderMovement()
+            }
+        }, 0, 30000) // 每30秒轮询一次
+        Log.d("GeofenceFragment", "开始轮询老人轨迹")
+    }
+
+    /**
+     * 轮询老人轨迹数据
+     */
+    private fun pollElderMovement() {
+        val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
+        Log.d("GeofenceFragment", "轮询老人轨迹: eldername=$eldername")
+        viewModel.getElderMovement(eldername)
+    }
+
+    /**
+     * 停止轮询
+     */
+    private fun stopPollTimer() {
+        pollTimer?.cancel()
+        pollTimer = null
+        Log.d("GeofenceFragment", "停止轮询老人轨迹")
     }
 
     private fun bindView(view: View) {
@@ -212,6 +309,7 @@ class GeofenceFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopPollTimer()
         aMapWrapper?.onDestroy()
     }
 
