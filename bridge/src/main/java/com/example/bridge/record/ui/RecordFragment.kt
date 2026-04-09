@@ -32,14 +32,13 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.util.Collections
 import java.util.TreeSet
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class RecordFragment : Fragment() {
 
@@ -94,12 +93,12 @@ class RecordFragment : Fragment() {
         week?.setOnClickListener {
             selectedDays = 7
             updateButtonAppearance()
-            loadRiskDataFromDatabase()
+            loadRecordDataWithNetworkFirst()
         }
         half?.setOnClickListener {
             selectedDays = 15
             updateButtonAppearance()
-            loadRiskDataFromDatabase()
+            loadRecordDataWithNetworkFirst()
         }
         updateButtonAppearance()
 
@@ -121,43 +120,102 @@ class RecordFragment : Fragment() {
             return
         }
 
-        // 停止使用显式的 ExecutorService，改用协程作用域
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // 1. 获取 Service
                 val apiService = RetrofitClient.createService(BindApiService::class.java)
-
-                // 2. 调用 suspend 函数 (现在可以正常调用了)
                 val networkData = apiService.getAllDailyRisk(eldername)
 
                 if (!networkData.isNullOrEmpty()) {
                     Log.d("RecordFragment", "从网络获取到 ${networkData.size} 条风险数据")
-
-                    // 3. 获取 DAO 并更新本地数据库
                     val database = AppDatabase.getDatabase(requireContext())
                     database.dailyRiskDao().insertAll(networkData)
                     Log.d("RecordFragment", "已更新本地数据库")
 
-                    // 4. 切换到主线程更新 UI
                     withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "同步成功", Toast.LENGTH_SHORT).show()
                         loadRiskDataFromDatabase()
                         swipeRefresh?.isRefreshing = false
                     }
                 } else {
                     Log.d("RecordFragment", "网络数据为空")
                     withContext(Dispatchers.Main) {
+                        Toast.makeText(context, "暂无数据", Toast.LENGTH_SHORT).show()
                         swipeRefresh?.isRefreshing = false
                     }
                 }
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 Log.e("RecordFragment", "从网络获取数据失败", e)
                 withContext(Dispatchers.Main) {
                     swipeRefresh?.isRefreshing = false
-                    // 可以给用户一个错误提示
                     Toast.makeText(context, "同步失败", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+    }
+
+    /**
+     * 首次加载：先从网络拉取并存库，再读库更新UI
+     */
+    private fun loadRecordDataWithNetworkFirst() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            swipeRefresh?.isRefreshing = true
+            try {
+                val (data, networkSuccess) = withContext(Dispatchers.IO) {
+                    loadRecordData()
+                }
+                if (view == null) return@launch
+                updateUI(data)
+                if (networkSuccess) {
+                    Toast.makeText(requireContext(), "同步成功", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "暂无数据", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                Log.e("RecordFragment", "加载数据失败: ${e.message}", e)
+                Toast.makeText(requireContext(), "刷新失败", Toast.LENGTH_SHORT).show()
+            } finally {
+                swipeRefresh?.isRefreshing = false
+            }
+        }
+    }
+
+    private suspend fun loadRecordData(): Pair<List<DailyRiskEntity>, Boolean> = withContext(Dispatchers.IO) {
+        val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
+        if (eldername.isNullOrEmpty()) {
+            return@withContext Pair(emptyList(), false)
+        }
+
+        // 从网络拉取并存库
+        var networkSuccess = false
+        try {
+            val apiService = RetrofitClient.createService(BindApiService::class.java)
+            val networkData = apiService.getAllDailyRisk(eldername)
+            if (!networkData.isNullOrEmpty()) {
+                val database = AppDatabase.getDatabase(requireContext())
+                database.dailyRiskDao().insertAll(networkData)
+                Log.d("RecordFragment", "网络数据已存库: ${networkData.size} 条")
+                networkSuccess = true
+            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            Log.e("RecordFragment", "网络拉取失败，读取本地缓存: ${e.message}")
+        }
+
+        // 读库
+        val database = AppDatabase.getDatabase(requireContext())
+        val fromDate: LocalDate = LocalDate.now().minusDays((selectedDays - 1).toLong())
+        val list = RiskRepository.getFromBlocking(database.dailyRiskDao(), fromDate)
+        val result: MutableList<DailyRiskEntity> = ArrayList(list)
+        Collections.reverse(result)
+        Pair(result, networkSuccess)
+    }
+
+    private fun updateUI(list: List<DailyRiskEntity>) {
+        riskDataList = list.toMutableList()
+        adapter?.setList(list)
+        updateLineChartData(list)
     }
 
     private fun updateButtonAppearance() {
@@ -214,12 +272,11 @@ class RecordFragment : Fragment() {
             sheet.show(parentFragmentManager, "RiskDetailBottomSheet")
         }
 
-        loadRiskDataFromDatabase()
+        loadRecordDataWithNetworkFirst()
     }
 
     private fun loadRiskDataFromDatabase() {
-        val executor: ExecutorService = Executors.newSingleThreadExecutor()
-        executor.execute {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val database = AppDatabase.getDatabase(requireContext())
                 val fromDate: LocalDate = LocalDate.now().minusDays((selectedDays - 1).toLong())
@@ -229,16 +286,16 @@ class RecordFragment : Fragment() {
                 val result: MutableList<DailyRiskEntity> = ArrayList(list)
                 Collections.reverse(result)
 
-                requireActivity().runOnUiThread {
+                withContext(Dispatchers.Main) {
                     riskDataList = result
                     adapter?.setList(result)
                     updateLineChartData(result)
                 }
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 e.printStackTrace()
             }
         }
-        executor.shutdown()
     }
 
     private fun updateLineChartData(list: List<DailyRiskEntity>?) {

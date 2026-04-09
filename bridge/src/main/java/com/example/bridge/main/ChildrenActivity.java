@@ -114,7 +114,7 @@ public class ChildrenActivity extends AppCompatActivity {
 
         if (itemId == R.id.dashboard) {
             targetTag = "DASHBOARD";
-            selectedFragment = DashboardFragment.newInstance("", "");
+            selectedFragment = new DashboardFragment();
             android.util.Log.d("ChildrenActivity", "Dashboard selected");
         } else if (itemId == R.id.data) {
             targetTag = "DATA";
