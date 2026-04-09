@@ -16,8 +16,8 @@
         android:title="位置"/>
 
     <item
-        android:id="@+id/profiles"
-        android:icon="@drawable/profiles"
-        android:title="个人"/>
+        android:id="@+id/settings"
+        android:icon="@drawable/settings"
+        android:title="设置"/>
 
 </menu>

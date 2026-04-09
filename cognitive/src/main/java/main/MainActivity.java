@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -37,7 +36,7 @@ import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import mine.ui.RecordFragment;
-import settings.SettingsFragment;
+import setting.ui.SettingFragment;
 import sports.data.StepForegroundService;
 
 public class MainActivity extends AppCompatActivity {
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.history) {
                 selectFragment = RecordFragment.newInstance("", "");
             } else if (item.getItemId() == R.id.settings) {
-                selectFragment = SettingsFragment.newInstance("", "");
+                selectFragment = SettingFragment.newInstance("", "");
             }
             if (selectFragment != null) {
                 switchFragment(selectFragment, false);

@@ -18,8 +18,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.bridge.R;
 import com.example.bridge.dashboard.ui.DashboardFragment;
 import com.example.bridge.geofence.ui.GeofenceFragment;
-import com.example.bridge.profiles.ProfilesFragment;
 import com.example.bridge.record.ui.RecordFragment;
+import com.example.bridge.setting.ui.SettingFragment;
 import com.example.common.login.LoginPopupProvider;
 import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -118,15 +118,15 @@ public class ChildrenActivity extends AppCompatActivity {
             android.util.Log.d("ChildrenActivity", "Dashboard selected");
         } else if (itemId == R.id.data) {
             targetTag = "DATA";
-            selectedFragment = RecordFragment.newInstance("", "");
+            selectedFragment = new RecordFragment();
             android.util.Log.d("ChildrenActivity", "Data selected");
         } else if (itemId == R.id.geofence) {
             targetTag = "GEOFENCE";
             selectedFragment = new GeofenceFragment();
             android.util.Log.d("ChildrenActivity", "Geofence selected");
-        } else if (itemId == R.id.profiles) {
-            targetTag = "PROFILES";
-            selectedFragment = ProfilesFragment.newInstance("", "");
+        } else if (itemId == R.id.settings) {
+            targetTag = "SETTINGS";
+            selectedFragment = SettingFragment.newInstance("", "");
             android.util.Log.d("ChildrenActivity", "Profiles selected");
         }
 
