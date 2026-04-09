@@ -93,7 +93,7 @@ public class SettingFragment extends Fragment {
 
     private void initRVAdapter() {
         List<SettingItem> items = new ArrayList<>();
-        items.add(new SettingItem(R.drawable.profiles, "设置绑定用户备注", 0, true));
+        items.add(new SettingItem(R.drawable.profiles, "设置绑定用户备注", 0, false));
         items.add(new SettingItem(R.drawable.map, "重设围栏", 1, false));
 
         SettingAdapter adapter = new SettingAdapter(items, new SettingAdapter.OnSettingsClickListener() {

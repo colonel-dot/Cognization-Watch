@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@android:color/transparent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -13,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="15dp"
         android:src="@drawable/game"
-        app:tint="@color/white"
+        app:tint="@color/blue"
         />
 
     <TextView
@@ -46,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="5dp"
         android:src="@drawable/expand"
         app:tint="@color/white"
         />

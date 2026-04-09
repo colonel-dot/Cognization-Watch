@@ -23,8 +23,7 @@
         android:fontFamily="@font/harmonyos_sans_bold"
         />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/title"
@@ -34,19 +33,21 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_rounded"
+        android:backgroundTint="@color/grey_black">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:padding="8dp"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/signout"
-        android:layout_width="154dp"
-        android:layout_height="50dp"
+        android:layout_width="145dp"
+        android:layout_height="46dp"
         android:background="@drawable/background_rounded"
         android:backgroundTint="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,13 +55,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
         android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:stateListAnimator="@animator/button_press"
+        android:clickable="true">
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:src="@drawable/logout"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="46dp"
             app:tint="@color/white" />
 
         <TextView

@@ -21,7 +21,10 @@ import game.BrainTrainingFragment
 import main.MainActivity
 import read_assessment.ui.ReadFragment
 import sports.data.StepForegroundService
-import rtc.VideoCallFragment
+import android.util.Log
+import com.example.common.bind_device.BindStatusManager
+import com.example.common.login.remote.LoginStatusManager
+import com.example.common.rtc.RtcActivity
 import com.example.common.util.ItemSpacingDecoration
 
 class HomeFragment : Fragment() {
@@ -79,19 +82,39 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
 
         adapter.setOnItemClickListener { position: Int ->
-            val fragment = when (position) {
-                0 -> ReadFragment()
-                1 -> BrainTrainingFragment()
-                2 -> HealthMonitoringFragment()
-                3 -> VideoCallFragment()
-                else -> null
-            }
+            when (position) {
+                3 -> {
+                    val userId = LoginStatusManager.getLoggedInUserId(requireContext())
+                    val targetId = BindStatusManager.getBindStatus().second
 
-            fragment?.let {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                    if (userId.isNullOrEmpty() || targetId.isNullOrEmpty()) {
+                        Log.e("HomeFragment", "用户ID或对方ID为空，无法发起RTC通话")
+                        Toast.makeText(requireContext(), "请先登录并绑定设备", Toast.LENGTH_SHORT).show()
+                        return@setOnItemClickListener
+                    }
+
+                    Log.d("HomeFragment", "发起RTC通话: userId=$userId, targetId=$targetId")
+                    val intent = Intent(requireContext(), RtcActivity::class.java)
+                    intent.putExtra("userId", userId)
+                    intent.putExtra("targetId", targetId)
+                    intent.putExtra("isElder", false)
+                    startActivity(intent)
+                }
+                else -> {
+                    val fragment = when (position) {
+                        0 -> ReadFragment()
+                        1 -> BrainTrainingFragment()
+                        2 -> HealthMonitoringFragment()
+                        else -> null
+                    }
+
+                    fragment?.let {
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                }
             }
         }
 
