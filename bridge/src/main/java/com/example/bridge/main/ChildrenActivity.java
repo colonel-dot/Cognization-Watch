@@ -126,7 +126,7 @@ public class ChildrenActivity extends AppCompatActivity {
             android.util.Log.d("ChildrenActivity", "Geofence selected");
         } else if (itemId == R.id.settings) {
             targetTag = "SETTINGS";
-            selectedFragment = SettingFragment.newInstance("", "");
+            selectedFragment = new SettingFragment();
             android.util.Log.d("ChildrenActivity", "Profiles selected");
         }
 

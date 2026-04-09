@@ -49,6 +49,8 @@ import com.example.common.util.ItemSpacingDecoration;
 
 public class DashboardFragment extends Fragment {
 
+    private static final String TAG = "DashboardFragment";
+
     private String param1;
     private String param2;
 
@@ -136,11 +138,7 @@ public class DashboardFragment extends Fragment {
             loadDashboardDataWithRefreshComplete();
         });
 
-        try {
-            loadDashboardData();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        loadDashboardDataWithRefreshComplete();
     }
 
     /** 加载数据并在下拉刷新完成后结束刷新状态 */
@@ -213,6 +211,7 @@ public class DashboardFragment extends Fragment {
 
     /** 更新 Dashboard UI 数据 */
     private void updateDashboardUI(DashboardData data) {
+        Log.d(TAG, TAG + ".updateDashboardUI");
         if (adapter.list.size() > 0) {
             adapter.list.set(0, new DashboardRtcItem(data.username));
         }

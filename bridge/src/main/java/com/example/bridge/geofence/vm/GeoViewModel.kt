@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.bridge.geofence.network.GeoNetworkRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import kotlin.onSuccess
 
 /**
@@ -50,7 +52,15 @@ class GeoViewModel(application: Application) : AndroidViewModel(application) {
 
     // ==================== 围栏信息状态（内部可变，外部只读） ====================
     private val _fenceUiState = MutableStateFlow<FenceUiState>(FenceUiState.Idle)
-    val barrierUiState: StateFlow<FenceUiState> = _fenceUiState.asStateFlow()
+    val fenceUiState: StateFlow<FenceUiState> = _fenceUiState.asStateFlow()
+
+    // Java interop: expose as LiveData with class tags for safe instanceof checks
+    fun getBarrierUiState(): LiveData<FenceUiState> = _fenceUiState.asLiveData()
+
+    // Java interop: helper to check state type (avoids sealed class instanceof issues in Java)
+    fun isBarrierPostSuccess(state: FenceUiState): Boolean = state is FenceUiState.PostSuccess
+    fun isBarrierError(state: FenceUiState): Boolean = state is FenceUiState.Error
+    fun getBarrierErrorMsg(state: FenceUiState): String? = (state as? FenceUiState.Error)?.msg
 
     // ==================== 老人轨迹状态 ====================
     private val _movementUiState = MutableStateFlow<MovementUiState>(MovementUiState.Idle)

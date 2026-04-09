@@ -10,6 +10,9 @@ import androidx.core.graphics.ColorUtils;
 public class GenerateAutoAvatar {
 
     public static Bitmap generate(String name, int size) {
+        if (name == null || name.trim().isEmpty()) {
+            name = "?";
+        }
 
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);

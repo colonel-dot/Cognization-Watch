@@ -38,7 +38,6 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import mine.test.DataInitializer;
 import com.example.common.util.ItemSpacingDecoration;
 
 /**
@@ -48,12 +47,12 @@ import com.example.common.util.ItemSpacingDecoration;
  */
 public class RecordFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+    // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+    // Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -69,7 +68,7 @@ public class RecordFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment RecordFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // Rename and change types and number of parameters
     public static RecordFragment newInstance(String param1, String param2) {
         RecordFragment fragment = new RecordFragment();
         Bundle args = new Bundle();

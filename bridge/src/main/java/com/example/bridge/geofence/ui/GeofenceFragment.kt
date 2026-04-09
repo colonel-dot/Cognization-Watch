@@ -123,7 +123,7 @@ class GeofenceFragment : Fragment() {
 
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.barrierUiState.collect { state ->
+            viewModel.fenceUiState.collect { state ->
                 when (state) {
                     is FenceUiState.PostSuccess -> {
                         Log.d("GeofenceFragment", "围栏信息发送到远端成功")
@@ -246,7 +246,6 @@ class GeofenceFragment : Fragment() {
                     MarkerOptions()
                         .position(latLng)
                         .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
-                        .snippet("Marker 内容") // TODO
                         .draggable(false)
                         .visible(true)
                 )
@@ -282,7 +281,6 @@ class GeofenceFragment : Fragment() {
                     MarkerOptions()
                         .position(latLng)
                         .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
-                        .snippet("Marker 内容") // TODO
                         .draggable(false)
                         .visible(true)
                 )
