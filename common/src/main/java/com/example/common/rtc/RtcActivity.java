@@ -50,8 +50,6 @@ public class RtcActivity extends AppCompatActivity {
         return new String[]{
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA,
-//                    Manifest.permission.READ_PHONE_STATE,
-//                    Manifest.permission.BLUETOOTH_CONNECT
         };
     }
 

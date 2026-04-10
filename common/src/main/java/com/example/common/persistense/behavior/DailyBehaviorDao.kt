@@ -13,15 +13,15 @@ import java.time.LocalDate
 @Dao
 interface DailyBehaviorDao {
 
-    @Transaction // 事务保证原子性，查和插是一个整体，不会并发出错
+    @Transaction // 事务保证原子性
     suspend fun getOrInitTodayBehavior(date: LocalDate): DailyBehaviorEntity {
-        // 1. 查询当天是否有数据
+        // 查询当天是否有数据
         val existEntity = getByDate(date)
         return if (existEntity != null) {
-            // 2. 有数据 → 直接返回
+            // 有数据 → 直接返回
             existEntity
         } else {
-            // 3. 无数据 → 初始化一条默认值的空数据并插入
+            // 无数据 → 初始化默认值的空数据并插入
             val newEntity = DailyBehaviorEntity(
                 date = date,
                 wakeMinute = 0,

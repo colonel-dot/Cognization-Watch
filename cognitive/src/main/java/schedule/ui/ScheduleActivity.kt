@@ -63,7 +63,6 @@ class ScheduleActivity : AppCompatActivity() {
         btn_bed = findViewById(R.id.btn_bed)
         btn_rise = findViewById(R.id.btn_rise)
 
-        // 正确初始化RecyclerView[2,5](@ref)
         rvBedHour = findViewById(R.id.rvBedHour)
         rvBedMinute = findViewById(R.id.rvBedMinute)
         rvWakeHour = findViewById(R.id.rvHour)
@@ -75,7 +74,6 @@ class ScheduleActivity : AppCompatActivity() {
         map[rvWakeHour] = CircularSnapHelper(viewModel.hours.size)
         map[rvWakeMinute] = CircularSnapHelper(viewModel.minutes.size)
 
-        // 初始化滚轮
         bedHourAdapter = setupWheel(rvBedHour, viewModel.hours, viewModel.bedHourPos) { selectedHour, pos ->
             viewModel.onBedTimeSelected(
                 selectedHour,
@@ -136,21 +134,17 @@ class ScheduleActivity : AppCompatActivity() {
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
-        // 设置观察者
         setupObservers()
     }
 
     override fun onResume() {
         super.onResume()
         if (checkUsageStatsPermission()) {
-            // 不会重复刷新，因为 ViewModel 会拦住
             viewModel.refreshBySystemEvents()
             setResult(RESULT_OK)
         }
     }
 
-
-    /** 修复后的初始化滚轮方法 */
     private fun setupWheel(
         recyclerView: RecyclerView,
         data: List<String>,
@@ -167,10 +161,9 @@ class ScheduleActivity : AppCompatActivity() {
         val safePos = calculateSafePosition(initialPos, adapter)
         adapter.selectedPos = safePos
 
-        // 重点：使用 post 确保 rv.height 已知
         recyclerView.post {
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val itemHeight = 120 // 确保这里和 Adapter onCreateViewHolder 里的高度一致
+            val itemHeight = 120
             val offset = recyclerView.height / 2 - itemHeight / 2
             layoutManager.scrollToPositionWithOffset(safePos, offset)
         }
@@ -186,7 +179,6 @@ class ScheduleActivity : AppCompatActivity() {
         return middlePos + adjustedPos
     }
 
-    // 创建滚动监听器
     private fun createScrollListener(
         adapter: WheelAdapter,
         onItemSelected: (String, Int) -> Unit
@@ -194,14 +186,12 @@ class ScheduleActivity : AppCompatActivity() {
         return object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
 
-                // 滑动停止状态
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     val layoutManager = rv.layoutManager as? LinearLayoutManager ?: return
                     val snapView = map[rv]?.findSnapView(layoutManager) ?: return
                     val snapPos = rv.getChildAdapterPosition(snapView)
 
                     if (snapPos != RecyclerView.NO_POSITION) {
-                        // 准确计算真实位置
                         val realPos = getRealPosition(snapPos, adapter.origin.size)
                         adapter.selectedPos = snapPos
                         adapter.notifyDataSetChanged()
@@ -219,7 +209,6 @@ class ScheduleActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.bedTimeText.observe(this) { text ->
             tvBedTime.text = text
-            // 使用正确的RecyclerView实例，添加延迟避免竞争条件
             rvBedHour.postDelayed({
                 scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, rvBedHour)
                 scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, rvBedMinute)
@@ -235,14 +224,11 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
-    /** 修复后的滚动方法 */
     private fun scrollWheelTo(pos: Int, adapter: WheelAdapter, rv: RecyclerView) {
         val safePos = calculateSafePosition(pos, adapter)
         rv.post {
             val layoutManager = rv.layoutManager as LinearLayoutManager
-            // 计算偏移量：(RecyclerView高度 / 2) - (Item高度 / 2)
-            // 注意：Adapter里的TextView高度是120px，这里要保持一致
-            val itemHeight = 120 // 如果你在Adapter里写的是120
+            val itemHeight = 120
             val offset = rv.height / 2 - itemHeight / 2
 
             layoutManager.scrollToPositionWithOffset(safePos, offset)
@@ -252,7 +238,6 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
-    /** 检查权限 */
     private fun checkUsageStatsPermission(): Boolean {
         val appOps = getSystemService(APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(

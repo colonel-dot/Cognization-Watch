@@ -40,8 +40,6 @@ class ReadViewModel(application: Application) : AndroidViewModel(application ) {
         return speakText
     }
 
-
-    /** 开始录音 */
     fun startRecord(rootDir: File) {
         val dir = File(rootDir, "recordings")
         if (!dir.exists()) dir.mkdirs()

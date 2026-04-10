@@ -25,7 +25,7 @@ object GeofenceRepository {
         }
     }
 
-    // 插入事件（后台协程）
+    // 插入事件 后台协程
     fun insertEvent(item: GeofenceItem) {
         ensureInitialized()
         CoroutineScope(Dispatchers.IO).launch {
@@ -33,7 +33,7 @@ object GeofenceRepository {
         }
     }
 
-    // 阻塞方式插入（用于 BroadcastReceiver）
+    // 阻塞方式插入 用于 BroadcastReceiver
     @JvmStatic
     fun insertEventBlocking(item: GeofenceItem) {
         ensureInitialized()

@@ -45,7 +45,7 @@ interface DailyRiskDao {
     """)
     suspend fun loadUnalertedHighRisk(): List<DailyRiskEntity>
 
-    @Query("SELECT * FROM daily_risk") // 注意：表名要和实体类的@Entity(tableName = "xxx")一致
+    @Query("SELECT * FROM daily_risk")
     fun getAllDailyRisk(): Flow<List<DailyRiskEntity>>
 
     @Query("DELETE FROM daily_risk")

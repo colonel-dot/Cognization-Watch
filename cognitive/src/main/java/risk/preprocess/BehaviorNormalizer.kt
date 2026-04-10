@@ -11,7 +11,7 @@ object BehaviorNormalizer {
             if (min == null || min == 0) return null
 
             // 以 4:00 作为一天起点
-            // 0:00 - 3:59 认为是“前一天深夜” → +1440
+            // 0:00 - 3:59 认为是前一天深夜 → +1440
             return if (min < 240) min + 1440 else min
         }
 

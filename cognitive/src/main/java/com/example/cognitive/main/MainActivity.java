@@ -26,14 +26,14 @@ import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.facade.template.IProvider;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.cognitive.R;
-import com.example.cognitive.main.home.HomeFragment;
+import com.example.cognitive.main.home.ui.HomeFragment;
 import com.example.common.bind_device.BindStatusManager;
 import com.example.common.persistense.geofence.GeofenceRepository;
-import geofence.vm.CognitiveGeofenceViewModel;
 import com.example.common.login.LoginPopupProvider;
 import com.example.common.router.RouterPaths;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import geofence.vm.GeofenceViewModel;
 import mine.ui.RecordFragment;
 import setting.ui.SettingFragment;
 import sports.data.StepForegroundService;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
     private Fragment currentFragment;
-    private CognitiveGeofenceViewModel geofenceViewModel;
+    private GeofenceViewModel geofenceViewModel;
     private ActivityResultLauncher<String[]> multiplePermissionLauncher;
 
     @Override
@@ -85,11 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
         checkAndRequestPermissions();
 
-        geofenceViewModel = new ViewModelProvider(this).get(CognitiveGeofenceViewModel.class);
+        geofenceViewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
 
         initBottomNavigation();
 
-        // 初始化围栏监控
         GeofenceRepository.initialize(this);
         String otherId = BindStatusManager.INSTANCE.getBindStatus().getSecond();
         if (otherId != null && !otherId.isEmpty()) {
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFound(Postcard postcard) {
                         Log.d(TAG, "路由找到: " + postcard.getPath());
-                        // 获取 IProvider 并调用 showPopup()
+                        // 获取 IProvider 调用 showPopup()
                         IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
                         provider.init(MainActivity.this);
                         if (provider instanceof LoginPopupProvider) {
@@ -189,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!permissionsToRequest.isEmpty()) {
-            // 使用 ActivityResultLauncher 请求权限
             multiplePermissionLauncher.launch(permissionsToRequest.toArray(new String[0]));
         } else {
             startStepService();

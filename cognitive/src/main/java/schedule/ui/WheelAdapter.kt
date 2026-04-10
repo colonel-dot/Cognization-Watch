@@ -43,7 +43,6 @@ class WheelAdapter(val origin: List<String>) :
 
         holder.tv.setTextColor(if (position == selectedPos) Color.BLACK else Color.GRAY)
         holder.tv.textSize = if (position == selectedPos) 22f else 18f
-        //holder.tv.setBackgroundColor(if (position == selectedPos) Color.parseColor("#E3F2FD") else Color.TRANSPARENT)
     }
 
     fun getRealValue(): String {
@@ -55,7 +54,6 @@ class WheelAdapter(val origin: List<String>) :
         return origin.size * loopMultiplier / 2
     }
 
-    // 新增方法：计算真实位置
     fun getRealPosition(loopPosition: Int): Int {
         return (loopPosition % origin.size + origin.size) % origin.size
     }

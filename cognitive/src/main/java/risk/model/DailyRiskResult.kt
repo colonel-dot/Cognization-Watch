@@ -16,7 +16,7 @@ data class DailyRiskResult(
     val alerted: Boolean = false
 )
 
-// 扩展函数：业务模型 → 数据库实体
+// 业务模型 → 数据库实体
 fun DailyRiskResult.toEntity(alerted: Boolean = false): DailyRiskEntity {
     return DailyRiskEntity(
         date = this.date,

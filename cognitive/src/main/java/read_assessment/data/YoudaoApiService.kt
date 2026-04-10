@@ -85,18 +85,16 @@ object YoudaoApiService {
                 setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
 
                 // 设置连接超时和读取超时
-                connectTimeout = 10000  // 10秒连接超时
-                readTimeout = 30000     // 30秒读取超时
+                connectTimeout = 10000
+                readTimeout = 30000
             }
 
             try {
-                // 2. 连接尝试日志
                 Log.d(TAG, "尝试建立连接...")
 
                 // 实际建立连接
                 conn.connect()
 
-                // 3. 连接成功日志
                 Log.d(TAG, "连接成功建立，准备发送数据")
 
                 //val postData = params.map { "${it.key}=${it.value}" }.joinToString("&")
@@ -108,7 +106,7 @@ object YoudaoApiService {
                     outputStream.write(postData.toByteArray(Charsets.UTF_8))
                 }
 
-                // 4. 数据发送后，获取响应前日志
+                // 数据发送后获取响应前日志
                 Log.d(TAG, "请求数据已发送，等待响应...")
 
                 val responseCode = conn.responseCode
@@ -125,11 +123,9 @@ object YoudaoApiService {
                 JSONObject(response)
 
             } catch (e: Exception) {
-                // 5. 连接或请求异常日志
                 Log.e(TAG, "请求发生异常: ${e.message}", e)
                 throw e
             } finally {
-                // 6. 连接关闭日志
                 Log.d(TAG, "关闭HTTP连接")
                 conn.disconnect()
             }

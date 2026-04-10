@@ -52,7 +52,7 @@ public class ChildrenActivity extends AppCompatActivity {
                     @Override
                     public void onFound(Postcard postcard) {
                         Log.d(TAG, "路由找到: " + postcard.getPath());
-                        // 获取 IProvider 并调用 showPopup()
+                        // 获取 IProvider 调用 showPopup()
                         IProvider provider = (IProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
                         provider.init(ChildrenActivity.this);
                         if (provider instanceof LoginPopupProvider) {
@@ -88,12 +88,10 @@ public class ChildrenActivity extends AppCompatActivity {
         bottomNavigation.setSelectedItemId(R.id.dashboard);
     }
 
-    /** 切换到底部导航对应的 Fragment，并更新导航栏选中状态 */
     public void switchToGeofenceFragment() {
         bottomNavigation.setSelectedItemId(R.id.geofence);
     }
 
-    /** 根据 itemId 切换 Fragment */
     private void switchFragment(int itemId) {
         Log.d(TAG, "Bottom nav item selected: " + itemId);
 

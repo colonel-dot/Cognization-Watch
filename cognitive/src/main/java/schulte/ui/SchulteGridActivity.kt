@@ -48,7 +48,6 @@ class SchulteGridActivity : AppCompatActivity() {
             insets
         }
 
-        // 绑定视图
         bindView()
 
         initTimer()

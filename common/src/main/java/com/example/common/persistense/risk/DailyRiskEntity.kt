@@ -8,8 +8,8 @@ import java.time.LocalDate
 data class DailyRiskEntity(
     @PrimaryKey val date: LocalDate,
 
-    val riskScore: Double,// 风险指数
-    val riskLevel: RiskLevel = RiskLevel.数据不足无法评估,// 总的风险等级
+    val riskScore: Double, // 风险指数
+    val riskLevel: RiskLevel = RiskLevel.数据不足无法评估, // 总的风险等级
 
     val sleepRisk: Double = 0.0,
     val schulteRisk: Double = 0.0,

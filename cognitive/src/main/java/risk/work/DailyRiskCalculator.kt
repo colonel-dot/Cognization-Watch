@@ -33,7 +33,7 @@ object DailyRiskCalculator {
             )
         }
 
-        val latest = data[dataSize - 2] // 倒数第1天是当天，取倒数第2天作为最新完整数据
+        val latest = data[dataSize - 2] // -1 是当天，取 -2 作为最新完整数据
 
         val explanations = mutableListOf<String>()
 
@@ -51,11 +51,11 @@ object DailyRiskCalculator {
             0.0
         }
 
-        // 舒尔特（优先25格，其次16格）
+        // 舒尔特 优先25格，其次16格
         val schulteValues =
             data.mapNotNull { it.schulte25Time ?: it.schulte16Time }
 
-        /*后续对16格和25格算法分别处理
+     /* 后续对16格和25格算法分别处理
         val schulteValues = when (evaluatorType) {
             SchulteEvaluatorType.GRID_4 -> data.mapNotNull { it.schulte16Time }
             SchulteEvaluatorType.GRID_5 -> data.mapNotNull { it.schulte25Time  }
