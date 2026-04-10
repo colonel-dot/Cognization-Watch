@@ -47,4 +47,7 @@ interface DailyRiskDao {
 
     @Query("SELECT * FROM daily_risk") // 注意：表名要和实体类的@Entity(tableName = "xxx")一致
     fun getAllDailyRisk(): Flow<List<DailyRiskEntity>>
+
+    @Query("DELETE FROM daily_risk")
+    suspend fun deleteAll()
 }

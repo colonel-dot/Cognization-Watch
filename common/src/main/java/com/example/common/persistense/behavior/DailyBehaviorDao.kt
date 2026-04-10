@@ -147,4 +147,6 @@ interface DailyBehaviorDao {
     @Query("SELECT * FROM daily_behavior")
     fun getAllDailyBehavior(): Flow<List<DailyBehaviorEntity>>
 
+    @Query("DELETE FROM daily_behavior")
+    suspend fun deleteAll()
 }

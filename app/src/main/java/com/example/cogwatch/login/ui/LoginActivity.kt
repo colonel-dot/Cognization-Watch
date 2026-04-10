@@ -28,7 +28,6 @@ private const val TAG = "LoginActivity"
 private const val IDENTITY_ELDER = "elder"
 private const val IDENTITY_CHILD = "child"
 
-@Route(path = RouterPaths.LOGIN_MAIN)
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var title: TypewriterTextView

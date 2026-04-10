@@ -29,6 +29,9 @@ import setting.item.SettingItem;
 import user.UserManager;
 import com.example.common.login.remote.LoginStatusManager;
 import com.example.common.bind_device.BindStatusManager;
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.example.common.persistense.BusinessDataManager;
+import com.example.common.router.RouterPaths;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -164,6 +167,7 @@ public class SettingFragment extends Fragment {
         LoginStatusManager.INSTANCE.logout(requireContext());
         BindStatusManager.INSTANCE.clearBindStatus(requireContext());
         UserManager.INSTANCE.clear();
+        BusinessDataManager.INSTANCE.clearAll(requireContext());
         Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClassName("com.example.cogwatch", "com.example.cogwatch.login.ui.LoginActivity");

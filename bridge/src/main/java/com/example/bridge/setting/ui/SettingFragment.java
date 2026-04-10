@@ -33,6 +33,7 @@ import com.example.bridge.setting.item.SettingItem;
 import com.example.common.geofence.model.BarrierInfo;
 import com.example.common.login.remote.LoginStatusManager;
 import com.example.common.bind_device.BindStatusManager;
+import com.example.common.persistense.BusinessDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,6 +203,7 @@ public class SettingFragment extends Fragment {
     private void performLogout() {
         LoginStatusManager.INSTANCE.logout(requireContext());
         BindStatusManager.INSTANCE.clearBindStatus(requireContext());
+        BusinessDataManager.INSTANCE.clearAll(requireContext());
         Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClassName("com.example.cogwatch", "com.example.cogwatch.login.ui.LoginActivity");
