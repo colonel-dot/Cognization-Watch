@@ -1,12 +1,9 @@
 package com.example.common.login;
 
 import android.content.Context;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.facade.Postcard;
-import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.facade.template.IProvider;
 import com.example.common.bind_device.BindStatusManager;
 import com.example.common.router.RouterPaths;
@@ -24,14 +21,13 @@ public class LoginPopupProvider implements IProvider {
     }
 
     public void showPopup() {
-        if (!(context instanceof FragmentActivity)) return;
+        if (!(context instanceof FragmentActivity activity)) return;
 
         BindStatusManager.INSTANCE.init(context);
         if (BindStatusManager.INSTANCE.isBound(context)) {
             return;
         }
 
-        FragmentActivity activity = (FragmentActivity) context;
         BindDialogFragment dialog = new BindDialogFragment();
         dialog.show(activity.getSupportFragmentManager(), "BindDialog");
     }

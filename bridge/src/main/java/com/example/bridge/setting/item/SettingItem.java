@@ -1,11 +1,11 @@
 package com.example.bridge.setting.item;
 
 public class SettingItem {
-    private int icon;
-    private String type;
-    private int position;
+    private final int icon;
+    private final String type;
+    private final int position;
 
-    private boolean isSwitch;
+    private final boolean isSwitch;
 
     public SettingItem(int icon, String type, int position, boolean isSwitch) {
         this.icon = icon;

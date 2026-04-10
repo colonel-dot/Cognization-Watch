@@ -39,22 +39,13 @@ import java.time.LocalDate
 
 class DashboardFragment : Fragment() {
 
-    private val TAG = "DashboardFragment"
+    companion object {
+        private const val TAG = "DashboardFragment"
+    }
 
     private var recyclerView: RecyclerView? = null
     private var swipeRefresh: SwipeRefreshLayout? = null
     private var adapter: DashboardRVAdapter? = null
-
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,11 +70,11 @@ class DashboardFragment : Fragment() {
         adapter!!.list.add(DashboardCollectionItem(0, 0.0))
         adapter!!.list.add(DashboardAlertItem("没有数据源"))
 
-        adapter!!.setOnRtcClickListener(OnItemClickListener { position ->
+        adapter!!.setOnRtcClickListener(OnItemClickListener { _ ->
             val userId = LoginStatusManager.getLoggedInUserId(requireContext())
             val targetId = BindStatusManager.getBindStatus().second
 
-            if (userId.isNullOrEmpty() || targetId.isNullOrEmpty()) {
+            if (userId.isEmpty() || targetId.isNullOrEmpty()) {
                 Log.e(TAG, "用户ID或对方ID为空，无法发起RTC通话")
                 Toast.makeText(requireContext(), "请先登录并绑定设备", Toast.LENGTH_SHORT).show()
                 return@OnItemClickListener
@@ -97,11 +88,11 @@ class DashboardFragment : Fragment() {
             startActivity(intent)
         })
 
-        adapter!!.setOnAlertClickListener(OnItemClickListener { position ->
+        adapter!!.setOnAlertClickListener { _ ->
             if (activity is ChildrenActivity) {
                 (activity as ChildrenActivity).switchToGeofenceFragment()
             }
-        })
+        }
 
         recyclerView!!.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView!!.adapter = adapter
@@ -145,9 +136,9 @@ class DashboardFragment : Fragment() {
         val childAccount = username
         val elderAccount = BindStatusManager.getBindStatus().second
 
-        if (childAccount.isNullOrEmpty() || elderAccount.isNullOrEmpty()) {
+        if (childAccount.isEmpty() || elderAccount.isNullOrEmpty()) {
             return@coroutineScope DashboardLoadResult(
-                DashboardData(username ?: "", 0.0, 0.0, 0, 0.0, "请先绑定设备"),
+                DashboardData(username, 0.0, 0.0, 0, 0.0, "请先绑定设备"),
                 hasData = false
             )
         }
@@ -227,7 +218,7 @@ class DashboardFragment : Fragment() {
 
     private fun updateDashboardUI(data: DashboardData) {
         Log.d(TAG, "$TAG.updateDashboardUI")
-        if (adapter!!.list.size > 0) {
+        if (adapter!!.list.isNotEmpty()) {
             val boundUsername = BindStatusManager.getBindStatus().second
             val remark = BindStatusManager.getBindRemark(requireContext())
             val displayName = remark ?: boundUsername ?: data.username
@@ -253,18 +244,4 @@ class DashboardFragment : Fragment() {
         val todaySleepHours: Double,
         val alertTip: String
     )
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String, param2: String): DashboardFragment {
-            return DashboardFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-        }
-    }
 }

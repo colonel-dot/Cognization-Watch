@@ -3,15 +3,15 @@ package geofence.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.amap.api.fence.GeoFence
 import com.amap.api.fence.GeoFenceClient
-import com.amap.api.location.DPoint
+import com.example.common.geofence.GeofenceConstants
 import com.example.common.geofence.model.ElderMovement
 import com.example.common.persistense.geofence.GeofenceItem
 import com.example.common.persistense.geofence.GeofenceRepository
-import com.example.common.geofence.GeofenceConstants
 import geofence.network.ElderMovementRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +24,7 @@ class GeofenceReceiver : BroadcastReceiver() {
         const val GEOFENCE_BROADCAST_ACTION = GeofenceConstants.GEOFENCE_BROADCAST_ACTION
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
 
@@ -35,7 +36,7 @@ class GeofenceReceiver : BroadcastReceiver() {
         val status = bundle.getInt(GeoFence.BUNDLE_KEY_FENCESTATUS)
         val customId = bundle.getString(GeoFence.BUNDLE_KEY_CUSTOMID) ?: return
         val fenceId = bundle.getString(GeoFence.BUNDLE_KEY_FENCEID)
-        val fence = bundle.getParcelable<GeoFence>(GeoFence.BUNDLE_KEY_FENCE)
+        val fence = bundle.getParcelable(GeoFence.BUNDLE_KEY_FENCE, GeoFence::class.java)
 
         saveGeofenceEvent(context, status, customId, fence)
     }

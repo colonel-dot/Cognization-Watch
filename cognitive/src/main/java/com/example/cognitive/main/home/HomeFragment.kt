@@ -87,7 +87,7 @@ class HomeFragment : Fragment() {
                     val userId = LoginStatusManager.getLoggedInUserId(requireContext())
                     val targetId = BindStatusManager.getBindStatus().second
 
-                    if (userId.isNullOrEmpty() || targetId.isNullOrEmpty()) {
+                    if (userId.isEmpty() || targetId.isNullOrEmpty()) {
                         Log.e("HomeFragment", "用户ID或对方ID为空，无法发起RTC通话")
                         Toast.makeText(requireContext(), "请先登录并绑定设备", Toast.LENGTH_SHORT).show()
                         return@setOnItemClickListener
@@ -123,10 +123,14 @@ class HomeFragment : Fragment() {
     }
 
     private val requiredPermissions: Array<String>
-        get() = arrayOf(
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.ACTIVITY_RECOGNITION
-        )
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        } else {
+            TODO("VERSION.SDK_INT < TIRAMISU")
+        }
 
     private fun checkPermissions(): Boolean {
         for (permission in requiredPermissions) {
@@ -141,11 +145,7 @@ class HomeFragment : Fragment() {
 
     private fun startStepService() {
         val intent = Intent(requireContext(), StepForegroundService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            requireContext().startForegroundService(intent)
-        } else {
-            requireContext().startService(intent)
-        }
+        requireContext().startForegroundService(intent)
     }
 
     companion object {

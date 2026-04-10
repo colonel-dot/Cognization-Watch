@@ -17,7 +17,6 @@ import schedule.ui.ScheduleActivity
 import schedule.vm.ScheduleViewModel
 import sports.vm.StepViewModel
 import com.example.common.util.ItemSpacingDecoration
-import com.example.common.util.OnItemClickListener
 import kotlinx.coroutines.launch
 
 class HealthMonitoringFragment : Fragment() {
@@ -52,7 +51,7 @@ class HealthMonitoringFragment : Fragment() {
                 val steps = entity.steps?.toDouble() ?: 0.0
 
                 // 直接更新 list 并刷新 adapter
-                if (list.size > 0 && list[0] != null) {
+                if (list.isNotEmpty() && list[0] != null) {
                     list[0] = list[0]!!.copy(data = steps)
                     adapter.notifyItemChanged(0)
                 }
@@ -81,7 +80,7 @@ class HealthMonitoringFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (getArguments() != null) {
+        if (arguments != null) {
             mParam1 = requireArguments().getString(ARG_PARAM1)
             mParam2 = requireArguments().getString(ARG_PARAM2)
         }
@@ -100,13 +99,13 @@ class HealthMonitoringFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView?>(R.id.content)
         val swipeRefresh = view.findViewById<SwipeRefreshLayout?>(R.id.swipeRefresh)
 
-        list = ArrayList<HealthMonitoringRVModel?>()
+        list = ArrayList()
         list.add(HealthMonitoringRVModel("今日步数", 0.toDouble(), 10000.0, "steps"))
         list.add(HealthMonitoringRVModel("作息时间", 0.0, 10.0, "hours"))
 
         adapter = HealthMonitoringRVAdapter(list)
 
-        recyclerView.adapter = adapter
+        recyclerView?.adapter = adapter
 
         // 设置下拉刷新
         swipeRefresh?.setOnRefreshListener {
@@ -127,18 +126,18 @@ class HealthMonitoringFragment : Fragment() {
             adapter.notifyItemChanged(1)
         }
 
-        recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
+        recyclerView?.setLayoutManager(LinearLayoutManager(context))
 
-        adapter.setOnItemClickListener(OnItemClickListener { position: Int ->
+        adapter.setOnItemClickListener { position: Int ->
             when (position) {
                 1 -> {
-                    startActivity(Intent(getContext(), ScheduleActivity::class.java))
+                    startActivity(Intent(context, ScheduleActivity::class.java))
                 }
             }
-        })
+        }
 
-        val itemSpacingDecoration = ItemSpacingDecoration(getContext(), 20, false)
-        recyclerView.addItemDecoration(itemSpacingDecoration)
+        val itemSpacingDecoration = ItemSpacingDecoration(context, 20, false)
+        recyclerView?.addItemDecoration(itemSpacingDecoration)
     }
 
     companion object {

@@ -2,8 +2,8 @@ package com.example.bridge.dashboard.item;
 
 public class DashboardRiskItem implements DashboardItem {
 
-    private double risk;
-    private double yesterday;
+    private final double risk;
+    private final double yesterday;
 
     public DashboardRiskItem(double risk, double yesterday) {
         this.risk = risk;

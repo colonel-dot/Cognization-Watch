@@ -1,9 +1,9 @@
 package com.example.cognitive.main.home;
 
 public class HomeRVModel {
-    private int image;
-    private String function;
-    private int background;
+    private final int image;
+    private final String function;
+    private final int background;
 
     public HomeRVModel(int image, String function, int background) {
         this.image = image;

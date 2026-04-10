@@ -8,9 +8,9 @@ public class TimerHelper {
     private long startTime;
     private long elapsedTime; // 已累计时间
     private boolean running;
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private Runnable task = new Runnable() {
+    private final Runnable task = new Runnable() {
         @Override
         public void run() {
 

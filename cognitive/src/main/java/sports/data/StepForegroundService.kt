@@ -21,7 +21,7 @@ class StepForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "服务已经打开")
-        val sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+        val sensorManager = getSystemService(SENSOR_SERVICE) as? SensorManager
         val db = AppDatabase.getDatabase(application)
 
         if (sensorManager != null) {

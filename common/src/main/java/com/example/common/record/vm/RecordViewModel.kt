@@ -1,4 +1,4 @@
-package com.example.common.record
+package com.example.common.record.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -32,13 +32,13 @@ class RecordViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 val risk = riskDao.getByDate(date)
                 _riskData.postValue(risk)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _riskData.postValue(null)
             }
             try {
                 val behavior = behaviorDao.getByDate(date)
                 _behaviorData.postValue(behavior)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _behaviorData.postValue(null)
             }
         }

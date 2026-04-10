@@ -32,8 +32,7 @@ public class RemarkDialogFragment extends DialogFragment {
         if (getDialog() != null && getDialog().getWindow() != null) {
             android.view.Window window = getDialog().getWindow();
             android.view.WindowManager.LayoutParams params = window.getAttributes();
-            int widthInPx = (int) (320 * getResources().getDisplayMetrics().density);
-            params.width = widthInPx;
+            params.width = (int) (320 * getResources().getDisplayMetrics().density);
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             window.setAttributes(params);
         }
@@ -58,7 +57,7 @@ public class RemarkDialogFragment extends DialogFragment {
 
         remarkButton.setOnClickListener(v -> {
             String remark = remarkUsername.getText() != null ? remarkUsername.getText().toString().trim() : null;
-            if (remark.isBlank()) {
+            if (remark != null && remark.isBlank()) {
                 Toast.makeText(requireContext(), "请输入备注", Toast.LENGTH_SHORT).show();
                 return;
             }

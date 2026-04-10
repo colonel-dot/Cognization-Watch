@@ -54,7 +54,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
         return hour * 60 + minute;
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder {
 
         ImageView icon;
         TextView time;

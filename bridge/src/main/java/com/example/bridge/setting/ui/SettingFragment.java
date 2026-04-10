@@ -1,7 +1,6 @@
 package com.example.bridge.setting.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,15 +45,6 @@ public class SettingFragment extends Fragment {
 
     private static final String TAG = "SettingFragment";
 
-    // Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private RecyclerView content;
     private LinearLayout signout;
     private SettingAdapter adapter;
@@ -74,15 +64,6 @@ public class SettingFragment extends Fragment {
                     Toast.makeText(requireContext(), "需要定位权限才能设置围栏", Toast.LENGTH_SHORT).show();
                 }
             });
-
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,8 +87,6 @@ public class SettingFragment extends Fragment {
 
     private void observeUiState() {
         viewModel.getBarrierUiState().observe(getViewLifecycleOwner(), state -> {
-            if (state == null) return;
-
             if (viewModel.isBarrierPostSuccess(state)) {
                 Log.d("SettingFragment", "围栏信息发送到远端成功");
                 Toast.makeText(requireContext(), "围栏绑定成功", Toast.LENGTH_SHORT).show();
@@ -130,7 +109,7 @@ public class SettingFragment extends Fragment {
 
     private void sendBarrierInfoToRemote(double lat, double lng, float radius) {
         String eldername = LoginStatusManager.INSTANCE.getLoggedInUserId(requireContext());
-        BarrierInfo barrierInfo = new BarrierInfo(eldername, lng, lat, (double) radius);
+        BarrierInfo barrierInfo = new BarrierInfo(eldername, lng, lat, radius);
         viewModel.postBarrierInfo(eldername, barrierInfo);
     }
 
@@ -185,8 +164,10 @@ public class SettingFragment extends Fragment {
     }
 
     private void showLogoutConfirmDialog() {
-        if (!isAdded() || requireContext() == null) {
+        if (!isAdded()) {
             return;
+        } else {
+            requireContext();
         }
         new AlertDialog.Builder(requireContext())
                 .setTitle("确认退出")

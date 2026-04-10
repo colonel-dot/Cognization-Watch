@@ -7,6 +7,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 public class ItemSpacingDecoration extends RecyclerView.ItemDecoration {
 
     private final int margin;
@@ -36,7 +38,7 @@ public class ItemSpacingDecoration extends RecyclerView.ItemDecoration {
         if (isHorizontal) {
             if (parent.getChildAdapterPosition(view) == 0) {
                 outRect.left = margin;
-            } else if (parent.getChildAdapterPosition(view) == parent.getAdapter().getItemCount() - 1) {
+            } else if (parent.getChildAdapterPosition(view) == Objects.requireNonNull(parent.getAdapter()).getItemCount() - 1) {
                 outRect.left = space;
                 outRect.right = margin + extraEnd;
             } else {
@@ -45,7 +47,7 @@ public class ItemSpacingDecoration extends RecyclerView.ItemDecoration {
         } else {
             if (parent.getChildAdapterPosition(view) == 0) {
                 outRect.top = margin;
-            } else if (parent.getChildAdapterPosition(view) == parent.getAdapter().getItemCount() - 1) {
+            } else if (parent.getChildAdapterPosition(view) == Objects.requireNonNull(parent.getAdapter()).getItemCount() - 1) {
                 outRect.top = space;
                 outRect.bottom = margin + extraEnd;
             } else {

@@ -21,8 +21,6 @@ import com.example.common.login.remote.LoginStatusManager
 import com.example.bridge.main.ChildrenActivity
 import kotlinx.coroutines.launch
 import com.example.cognitive.main.MainActivity
-import com.example.common.router.RouterPaths
-import com.alibaba.android.arouter.facade.annotation.Route
 
 private const val TAG = "LoginActivity"
 private const val IDENTITY_ELDER = "elder"
@@ -101,11 +99,11 @@ class LoginActivity : AppCompatActivity() {
             LoginRepository().login(userName, passWord).collect { result ->
                 result.fold(
                     onSuccess = { loginResponse ->
-                        Log.d(TAG, "login: 收到账号密码分别是 ${userName} 和 ${passWord} 的登录请求，服务器返回状态码 ${loginResponse.code}")
+                        Log.d(TAG, "login: 收到账号密码分别是 $userName 和 $passWord 的登录请求，服务器返回状态码 ${loginResponse.code}")
                         if (loginResponse.code == 200) {
                             Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
                             LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
-                            val intent = if (identity.equals(IDENTITY_ELDER)) {
+                            val intent = if (identity == IDENTITY_ELDER) {
                                 Intent(this@LoginActivity, MainActivity::class.java)
                             } else {
                                 Intent(this@LoginActivity, ChildrenActivity::class.java)
@@ -117,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     },
                     onFailure = { e ->
-                        Log.d(TAG, "login: 收到账号密码分别是 ${userName} 和 ${passWord} 的登录请求但是失败")
+                        Log.d(TAG, "login: 收到账号密码分别是 $userName 和 $passWord 的登录请求但是失败")
                         Toast.makeText(this@LoginActivity, "请求失败：${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 )
@@ -128,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
     private fun fakelogin() {
         val userName = username.text.toString()
         LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
-        val intent = if (identity.equals(IDENTITY_ELDER)) {
+        val intent = if (identity == IDENTITY_ELDER) {
             Intent(this@LoginActivity, MainActivity::class.java)
         } else {
             Intent(this@LoginActivity, ChildrenActivity::class.java)

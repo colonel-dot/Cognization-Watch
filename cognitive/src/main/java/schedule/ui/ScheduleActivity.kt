@@ -1,8 +1,6 @@
 package schedule.ui
 
-import android.app.Activity
 import android.app.AppOpsManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -11,14 +9,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import schedule.vm.ScheduleViewModel
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
@@ -64,8 +60,8 @@ class ScheduleActivity : AppCompatActivity() {
         tvBedTime = findViewById(R.id.tvBedTime)
         tvWakeTime = findViewById(R.id.tvWakeTime)
 
-        btn_bed = findViewById<Button>(R.id.btn_bed)
-        btn_rise = findViewById<Button>(R.id.btn_rise)
+        btn_bed = findViewById(R.id.btn_bed)
+        btn_rise = findViewById(R.id.btn_rise)
 
         // 正确初始化RecyclerView[2,5](@ref)
         rvBedHour = findViewById(R.id.rvBedHour)
@@ -123,7 +119,7 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeHour = wakeHourAdapter.getRealValue(),
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
             mainViewModel.notifyRecordChanged()
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
@@ -135,7 +131,7 @@ class ScheduleActivity : AppCompatActivity() {
                 wakeHour = wakeHourAdapter.getRealValue(),
                 wakeMinute = wakeMinuteAdapter.getRealValue()
             )
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
             mainViewModel.notifyRecordChanged()
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
@@ -149,7 +145,7 @@ class ScheduleActivity : AppCompatActivity() {
         if (checkUsageStatsPermission()) {
             // 不会重复刷新，因为 ViewModel 会拦住
             viewModel.refreshBySystemEvents()
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
         }
     }
 
@@ -258,7 +254,7 @@ class ScheduleActivity : AppCompatActivity() {
 
     /** 检查权限 */
     private fun checkUsageStatsPermission(): Boolean {
-        val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val appOps = getSystemService(APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(
             AppOpsManager.OPSTR_GET_USAGE_STATS,
             android.os.Process.myUid(),

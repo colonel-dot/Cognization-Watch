@@ -1,85 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
-    android:orientation="vertical"
-    android:background="@color/blue_grey">
+    android:background="@color/blue_grey"
+    tools:context=".main.MainActivity">
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigation"
+        />
 
-    <!-- 底部导航栏 -->
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#F8F8F8"
-        android:paddingVertical="12dp">
+        android:layout_height="80dp"
+        android:background="@drawable/background_top_rounded"
+        app:menu="@menu/home_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
-        <!-- 首页 -->
-        <LinearLayout
-            android:id="@+id/home_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="首页"
-                android:textSize="12sp"
-                android:textColor="#000000"
-                android:layout_marginTop="4dp" />
-
-        </LinearLayout>
-
-        <!-- 任务 -->
-        <LinearLayout
-            android:id="@+id/call"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="通话"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/mine_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="我的"
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:layout_marginTop="4dp" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-</LinearLayout>
-
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
-package com.example.common.record;
+package com.example.common.record.ui;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.common.R;
 import com.example.common.persistense.risk.RiskLevel;
+import com.example.common.record.vm.RecordViewModel;
 import com.example.common.util.StringMap;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -78,15 +78,14 @@ public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
                 } else if (risk.getRiskLevel() == RiskLevel.认知情况正常) {
                     level.setTextColor(ContextCompat.getColor(requireContext(), R.color.green));
                 } else if (risk.getRiskLevel() == RiskLevel.数据不足无法评估) {
-                    level.setTextColor(Color.TRANSPARENT);
+                    level.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
                 }
 
-                StringBuilder detailBuilder = new StringBuilder();
-                detailBuilder.append("• 睡眠风险指数：").append(String.format("%.2f", risk.getSleepRisk())).append("\n");
-                detailBuilder.append("• 舒尔特风险指数：").append(String.format("%.2f", risk.getSchulteRisk())).append("\n");
-                detailBuilder.append("• 步数风险指数：").append(String.format("%.2f", risk.getStepsRisk())).append("\n");
-                detailBuilder.append("• 语音能力指数：").append(String.format("%.2f", risk.getSpeechRisk()));
-                detail.setText(detailBuilder.toString());
+                String detailBuilder = "• 睡眠风险指数：" + String.format("%.2f", risk.getSleepRisk()) + "\n" +
+                        "• 舒尔特风险指数：" + String.format("%.2f", risk.getSchulteRisk()) + "\n" +
+                        "• 步数风险指数：" + String.format("%.2f", risk.getStepsRisk()) + "\n" +
+                        "• 语音能力指数：" + String.format("%.2f", risk.getSpeechRisk());
+                detail.setText(detailBuilder);
 
                 TextView tvExplanations = view.findViewById(R.id.explanations);
                 tvExplanations.setText("分析说明：\n" + risk.getExplanations());
@@ -98,14 +97,13 @@ public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
                 behavior.setText("该日期暂无行为数据。");
                 return;
             }
-            StringBuilder behaviorBuilder = new StringBuilder();
-            behaviorBuilder.append("• 起床时间：").append(StringMap.mapMinuteToTime(behaviorEntity.getWakeMinute() != null ? behaviorEntity.getWakeMinute() : 0)).append("\n");
-            behaviorBuilder.append("• 睡觉时间：").append(StringMap.mapMinuteToTime(behaviorEntity.getSleepMinute() != null ? behaviorEntity.getSleepMinute() : 0)).append("\n");
-            behaviorBuilder.append("• 舒尔特16格时间：").append(String.format("%.2f", behaviorEntity.getSchulte16TimeSec() != null ? behaviorEntity.getSchulte16TimeSec() : 0.0)).append(" 秒\n");
-            behaviorBuilder.append("• 舒尔特25格时间：").append(String.format("%.2f", behaviorEntity.getSchulte25TimeSec() != null ? behaviorEntity.getSchulte25TimeSec() : 0.0)).append(" 秒\n");
-            behaviorBuilder.append("• 语音评分：").append(String.format("%.2f", behaviorEntity.getSpeechScore() != null ? behaviorEntity.getSpeechScore() : 0.0)).append("\n");
-            behaviorBuilder.append("• 步数：").append(behaviorEntity.getSteps() != null ? behaviorEntity.getSteps() : 0);
-            behavior.setText(behaviorBuilder.toString());
+            String behaviorBuilder = "• 起床时间：" + StringMap.mapMinuteToTime(behaviorEntity.getWakeMinute() != null ? behaviorEntity.getWakeMinute() : 0) + "\n" +
+                    "• 睡觉时间：" + StringMap.mapMinuteToTime(behaviorEntity.getSleepMinute() != null ? behaviorEntity.getSleepMinute() : 0) + "\n" +
+                    "• 舒尔特16格时间：" + String.format("%.2f", behaviorEntity.getSchulte16TimeSec() != null ? behaviorEntity.getSchulte16TimeSec() : 0.0) + " 秒\n" +
+                    "• 舒尔特25格时间：" + String.format("%.2f", behaviorEntity.getSchulte25TimeSec() != null ? behaviorEntity.getSchulte25TimeSec() : 0.0) + " 秒\n" +
+                    "• 语音评分：" + String.format("%.2f", behaviorEntity.getSpeechScore() != null ? behaviorEntity.getSpeechScore() : 0.0) + "\n" +
+                    "• 步数：" + (behaviorEntity.getSteps() != null ? behaviorEntity.getSteps() : 0);
+            behavior.setText(behaviorBuilder);
         });
 
         return view;

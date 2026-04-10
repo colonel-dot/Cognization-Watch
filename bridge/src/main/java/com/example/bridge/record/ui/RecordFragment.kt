@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -24,7 +22,7 @@ import com.example.common.persistense.risk.DailyRiskEntity
 import com.example.common.persistense.risk.RiskRepository
 import com.example.common.repository.network.BindApiService
 import com.example.common.repository.network.RetrofitClient
-import com.example.common.record.RecordDetailBottomSheet
+import com.example.common.record.ui.RecordDetailBottomSheet
 import com.example.common.util.ItemSpacingDecoration
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -38,8 +36,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import java.util.Collections
 import java.util.TreeSet
+import kotlin.math.ceil
+import kotlin.math.floor
 
 class RecordFragment : Fragment() {
 
@@ -67,7 +66,7 @@ class RecordFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_record, container, false)
     }
 
-    override fun onViewCreated(@NonNull view: View, @Nullable savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("RecordFragment", "onViewCreated")
 
@@ -115,7 +114,7 @@ class RecordFragment : Fragment() {
      */
     private fun refreshFromNetwork() {
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
-        if (eldername.isNullOrEmpty()) {
+        if (eldername.isEmpty()) {
             Log.w("RecordFragment", "未登录，无法获取绑定设备数据")
             swipeRefresh?.isRefreshing = false
             return
@@ -126,7 +125,7 @@ class RecordFragment : Fragment() {
                 val apiService = RetrofitClient.createService(BindApiService::class.java)
                 val networkData = apiService.getAllDailyRisk(eldername)
 
-                if (!networkData.isNullOrEmpty()) {
+                if (networkData.isNotEmpty()) {
                     Log.d("RecordFragment", "从网络获取到 ${networkData.size} 条风险数据")
                     val database = AppDatabase.getDatabase(requireContext())
                     database.dailyRiskDao().insertAll(networkData)
@@ -184,7 +183,7 @@ class RecordFragment : Fragment() {
 
     private suspend fun loadRecordData(): Pair<List<DailyRiskEntity>, Boolean> = withContext(Dispatchers.IO) {
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
-        if (eldername.isNullOrEmpty()) {
+        if (eldername.isEmpty()) {
             return@withContext Pair(emptyList(), false)
         }
 
@@ -193,7 +192,7 @@ class RecordFragment : Fragment() {
         try {
             val apiService = RetrofitClient.createService(BindApiService::class.java)
             val networkData = apiService.getAllDailyRisk(eldername)
-            if (!networkData.isNullOrEmpty()) {
+            if (networkData.isNotEmpty()) {
                 val database = AppDatabase.getDatabase(requireContext())
                 database.dailyRiskDao().insertAll(networkData)
                 Log.d("RecordFragment", "网络数据已存库: ${networkData.size} 条")
@@ -209,7 +208,7 @@ class RecordFragment : Fragment() {
         val fromDate: LocalDate = LocalDate.now().minusDays((selectedDays - 1).toLong())
         val list = RiskRepository.getFromBlocking(database.dailyRiskDao(), fromDate)
         val result: MutableList<DailyRiskEntity> = ArrayList(list)
-        Collections.reverse(result)
+        result.reverse()
         Pair(result, networkSuccess)
     }
 
@@ -262,15 +261,15 @@ class RecordFragment : Fragment() {
         val itemSpacingDecoration = ItemSpacingDecoration(requireContext(), 3, 16, false)
         record?.addItemDecoration(itemSpacingDecoration)
 
-        adapter?.setOnRecordClickListener { position, riskEntity ->
-            val fm: FragmentManager? = parentFragmentManager
-            if (fm?.findFragmentByTag("RiskDetailBottomSheet") != null) {
+        adapter?.setOnRecordClickListener { _, riskEntity ->
+            val fm: FragmentManager = parentFragmentManager
+            if (fm.findFragmentByTag("RecordDetailBottomSheet") != null) {
                 return@setOnRecordClickListener
             }
 
             val date: LocalDate = riskEntity.date
             val sheet = RecordDetailBottomSheet.newInstance(date)
-            sheet.show(parentFragmentManager, "RiskDetailBottomSheet")
+            sheet.show(parentFragmentManager, "RecordDetailBottomSheet")
         }
 
         loadRecordDataWithNetworkFirst()
@@ -285,7 +284,7 @@ class RecordFragment : Fragment() {
 
                 // Reverse to show latest first
                 val result: MutableList<DailyRiskEntity> = ArrayList(list)
-                Collections.reverse(result)
+                result.reverse()
 
                 withContext(Dispatchers.Main) {
                     riskDataList = result
@@ -319,8 +318,8 @@ class RecordFragment : Fragment() {
         val yLabels = TreeSet<Float>()
         for (entry in entries) {
             val value = entry.y
-            val floor = (Math.floor((value * 10).toDouble()) / 10.0).toFloat()
-            val ceil = (Math.ceil((value * 10).toDouble()) / 10.0).toFloat()
+            val floor = (floor((value * 10).toDouble()) / 10.0).toFloat()
+            val ceil = (ceil((value * 10).toDouble()) / 10.0).toFloat()
             yLabels.add(floor)
             yLabels.add(ceil)
         }
@@ -341,16 +340,5 @@ class RecordFragment : Fragment() {
         yAxis?.isGranularityEnabled = true
 
         lineChart?.invalidate()
-    }
-
-    companion object {
-        fun newInstance(param1: String, param2: String): RecordFragment {
-            val fragment = RecordFragment()
-            val args = Bundle()
-            args.putString("param1", param1)
-            args.putString("param2", param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

@@ -8,6 +8,7 @@ import java.time.LocalDate
 
 object InsertData {
 
+    // TODO
     lateinit var db: AppDatabase
 
     private val testDate1 = LocalDate.of(2026, 3, 8)
@@ -143,7 +144,7 @@ object InsertData {
     )
 
     fun init(context: Context) {
-        db = AppDatabase.Companion.getDatabase(context)
+        db = AppDatabase.getDatabase(context)
     }
 
     suspend fun insertBehaviorData() {

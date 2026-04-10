@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
@@ -18,7 +19,7 @@ import setting.item.SettingItem;
 public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHolder> {
 
     List<SettingItem> list;
-    private OnSettingsClickListener listener;
+    private final OnSettingsClickListener listener;
 
     public interface OnSettingsClickListener {
         void onItemClick(SettingItem item);
@@ -30,6 +31,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
         this.listener = listener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -47,7 +49,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
         return list.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView icon_iv;
         TextView type_tv;
@@ -70,15 +72,11 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
                 switch_.setVisibility(View.VISIBLE);
                 expand_iv.setVisibility(View.GONE);
                 switch_.setChecked(item.isChecked());
-                switch_.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    listener.onSwitchChanged(item, isChecked);
-                });
+                switch_.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSwitchChanged(item, isChecked));
             } else {
                 switch_.setVisibility(View.GONE);
                 expand_iv.setVisibility(View.VISIBLE);
-                itemView.setOnClickListener(v -> {
-                    listener.onItemClick(item);
-                });
+                itemView.setOnClickListener(v -> listener.onItemClick(item));
             }
         }
     }

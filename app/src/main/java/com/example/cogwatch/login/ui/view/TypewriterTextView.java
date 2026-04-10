@@ -15,9 +15,8 @@ public class TypewriterTextView extends androidx.appcompat.widget.AppCompatTextV
 
     private CharSequence mOriginalText = "";
     private int mIndex;
-    private long mBaseDelay = 80;
+    private final long mBaseDelay = 80;
     private boolean isCursorVisible = true;
-    private final String mCursorSymbol = "|";
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Random mRandom = new Random();
@@ -68,6 +67,7 @@ public class TypewriterTextView extends androidx.appcompat.widget.AppCompatTextV
 
     private void updateTextWithCursor(boolean show) {
         String base = mOriginalText.subSequence(0, Math.min(mIndex, mOriginalText.length())).toString();
+        String mCursorSymbol = "|"; // 闪烁光标样式
         String full = base + mCursorSymbol;
         SpannableString spannable = new SpannableString(full);
 

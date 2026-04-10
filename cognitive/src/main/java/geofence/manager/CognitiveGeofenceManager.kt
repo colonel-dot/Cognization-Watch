@@ -8,6 +8,7 @@ import com.amap.api.fence.GeoFenceListener
 import com.amap.api.location.DPoint
 import com.example.common.geofence.GeofenceConstants
 import com.example.common.geofence.model.BarrierInfo
+import androidx.core.content.edit
 
 class CognitiveGeofenceManager(context: Context) {
 
@@ -87,12 +88,12 @@ class CognitiveGeofenceManager(context: Context) {
      * 保存围栏信息到本地
      */
     private fun saveBarrierInfo(barrierInfo: BarrierInfo) {
-        sp.edit()
-            .putString(KEY_ELDERNAME, barrierInfo.eldername)
-            .putFloat(KEY_LAT, barrierInfo.lat.toFloat())
-            .putFloat(KEY_LON, barrierInfo.lon.toFloat())
-            .putFloat(KEY_RADIUS, barrierInfo.radius.toFloat())
-            .apply()
+        sp.edit {
+            putString(KEY_ELDERNAME, barrierInfo.eldername)
+                .putFloat(KEY_LAT, barrierInfo.lat.toFloat())
+                .putFloat(KEY_LON, barrierInfo.lon.toFloat())
+                .putFloat(KEY_RADIUS, barrierInfo.radius.toFloat())
+        }
         Log.d(TAG, "BarrierInfo saved to local")
     }
 
@@ -136,7 +137,7 @@ class CognitiveGeofenceManager(context: Context) {
      * 清除本地存储
      */
     private fun clearLocalStorage() {
-        sp.edit().clear().apply()
+        sp.edit { clear() }
         Log.d(TAG, "Local storage cleared")
     }
 }

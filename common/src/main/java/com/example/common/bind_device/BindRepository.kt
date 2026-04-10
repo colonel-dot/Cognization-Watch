@@ -14,7 +14,7 @@ private const val TAG = "BindRepository"
 
 object BindRepository {
 
-    fun bind(request: BindRequest): Flow<Result<BindResponse>> = flow<Result<BindResponse>>{
+    fun bind(request: BindRequest) = flow {
         try {
             val request = BindRequest(request.musername, request.otherusername)
             val response = RetrofitClient.createService(BindApiService::class.java).bind(request)

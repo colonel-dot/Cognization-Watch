@@ -4,10 +4,11 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.abs
 
 class CircularSnapHelper(
     private val originalSize: Int,  // 原始数据大小，如 24（小时）或 60（分钟）
-    private val loopMultiplier: Int = 200
+    loopMultiplier: Int = 200
 ) : LinearSnapHelper() {
 
     private val middlePosition = originalSize * loopMultiplier / 2
@@ -99,7 +100,7 @@ class CircularSnapHelper(
             } else {
                 child.left + child.width / 2
             }
-            val distance = Math.abs(childCenter - center)
+            val distance = abs(childCenter - center)
             if (distance < minDistance) {
                 minDistance = distance
                 nearestView = child

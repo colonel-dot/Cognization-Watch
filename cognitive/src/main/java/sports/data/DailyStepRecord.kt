@@ -1,6 +1,7 @@
 package sports.data
 
 data class DailyStepRecord(
+    // TODO
     val date: String,        // 2025-12-05
     val stepCount: Int,      // 今日总步数
     val activeTimeSec: Int, // 今日运动秒数

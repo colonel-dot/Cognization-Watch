@@ -18,7 +18,7 @@ import com.example.common.util.OnItemClickListener;
 
 public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdapter.Holder> {
 
-    private List<SchulteGridCell> list;
+    private final List<SchulteGridCell> list;
 
     public SchulteGridRVAdapter(List<SchulteGridCell> list) {
         this.list = list;
@@ -46,7 +46,7 @@ public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdap
         notifyDataSetChanged();
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder {
         TextView cell;
 
         public Holder(@NonNull View itemView) {
@@ -57,19 +57,6 @@ public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdap
         public void bindView(int position) {
             int num = list.get(position).getNum();
             cell.setText(String.valueOf(num));
-
-//            if (list.get(position).isSelected()) {
-//
-//                cell.setAlpha(1f);
-//                cell.animate()
-//                        .alpha(0f)
-//                        .setDuration(100)
-//                        .start();
-//
-//            } else {
-//
-//                cell.setAlpha(1f);
-//            }
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

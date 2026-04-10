@@ -3,6 +3,7 @@ package com.example.common.bind_device
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.content.edit
 
 private const val SP_NAME = "bind_status"
 private const val TAG = "BindStatusManager"
@@ -29,7 +30,7 @@ object BindStatusManager {
     }
 
     fun saveBindRemark(context: Context, remark: String?) {
-        getSP(context).edit().putString(KEY_BIND_REMARK, remark).apply()
+        getSP(context).edit { putString(KEY_BIND_REMARK, remark) }
         bindRemark = remark
     }
 

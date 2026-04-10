@@ -41,7 +41,7 @@ public class GenerateAutoAvatar {
     }
 
     private static String getInitial(String name) {
-        if (name == null || name.length() == 0) {
+        if (name == null || name.isEmpty()) {
             return "?";
         }
         return name.substring(0, 1).toUpperCase();

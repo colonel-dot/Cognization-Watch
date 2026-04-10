@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 
 public class StringMap {
     public static String mapNumberWithUnit(double data, String unit) {
@@ -83,24 +82,15 @@ public class StringMap {
             return "Tomorrow";
         } else {
             // 超出范围 → 返回星期
-            switch (targetDate.getDayOfWeek()) {
-                case MONDAY:
-                    return "Monday";
-                case TUESDAY:
-                    return "Tuesday";
-                case WEDNESDAY:
-                    return "Wednesday";
-                case THURSDAY:
-                    return "Thursday";
-                case FRIDAY:
-                    return "Friday";
-                case SATURDAY:
-                    return "Saturday";
-                case SUNDAY:
-                    return "Sunday";
-                default:
-                    return "";
-            }
+            return switch (targetDate.getDayOfWeek()) {
+                case MONDAY -> "Monday";
+                case TUESDAY -> "Tuesday";
+                case WEDNESDAY -> "Wednesday";
+                case THURSDAY -> "Thursday";
+                case FRIDAY -> "Friday";
+                case SATURDAY -> "Saturday";
+                case SUNDAY -> "Sunday";
+            };
         }
     }
 

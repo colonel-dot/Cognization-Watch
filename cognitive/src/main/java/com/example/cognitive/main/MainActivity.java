@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
     private Fragment currentFragment;
-    private MainViewModel mainViewModel;
     private CognitiveGeofenceViewModel geofenceViewModel;
     private ActivityResultLauncher<String[]> multiplePermissionLauncher;
 
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main_main);
+        setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -86,13 +85,12 @@ public class MainActivity extends AppCompatActivity {
 
         checkAndRequestPermissions();
 
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         geofenceViewModel = new ViewModelProvider(this).get(CognitiveGeofenceViewModel.class);
 
         initBottomNavigation();
 
         // 初始化围栏监控
-        GeofenceRepository.INSTANCE.initialize(this);
+        GeofenceRepository.initialize(this);
         String otherId = BindStatusManager.INSTANCE.getBindStatus().getSecond();
         if (otherId != null && !otherId.isEmpty()) {
             geofenceViewModel.pullAndCreateGeofence(otherId);
@@ -131,25 +129,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigation() {
-        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment selectFragment = null;
             Log.d(TAG, "bottomNavigation.setOnItemSelectedListener");
             if (item.getItemId() == R.id.home) {
                 selectFragment = new HomeFragment();
             } else if (item.getItemId() == R.id.history) {
-                selectFragment = RecordFragment.newInstance("", "");
+                selectFragment = new RecordFragment();
             } else if (item.getItemId() == R.id.settings) {
-                selectFragment = SettingFragment.newInstance("", "");
+                selectFragment = new SettingFragment();
             }
             if (selectFragment != null) {
-                switchFragment(selectFragment, false);
+                switchFragment(selectFragment);
             }
             return true;
         });
-        switchFragment(new HomeFragment(), false);
+        switchFragment(new HomeFragment());
     }
 
-    public void switchFragment(Fragment fragment, boolean addToBackStack) {
+    public void switchFragment(Fragment fragment) {
         // 清除回退栈，防止 Fragment 重叠
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
@@ -202,10 +200,6 @@ public class MainActivity extends AppCompatActivity {
     private void startStepService() {
         Log.d(TAG, "startStepService");
         Intent intent = new Intent(this, StepForegroundService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        } else {
-            startService(intent);
-        }
+        startForegroundService(intent);
     }
 }

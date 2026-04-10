@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.common.login.simulate.InsertData
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
 import repository.NetWorkRepository
 import repository.UpdateRepository
 import risk.work.DailyRiskCalculator
@@ -23,7 +25,7 @@ private const val TAG = "MainViewModel"
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
-    val today = LocalDate.now()
+    val today = LocalDate.now()!!
     private val appDatabase = AppDatabase.getDatabase(application)
     private val behaviorDao = appDatabase.dailyBehaviorDao()
     private val riskDao = appDatabase.dailyRiskDao()
@@ -53,7 +55,11 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             Log.d(TAG, "initTodaySaveYesterday: 要给更新仓库传过去的todayBehavior是 $todayBehavior")
             UpdateRepository.initToday(todayBehavior)
             NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today, todayBehavior)
+                .catch { e -> Log.e(TAG, "上传今日行为数据失败: ${e.message}") }
+                .launchIn(viewModelScope)
             NetWorkRepository.updateDailyRisk(account = UserManager.getUserId(), date = today.minusDays(1), riskResult)
+                .catch { e -> Log.e(TAG, "上传昨日风险数据失败: ${e.message}") }
+                .launchIn(viewModelScope)
         }
     }
 
@@ -61,8 +67,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         _recordChanged.postValue(Unit)
     }
 
-    fun debug_post(){
-        var maccount = UserManager.getUserId()
+    fun fakepost(){
+        val maccount = UserManager.getUserId()
         Log.d(TAG, "debug_post: 要给后端传送过去的用户名是$maccount")
         viewModelScope.launch {
             NetWorkRepository.updateDailyBehavior(

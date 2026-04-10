@@ -11,6 +11,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -53,8 +55,7 @@ public class GeofenceDialogFragment extends DialogFragment {
         if (getDialog() != null && getDialog().getWindow() != null) {
             android.view.Window window = getDialog().getWindow();
             android.view.WindowManager.LayoutParams params = window.getAttributes();
-            int widthInPx = (int) (320 * getResources().getDisplayMetrics().density);
-            params.width = widthInPx;
+            params.width = (int) (320 * getResources().getDisplayMetrics().density);
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             window.setAttributes(params);
         }
@@ -106,7 +107,19 @@ public class GeofenceDialogFragment extends DialogFragment {
         });
     }
 
-    private static final int LOCATION_PERMISSION_REQUEST = 1001;
+    private final ActivityResultLauncher<String> locationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    try {
+                        createFence(seekBar.getProgress() > 0 ? seekBar.getProgress() : 3000);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Toast.makeText(getContext(), "需要定位权限才能创建围栏", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     public AMapLocationClient locationClient = null;
     public AMapLocationClientOption option = null;
 
@@ -116,7 +129,7 @@ public class GeofenceDialogFragment extends DialogFragment {
         // 检查定位权限
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
 
@@ -166,25 +179,5 @@ public class GeofenceDialogFragment extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         option = null;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d(TAG, "onRequestPermissionsResult, requestCode=" + requestCode + ", grantResults.length=" + grantResults.length);
-        if (requestCode == LOCATION_PERMISSION_REQUEST) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "权限已授予，重新调用createFence");
-                // 权限被授予，重新调用
-                try {
-                    createFence(seekBar.getProgress() > 0 ? seekBar.getProgress() : 3000);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                Log.d(TAG, "权限被拒绝");
-                Toast.makeText(getContext(), "需要定位权限才能创建围栏", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 }

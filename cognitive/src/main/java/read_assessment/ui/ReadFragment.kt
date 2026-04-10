@@ -16,11 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
 import read_assessment.vm.ReadViewModel
-import java.io.File
 
 class ReadFragment : Fragment() {
     private lateinit var bar_1: View
@@ -77,7 +75,7 @@ class ReadFragment : Fragment() {
         result = view.findViewById(R.id.result)
 
         // 修复6：安全获取文本，避免空指针
-        speakText = viewModel.getText() ?: "默认朗读文本"
+        speakText = viewModel.getText()
         read.text = speakText
 
         bar_1 = view.findViewById(R.id.bar_1)
@@ -130,7 +128,7 @@ class ReadFragment : Fragment() {
 
     fun bindClickListener() {
         read.setOnClickListener {
-            speakText = viewModel.getText() ?: "默认朗读文本"
+            speakText = viewModel.getText()
             Log.d(TAG, "换过来的句子是: $speakText")
             read.text = speakText
             Log.d(TAG, "TextView 现在是: ${read.text}")
@@ -173,7 +171,7 @@ class ReadFragment : Fragment() {
 
         viewModel.recordSavedEvent.observe(viewLifecycleOwner) { file ->
             file?.let {
-                Toast.makeText(requireContext(), "录音已保存：${it.absolutePath}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "录音已保存", Toast.LENGTH_SHORT).show()
             } ?: run {
                 Toast.makeText(requireContext(), "录音保存失败", Toast.LENGTH_SHORT).show()
             }
@@ -204,19 +202,6 @@ class ReadFragment : Fragment() {
     }
 
     companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String? = null, param2: String? = null): ReadFragment {
-            val fragment = ReadFragment()
-            val args = Bundle().apply {
-                putString(ARG_PARAM1, param1)
-                putString(ARG_PARAM2, param2)
-            }
-            fragment.arguments = args
-            return fragment
-        }
-
         private const val TAG = "ReadFragment"
     }
 }

@@ -19,10 +19,10 @@ class WheelAdapter(val origin: List<String>) :
 
     var selectedPos = origin.size * loopMultiplier / 2 // 初始选中中间
 
-    inner class VH(val tv: TextView) : RecyclerView.ViewHolder(tv)
+    class VH(val tv: TextView) : RecyclerView.ViewHolder(tv)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        var font: Typeface? = ResourcesCompat.getFont(parent.context, R.font.harmonyos_sans_bold)
+        val font: Typeface? = ResourcesCompat.getFont(parent.context, R.font.harmonyos_sans_bold)
         val tv = TextView(parent.context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,

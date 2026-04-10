@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class UserIdGenerate {
 
+    // TODO
     // 字符库：包含 大写字母 + 小写字母 + 数字
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 

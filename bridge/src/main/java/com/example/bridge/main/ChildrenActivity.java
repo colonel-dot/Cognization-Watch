@@ -76,22 +76,10 @@ public class ChildrenActivity extends AppCompatActivity {
                         Log.d(TAG, "路由到达: " + postcard.getPath());
                     }
                 });
-//        // 直接获取并调用（备用方案，确保弹窗能弹出）
-//        try {
-//            LoginPopupProvider provider = (LoginPopupProvider) ARouter.getInstance().build(RouterPaths.POPUP_LOGIN).navigation();
-//            if (provider != null) {
-//                // 确保 init 被调用
-//                provider.init(this);
-//                provider.showPopup();
-//                Log.d(TAG, "弹窗已显示");
-//            }
-//        } catch (Exception e) {
-//            Log.e(TAG, "获取 IProvider 失败", e);
-//        }
     }
 
     private void initBottomNavigation() {
-        android.util.Log.d("ChildrenActivity", "initBottomNavigation");
+        Log.d(TAG, "initBottomNavigation");
         bottomNavigation.setOnItemSelectedListener(item -> {
             switchFragment(item.getItemId());
             return true;
@@ -107,7 +95,7 @@ public class ChildrenActivity extends AppCompatActivity {
 
     /** 根据 itemId 切换 Fragment */
     private void switchFragment(int itemId) {
-        android.util.Log.d("ChildrenActivity", "Bottom nav item selected: " + itemId);
+        Log.d(TAG, "Bottom nav item selected: " + itemId);
 
         String targetTag = null;
         Fragment selectedFragment = null;
@@ -115,44 +103,43 @@ public class ChildrenActivity extends AppCompatActivity {
         if (itemId == R.id.dashboard) {
             targetTag = "DASHBOARD";
             selectedFragment = new DashboardFragment();
-            android.util.Log.d("ChildrenActivity", "Dashboard selected");
+            Log.d(TAG, "Dashboard selected");
         } else if (itemId == R.id.data) {
             targetTag = "DATA";
             selectedFragment = new RecordFragment();
-            android.util.Log.d("ChildrenActivity", "Data selected");
+            Log.d(TAG, "Data selected");
         } else if (itemId == R.id.geofence) {
             targetTag = "GEOFENCE";
             selectedFragment = new GeofenceFragment();
-            android.util.Log.d("ChildrenActivity", "Geofence selected");
+            Log.d(TAG, "Geofence selected");
         } else if (itemId == R.id.settings) {
             targetTag = "SETTINGS";
             selectedFragment = new SettingFragment();
-            android.util.Log.d("ChildrenActivity", "Profiles selected");
+            Log.d(TAG, "Profiles selected");
         }
 
         Fragment currentFragment = getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
-        android.util.Log.d("ChildrenActivity", "Current fragment: " + currentFragment + ", tag: " + (currentFragment != null ? currentFragment.getTag() : "null"));
+        Log.d(TAG, "Current fragment: " + currentFragment + ", tag: " + (currentFragment != null ? currentFragment.getTag() : "null"));
 
         if (currentFragment != null && currentFragment.getTag() != null
                 && currentFragment.getTag().equals(targetTag)) {
-            android.util.Log.d("ChildrenActivity", "Already on target fragment, skipping");
+            Log.d(TAG, "Already on target fragment, skipping");
             return;
         }
 
         if (selectedFragment != null) {
-            android.util.Log.d("ChildrenActivity", "Committing fragment transaction for tag: " + targetTag);
+            Log.d(TAG, "Committing fragment transaction for tag: " + targetTag);
             try {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment, targetTag)
                         .commit();
-                android.util.Log.d("ChildrenActivity", "Fragment transaction committed");
+                Log.d(TAG, "Fragment transaction committed");
             } catch (Exception e) {
-                android.util.Log.e("ChildrenActivity", "Error committing fragment transaction", e);
-                e.printStackTrace();
+                Log.e(TAG, "Error committing fragment transaction", e);
             }
         } else {
-            android.util.Log.e("ChildrenActivity", "selectedFragment is null!");
+            Log.e(TAG, "selectedFragment is null!");
         }
     }
 }

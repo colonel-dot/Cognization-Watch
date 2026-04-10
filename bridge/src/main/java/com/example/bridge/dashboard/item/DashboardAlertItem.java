@@ -2,7 +2,7 @@ package com.example.bridge.dashboard.item;
 
 public class DashboardAlertItem implements DashboardItem {
 
-    private String tip;
+    private final String tip;
 
     public DashboardAlertItem(String tip) {
         this.tip = tip;

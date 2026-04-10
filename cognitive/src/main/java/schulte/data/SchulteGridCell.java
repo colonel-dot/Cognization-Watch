@@ -2,7 +2,7 @@ package schulte.data;
 
 public class SchulteGridCell {
 
-    private int num;
+    private final int num;
     private boolean selected = false;
 
     public SchulteGridCell(int num) {

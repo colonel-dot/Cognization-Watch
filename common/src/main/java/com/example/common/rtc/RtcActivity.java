@@ -51,19 +51,12 @@ public class RtcActivity extends AppCompatActivity {
      * @return 权限字符串数组
      */
     private String[] getRequiredPermissions() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            return new String[]{
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA,
+        return new String[]{
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA,
 //                    Manifest.permission.READ_PHONE_STATE,
 //                    Manifest.permission.BLUETOOTH_CONNECT
-            };
-        } else {
-            return new String[]{
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA
-            };
-        }
+        };
     }
 
     private boolean checkPermissions() {
@@ -145,7 +138,7 @@ public class RtcActivity extends AppCompatActivity {
 
     private boolean isMuted = false;
 
-    private Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private long startTimeMillis;
     private Runnable timerRunnable;
 

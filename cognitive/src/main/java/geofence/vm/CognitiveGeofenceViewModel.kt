@@ -4,8 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.amap.api.fence.GeoFence
-import com.amap.api.fence.GeoFenceListener
 import com.example.common.geofence.model.BarrierInfo
 import geofence.manager.CognitiveGeofenceManager
 import geofence.network.ElderMovementRepository
@@ -36,15 +34,13 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
 
     init {
         // 设置围栏创建回调
-        geofenceManager.setFenceListener(object : GeoFenceListener {
-            override fun onGeoFenceCreateFinished(geoFenceList: MutableList<GeoFence>?, errorCode: Int, errorMsg: String?) {
-                if (errorCode == 0 && !geoFenceList.isNullOrEmpty()) {
-                    Log.d(TAG, "Geofence created successfully: ${geoFenceList[0].fenceId}")
-                } else {
-                    Log.e(TAG, "Geofence create failed: $errorCode - $errorMsg")
-                }
+        geofenceManager.setFenceListener { geoFenceList, errorCode, errorMsg ->
+            if (errorCode == 0 && !geoFenceList.isNullOrEmpty()) {
+                Log.d(TAG, "Geofence created successfully: ${geoFenceList[0].fenceId}")
+            } else {
+                Log.e(TAG, "Geofence create failed: $errorCode - $errorMsg")
             }
-        })
+        }
 
         // 尝试从本地恢复围栏（应用重启时）
         tryRestoreFromLocal()

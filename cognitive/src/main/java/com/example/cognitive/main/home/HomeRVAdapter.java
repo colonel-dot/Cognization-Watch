@@ -42,7 +42,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
         return list.size();
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView function;
 
@@ -62,7 +62,6 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onItemClick(position);
-                } else {
                 }
             });
         }

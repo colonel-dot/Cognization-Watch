@@ -24,7 +24,7 @@ class BrainTrainingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val list: MutableList<BrainTrainingRVModel?> = ArrayList<BrainTrainingRVModel?>()
+        val list: MutableList<BrainTrainingRVModel?> = ArrayList()
         list.add(BrainTrainingRVModel("舒尔特方格", R.drawable.brain, "Completed", R.color.blue))
         list.add(BrainTrainingRVModel("数独", R.drawable.brain, "敬请期待", R.color.green))
         list.add(BrainTrainingRVModel("中国象棋", R.drawable.brain, "敬请期待", R.color.blue))
@@ -32,13 +32,12 @@ class BrainTrainingFragment : Fragment() {
 
         val adapter = BrainTrainingRVAdapter(list)
         val recyclerView = view.findViewById<RecyclerView?>(R.id.content)
-        recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
-        recyclerView.setAdapter(adapter)
+        recyclerView?.setLayoutManager(LinearLayoutManager(context))
+        recyclerView?.setAdapter(adapter)
 
         adapter.setOnItemClickListener { position: Int ->
-            var intent: Intent? = null
-            intent = when (position) {
-                0 -> Intent(getContext(), SchulteGridActivity::class.java)
+            val intent = when (position) {
+                0 -> Intent(context, SchulteGridActivity::class.java)
                 else -> null
             }
 
@@ -47,22 +46,7 @@ class BrainTrainingFragment : Fragment() {
             }
         }
 
-        val itemSpacingDecoration = ItemSpacingDecoration(getContext(), 20, false)
-        recyclerView.addItemDecoration(itemSpacingDecoration)
-    }
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String?, param2: String?): BrainTrainingFragment {
-            val fragment = BrainTrainingFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.setArguments(args)
-            return fragment
-        }
+        val itemSpacingDecoration = ItemSpacingDecoration(context, 20, false)
+        recyclerView?.addItemDecoration(itemSpacingDecoration)
     }
 }

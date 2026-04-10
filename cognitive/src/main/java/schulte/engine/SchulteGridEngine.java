@@ -43,14 +43,6 @@ public class SchulteGridEngine {
         return state;
     }
 
-//    public void change() {
-//        if (state == State.RUNNING) {
-//            return;
-//        }
-//        isFourSquared = !isFourSquared;
-//        end = isFourSquared ? 16 : 25;
-//    }
-
     public void start() {
         cur = 0;
         end = isFourSquared ? 16 : 25;

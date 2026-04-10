@@ -18,7 +18,7 @@ import com.example.common.util.StringMap;
 
 public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonitoringRVAdapter.Holder> {
 
-    private List<HealthMonitoringRVModel> list;
+    private final List<HealthMonitoringRVModel> list;
 
     public HealthMonitoringRVAdapter(List<HealthMonitoringRVModel> list) {
         this.list = list;
@@ -41,8 +41,7 @@ public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonito
         return list.size();
     }
 
-
-    class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder {
 
         TextView function;
         TextView data;

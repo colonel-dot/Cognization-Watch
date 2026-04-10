@@ -20,13 +20,10 @@ import schulte.data.SchulteGridCell
 import schulte.engine.SchulteGridEngine
 import risk.work.RiskConfigManager
 import schulte.vm.SchulteGameViewModel
-import com.example.common.util.OnItemClickListener
 import com.example.common.util.TimerHelper
 import kotlin.getValue
 
 class SchulteGridActivity : AppCompatActivity() {
-    private var mParam1: String? = null
-    private var mParam2: String? = null
 
     private var time: TextView? = null
     private var grid: TextView? = null
@@ -51,11 +48,6 @@ class SchulteGridActivity : AppCompatActivity() {
             insets
         }
 
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            mParam1 = getIntent().getStringExtra(ARG_PARAM1)
-            mParam2 = getIntent().getStringExtra(ARG_PARAM2)
-        }
-
         // 绑定视图
         bindView()
 
@@ -68,15 +60,15 @@ class SchulteGridActivity : AppCompatActivity() {
         // 绑定点击事件
         bindClickListener()
 
-        grid?.text = engine!!.getCur().toString() + " / " + engine!!.getEnd()
+        grid?.text = engine!!.cur.toString() + " / " + engine!!.end
     }
 
     private fun bindView() {
-        time = findViewById<TextView?>(R.id.time)
-        grid = findViewById<TextView?>(R.id.grid)
-        schulte = findViewById<RecyclerView?>(R.id.schulte)
-        pause = findViewById<TextView?>(R.id.pause)
-        start = findViewById<TextView?>(R.id.start)
+        time = findViewById(R.id.time)
+        grid = findViewById(R.id.grid)
+        schulte = findViewById(R.id.schulte)
+        pause = findViewById(R.id.pause)
+        start = findViewById(R.id.start)
     }
 
     private fun initTimer() {
@@ -84,7 +76,7 @@ class SchulteGridActivity : AppCompatActivity() {
         timer!!.setOnTimerListener { `val`: Long ->
             ms = `val`
             val second = Math.toIntExact(`val` / 1000)
-            time!!.setText(second.toString())
+            time!!.text = second.toString()
         }
     }
 
@@ -97,32 +89,36 @@ class SchulteGridActivity : AppCompatActivity() {
         engine = SchulteGridEngine(type)
 
         // 初始化单元格数据
-        val list: MutableList<SchulteGridCell?> = ArrayList<SchulteGridCell?>()
-        for (i in 1..engine!!.getEnd()) {
+        val list = ArrayList<SchulteGridCell?>()
+        for (i in 1..engine!!.end) {
             list.add(SchulteGridCell(i))
         }
         // 设置RecyclerView适配器
         adapter = SchulteGridRVAdapter(list)
         schulte!!.setAdapter(adapter)
 
-        adapter!!.setOnItemClickListener(OnItemClickListener { pos: Int ->
-            val res = engine!!.click(adapter!!.getList().get(pos).getNum())
-            if (res == -1) { // 点击错误
-            } else if (res == 1) { // 游戏完成
-                timer!!.stop()
-                engine!!.stop()
-                start!!.setText("开始")
-                pause!!.setText("暂停")
-                showFinishedDialog()
-                Log.d(TAG, "initGameEngine: 要保存并更新舒尔特成绩了")
-                viewModel!!.saveGameTime(if (engine!!.isFourSquared()) 4 else 5, ms)
-                mainViewModel.notifyRecordChanged()
-            } else if (res == 0) { // 点击正确
-                grid!!.setText(engine!!.getCur().toString() + " / " + engine!!.getEnd())
+        adapter!!.setOnItemClickListener { pos: Int ->
+            val res = engine!!.click(adapter!!.list[pos].num)
+            when (res) {
+                -1 -> { // 点击错误
+                }
+                1 -> { // 游戏完成
+                    timer!!.stop()
+                    engine!!.stop()
+                    start!!.text = "开始"
+                    pause!!.text = "暂停"
+                    showFinishedDialog()
+                    Log.d(TAG, "initGameEngine: 要保存并更新舒尔特成绩了")
+                    viewModel.saveGameTime(if (engine!!.isFourSquared) 4 else 5, ms)
+                    mainViewModel.notifyRecordChanged()
+                }
+                0 -> { // 点击正确
+                    grid!!.text = engine!!.cur.toString() + " / " + engine!!.end
+                }
             }
-        })
+        }
 
-        val span = if (engine!!.isFourSquared()) 4 else 5
+        val span = if (engine!!.isFourSquared) 4 else 5
         schulte!!.setLayoutManager(GridLayoutManager(this, span))
     }
 
@@ -131,43 +127,43 @@ class SchulteGridActivity : AppCompatActivity() {
      */
     private fun bindClickListener() {
         // 暂停/继续按钮
-        pause!!.setOnClickListener(View.OnClickListener { v: View? ->
-            if (engine!!.getState() == SchulteGridEngine.State.RUNNING) {
+        pause!!.setOnClickListener { _: View? ->
+            if (engine!!.state == SchulteGridEngine.State.RUNNING) {
                 timer!!.pause()
                 engine!!.pause()
-                pause!!.setText("继续")
-            } else if (engine!!.getState() == SchulteGridEngine.State.PAUSED) {
+                pause!!.text = "继续"
+            } else if (engine!!.state == SchulteGridEngine.State.PAUSED) {
                 timer!!.resume()
                 engine!!.resume()
-                pause!!.setText("暂停")
+                pause!!.text = "暂停"
             }
-        })
+        }
 
         // 开始/结束按钮
-        start!!.setOnClickListener(View.OnClickListener { v: View? ->
-            if (engine!!.getState() == SchulteGridEngine.State.STOPPED) {
+        start!!.setOnClickListener { _: View? ->
+            if (engine!!.state == SchulteGridEngine.State.STOPPED) {
                 timer!!.start()
                 engine!!.start()
                 adapter!!.shuffle()
-                start!!.setText("结束")
-                pause!!.setText("暂停")
+                start!!.text = "结束"
+                pause!!.text = "暂停"
             } else {
                 // 重置游戏状态
                 timer!!.stop()
                 engine!!.stop()
-                start!!.setText("开始")
-                pause!!.setText("暂停")
+                start!!.text = "开始"
+                pause!!.text = "暂停"
 
-                time!!.setText("0")
-                grid!!.setText("0 / " + engine!!.getEnd())
+                time!!.text = "0"
+                grid!!.text = "0 / " + engine!!.end
 
                 // 重置单元格选中状态
-                for (cell in adapter!!.getList()) {
-                    cell.setSelected(false)
+                for (cell in adapter!!.list) {
+                    cell.isSelected = false
                 }
                 adapter!!.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     /**
@@ -180,13 +176,13 @@ class SchulteGridActivity : AppCompatActivity() {
             .setTitle("完成！")
             .setMessage(String.format("用时 %.3f 秒", seconds))
             .setPositiveButton(
-                "确定",
-                DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-                    // 重置显示
-                    time!!.setText("0")
-                    grid!!.setText("0 / " + engine!!.getEnd())
-                    dialog!!.dismiss()
-                })
+                "确定"
+            ) { dialog: DialogInterface?, _: Int ->
+                // 重置显示
+                time!!.text = "0"
+                grid!!.text = "0 / " + engine!!.end
+                dialog!!.dismiss()
+            }
             .show()
     }
 
@@ -202,17 +198,5 @@ class SchulteGridActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "SchulteGridActivity"
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        // 静态创建方法（用于传递参数）
-        fun newInstance(param1: String?, param2: String?): SchulteGridActivity {
-            val activity = SchulteGridActivity()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            activity.getIntent().putExtras(args) // Activity用Intent传递参数
-            return activity
-        }
     }
 }

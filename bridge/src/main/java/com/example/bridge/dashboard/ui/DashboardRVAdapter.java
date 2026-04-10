@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
@@ -44,22 +43,26 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = null;
-        switch (viewType) {
-            case TYPE_RTC:
+        View view;
+        return switch (viewType) {
+            case TYPE_RTC -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_rtc, parent, false);
-                return new RtcHolder(view);
-            case TYPE_RISK:
+                yield new RtcHolder(view);
+            }
+            case TYPE_RISK -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_risk, parent, false);
-                return new RiskHolder(view);
-            case TYPE_COLLECTION:
+                yield new RiskHolder(view);
+            }
+            case TYPE_COLLECTION -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_collection, parent, false);
-                return new CollectionHolder(view);
-            case TYPE_ALERT:
+                yield new CollectionHolder(view);
+            }
+            case TYPE_ALERT -> {
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_alert, parent, false);
-                return new AlertHolder(view);
-        }
-        return new RtcHolder(view);
+                yield new AlertHolder(view);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + viewType);
+        };
     }
 
     @Override
@@ -72,7 +75,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
         return list.size();
     }
 
-    abstract class Holder extends RecyclerView.ViewHolder {
+    public abstract static class Holder extends RecyclerView.ViewHolder {
 
         private Holder(@NonNull View itemView) {
             super(itemView);
@@ -105,11 +108,9 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                 }
             });
 
-            portrait.post(() -> {
-                portrait.setImageBitmap(
-                        GenerateAutoAvatar.generate(dri.getName(), portrait.getHeight())
-                );
-            });
+            portrait.post(() -> portrait.setImageBitmap(
+                    GenerateAutoAvatar.generate(dri.getName(), portrait.getHeight())
+            ));
         }
     }
 
@@ -139,7 +140,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                 );
                 assess.setText("高风险");
                 val.setTextColor(ContextCompat.getColor(assess.getContext(), R.color.red));
-            } else if (risk < 70 && risk >= 40) {
+            } else if (risk >= 40) {
                 assess.setBackgroundTintList(
                         ColorStateList.valueOf(
                                 ContextCompat.getColor(assess.getContext(), R.color.orange)
@@ -147,7 +148,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                 );
                 assess.setText("中等风险");
                 val.setTextColor(ContextCompat.getColor(assess.getContext(), R.color.orange));
-            } else if (risk < 40 && risk >= 0) {
+            } else if (risk >= 0) {
                 assess.setBackgroundTintList(
                         ColorStateList.valueOf(
                                 ContextCompat.getColor(assess.getContext(), R.color.cyan)

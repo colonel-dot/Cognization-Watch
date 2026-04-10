@@ -22,11 +22,11 @@ public class RtcManager {
 
     private TRTCCloud cloud;
     private TXDeviceManager manager;
-    private Context context;
+    private final Context context;
 
-    private String userId;
-    private String targetId;
-    private boolean isElder;
+    private final String userId;
+    private final String targetId;
+    private final boolean isElder;
     private WeakReference<TXCloudVideoView> localVideoViewRef;
     private WeakReference<TXCloudVideoView> remoteVideoViewRef;
 
@@ -90,11 +90,8 @@ public class RtcManager {
 
     public void switchCamera() {
         if (manager != null) {
-            if(manager.isFrontCamera()) {
-                manager.switchCamera(false);
-            } else {
-                manager.switchCamera(true); // true -> front
-            }
+            // true -> front
+            manager.switchCamera(!manager.isFrontCamera());
         }
     }
 
@@ -179,7 +176,7 @@ public class RtcManager {
 
     public void destroy() {
         if (cloud != null) {
-            cloud.destroySharedInstance();
+            TRTCCloud.destroySharedInstance();
             cloud = null;
             manager = null;
         }

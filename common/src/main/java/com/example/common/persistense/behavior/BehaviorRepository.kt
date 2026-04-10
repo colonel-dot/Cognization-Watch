@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 object BehaviorRepository {
 
+    // TODO
     fun getByDateBlocking(dao: DailyBehaviorDao, date: LocalDate): DailyBehaviorEntity? {
         return runBlocking {
             dao.getByDate(date)

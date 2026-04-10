@@ -36,7 +36,7 @@ object YoudaoApiService {
             return null
         }
         val len = q.length
-        return if (len <= 20) q else (q.substring(0, 10) + len + q.substring(len - 10, len))
+        return if (len <= 20) q else (q.take(10) + len + q.substring(len - 10, len))
     }
 
     /**

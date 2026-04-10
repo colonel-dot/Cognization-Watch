@@ -2,7 +2,7 @@ package com.example.bridge.dashboard.item;
 
 public class DashboardRtcItem implements DashboardItem {
 
-    private String name;
+    private final String name;
 
     public DashboardRtcItem(String name) {
         this.name = name;

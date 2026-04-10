@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.catch
 
 
-private const val TAG = "GeoNetWorkReposity"
+private const val TAG = "GeoNetWorkRepository"
 
 
 object GeoNetworkRepository {

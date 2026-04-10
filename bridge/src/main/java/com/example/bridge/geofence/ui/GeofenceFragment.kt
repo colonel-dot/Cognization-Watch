@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -58,10 +56,6 @@ class GeofenceFragment : Fragment() {
     // 定时轮询老人轨迹
     private var pollTimer: Timer? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,7 +64,7 @@ class GeofenceFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_geofence, container, false)
     }
 
-    override fun onViewCreated(@NonNull view: View, @Nullable savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("GeofenceFragment", "onViewCreated")
 
@@ -118,7 +112,7 @@ class GeofenceFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this).get(GeoViewModel::class.java)
+        viewModel = ViewModelProvider(this)[GeoViewModel::class.java]
     }
 
     private fun observeUiState() {
@@ -166,7 +160,7 @@ class GeofenceFragment : Fragment() {
      * 处理老人轨迹数据（将事件存入本地数据库并刷新UI）
      */
     private suspend fun handleElderMovement(movement: ElderMovement) {
-        val localStatus = when (movement.status?: "") {
+        val localStatus = when (movement.status) {
             "IN" -> GeofenceItem.STATUS_IN
             "OUT" -> GeofenceItem.STATUS_OUT
             "STAYED" -> GeofenceItem.STATUS_STAYED
@@ -197,11 +191,11 @@ class GeofenceFragment : Fragment() {
     private fun startPollTimer() {
         pollTimer?.cancel()
         pollTimer = Timer()
-        pollTimer?.scheduleAtFixedRate(object : TimerTask() {
+        pollTimer?.schedule(object : TimerTask() {
             override fun run() {
                 pollElderMovement()
             }
-        }, 0, 30000) // 每30秒轮询一次
+        }, 0, 30000)
         Log.d("GeofenceFragment", "开始轮询老人轨迹")
     }
 
@@ -292,37 +286,9 @@ class GeofenceFragment : Fragment() {
         }
     }
 
-    private fun insertSampleDataIfEmpty() {
-        val existing = GeofenceRepository.getAllEventsBlocking()
-        if (existing.isEmpty()) {
-            val minutesSince1970 = (System.currentTimeMillis() / 1000 / 60).toInt()
-
-            val sampleItems = ArrayList<GeofenceItem>()
-            sampleItems.add(GeofenceItem(0, minutesSince1970 - 60, 34.261111, 108.942222, GeofenceItem.STATUS_IN))
-            sampleItems.add(GeofenceItem(0, minutesSince1970 - 30, 34.262050, 108.943100, GeofenceItem.STATUS_OUT))
-            sampleItems.add(GeofenceItem(0, minutesSince1970 - 15, 34.261600, 108.941700, GeofenceItem.STATUS_STAYED))
-            sampleItems.add(GeofenceItem(0, minutesSince1970 - 5, 34.260800, 108.942800, GeofenceItem.STATUS_IN))
-
-            for (item in sampleItems) {
-                GeofenceRepository.insertEventBlocking(item)
-            }
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         stopPollTimer()
         aMapWrapper?.onDestroy()
-    }
-
-    companion object {
-        fun newInstance(param1: String, param2: String): GeofenceFragment {
-            val fragment = GeofenceFragment()
-            val args = Bundle()
-            args.putString("param1", param1)
-            args.putString("param2", param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

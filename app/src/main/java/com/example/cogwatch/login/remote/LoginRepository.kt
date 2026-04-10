@@ -2,17 +2,15 @@ package com.example.cogwatch.login.remote
 
 import remote.ApiService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import com.example.common.repository.network.RetrofitClient
 import com.example.common.login.remote.LoginRequest
-import com.example.common.login.remote.LoginResponse
 
 class LoginRepository {
 
     // 登录请求封装为 Flow
-    fun login(username: String, password: String): Flow<Result<LoginResponse>> = flow<Result<LoginResponse>> {
+    fun login(username: String, password: String) = flow {
         try {
             // 发起网络请求（suspend 函数，Retrofit 原生支持，无需适配器）
             val request = LoginRequest(username, password)

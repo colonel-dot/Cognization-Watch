@@ -14,7 +14,7 @@ class CogwatchApp: Application() {
         Log.e("ARouterDebug", "Application onCreate")
         if (BuildConfig.DEBUG) {
             ARouter.openLog()
-            ARouter.openDebug()
+            ARouter.openDebug() // TODO: ARouter debug
         }
         ARouter.init(this)
         Log.e("ARouterDebug", "ARouter init finished")

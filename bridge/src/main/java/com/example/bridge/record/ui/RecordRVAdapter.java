@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
@@ -26,6 +27,7 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
         this.list = list;
     }
 
+    @NonNull
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -60,10 +62,6 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
 
     public class Holder extends RecyclerView.ViewHolder {
 
-//        TextView read;
-//        TextView schulte;
-//        TextView steps;
-//        TextView schedule;
         TextView val; // risk
         TextView date; // 3.17
         TextView label; // today, yesterday or Monday etc.
@@ -71,10 +69,6 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
         public Holder(View itemView) {
             super(itemView);
 
-//            read = itemView.findViewById(R.id.read);
-//            schulte = itemView.findViewById(R.id.schulte);
-//            steps = itemView.findViewById(R.id.steps);
-//            schedule = itemView.findViewById(R.id.schedule);
             val = itemView.findViewById(R.id.val);
             date = itemView.findViewById(R.id.date);
             label = itemView.findViewById(R.id.label);
@@ -82,24 +76,6 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
 
         public void bindView(int position) {
             DailyRiskEntity item = list.get(position);
-//            read.setText(
-//                    "语音评分:" + (item.getSpeechScore() != null ? item.getSpeechScore() : "暂无")
-//            );
-//            schulte.setText(
-//                    "舒尔特成绩:" +
-//                    (item.getSchulte16TimeSec() != null
-//                            ? (item.getSchulte16TimeSec() / 1000) + "秒(4×4)"
-//                            : "暂无")
-//                    + " " +
-//                    (item.getSchulte25TimeSec() != null
-//                            ? (item.getSchulte25TimeSec() / 1000) + "秒(5×5)"
-//                            : "暂无")
-//            );
-//            steps.setText(
-//                    "步数:" + (item.getSteps() != null ? item.getSteps() : "暂无")
-//            );
-//            schedule.setText("起床:" + StringMap.mapMinuteToTime(item.getWakeMinute()) +
-//                            " 睡觉:" + StringMap.mapMinuteToTime(item.getSleepMinute()));
             val.setText(String.valueOf((int)(item.getRiskScore() * 100)));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M.dd");
