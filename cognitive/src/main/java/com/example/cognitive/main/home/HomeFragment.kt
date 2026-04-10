@@ -1,10 +1,11 @@
-package com.example.cognitive.main
+package com.example.cognitive.main.home
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +13,19 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.fragment.app.activityViewModels
 import collection.HealthMonitoringFragment
 import com.example.cognitive.R
-import game.BrainTrainingFragment
-import main.MainActivity
-import read_assessment.ui.ReadFragment
-import sports.data.StepForegroundService
-import android.util.Log
+import com.example.cognitive.main.MainViewModel
 import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.rtc.RtcActivity
 import com.example.common.util.ItemSpacingDecoration
+import game.BrainTrainingFragment
+import read_assessment.ui.ReadFragment
+import sports.data.StepForegroundService
 
 class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()

@@ -2,14 +2,14 @@ package repository
 
 import android.util.Log
 import com.example.common.repository.network.RetrofitClient
-import debug_login.UpdateDailyHealthRequest
-import debug_login.UpdateDailyRiskRequest
+import remote.UpdateDailyHealthRequest
+import remote.UpdateDailyRiskRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import com.example.common.persistense.behavior.DailyBehaviorEntity
-import debug_login.ApiService
+import remote.ApiService
 import risk.model.DailyRiskResult
 import risk.model.toResult
 import user.UserManager

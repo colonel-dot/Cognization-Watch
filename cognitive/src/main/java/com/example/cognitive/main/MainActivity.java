@@ -1,4 +1,4 @@
-package main;
+package com.example.cognitive.main;
 
 import android.Manifest;
 import android.content.Intent;
@@ -26,8 +26,7 @@ import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.facade.template.IProvider;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.example.cognitive.R;
-import com.example.cognitive.main.HomeFragment;
-import com.example.cognitive.main.MainViewModel;
+import com.example.cognitive.main.home.HomeFragment;
 import com.example.common.bind_device.BindStatusManager;
 import com.example.common.persistense.geofence.GeofenceRepository;
 import geofence.vm.CognitiveGeofenceViewModel;

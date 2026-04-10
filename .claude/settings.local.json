@@ -23,7 +23,8 @@
       "Bash(powershell:*)",
       "Bash(git rm:*)",
       "WebSearch",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git:*)"
     ]
   }
 }

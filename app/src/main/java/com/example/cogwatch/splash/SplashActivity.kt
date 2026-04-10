@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.cogwatch.R
 import com.example.cogwatch.login.ui.LoginActivity
 import com.example.common.login.remote.LoginStatusManager
-import main.MainActivity
+import com.example.cognitive.main.MainActivity
 import com.example.bridge.main.ChildrenActivity
 
 class SplashActivity : AppCompatActivity() {

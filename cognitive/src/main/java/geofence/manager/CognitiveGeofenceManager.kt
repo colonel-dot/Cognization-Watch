@@ -6,13 +6,14 @@ import android.util.Log
 import com.amap.api.fence.GeoFenceClient
 import com.amap.api.fence.GeoFenceListener
 import com.amap.api.location.DPoint
+import com.example.common.geofence.GeofenceConstants
 import com.example.common.geofence.model.BarrierInfo
 
 class CognitiveGeofenceManager(context: Context) {
 
     companion object {
         private const val TAG = "CognitiveGeofenceMgr"
-        const val GEOFENCE_BROADCAST_ACTION = "com.location.apis.geofence.broadcast"
+        const val GEOFENCE_BROADCAST_ACTION = GeofenceConstants.GEOFENCE_BROADCAST_ACTION
         private const val SP_NAME = "cognitive_geofence_status"
         private const val KEY_ELDERNAME = "eldername"
         private const val KEY_LAT = "lat"

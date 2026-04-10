@@ -1,14 +1,17 @@
-package com.example.cogwatch_ui.children.record.vm
+package com.example.common.record
 
 import android.app.Application
-import androidx.lifecycle.*
-import kotlinx.coroutines.launch
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.common.persistense.AppDatabase
 import com.example.common.persistense.behavior.DailyBehaviorEntity
 import com.example.common.persistense.risk.DailyRiskEntity
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class ElderRecordViewModel(application: Application) : AndroidViewModel(application) {
+class RecordViewModel(application: Application) : AndroidViewModel(application) {
 
     private val riskDao = AppDatabase
         .getDatabase(application)
@@ -27,10 +30,10 @@ class ElderRecordViewModel(application: Application) : AndroidViewModel(applicat
     fun queryRiskByDate(date: LocalDate) {
         viewModelScope.launch {
             try {
-                val risk = riskDao.getByDate(date)   //  可能为 null，天然安全
+                val risk = riskDao.getByDate(date)
                 _riskData.postValue(risk)
             } catch (e: Exception) {
-                _riskData.postValue(null)  // 任何异常也当作“无风险记录”
+                _riskData.postValue(null)
             }
             try {
                 val behavior = behaviorDao.getByDate(date)

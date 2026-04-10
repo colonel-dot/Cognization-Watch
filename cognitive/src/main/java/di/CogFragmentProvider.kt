@@ -1,7 +1,7 @@
 package di
 
 import androidx.fragment.app.Fragment
-import com.example.cognitive.main.HomeFragment
+import com.example.cognitive.main.home.HomeFragment
 import com.example.common.provider.FragmentProvider
 
 

@@ -20,15 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
-import com.example.bridge.dashboard.ui.RemarkDialogFragment;
 import com.example.bridge.geofence.ui.GeofenceDialogFragment;
-import com.example.bridge.geofence.vm.FenceUiState;
 import com.example.bridge.geofence.vm.GeoViewModel;
 import com.example.bridge.setting.item.SettingItem;
 import com.example.common.geofence.model.BarrierInfo;

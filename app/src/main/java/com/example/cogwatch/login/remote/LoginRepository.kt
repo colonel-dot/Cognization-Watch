@@ -1,6 +1,6 @@
 package com.example.cogwatch.login.remote
 
-import debug_login.ApiService
+import remote.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

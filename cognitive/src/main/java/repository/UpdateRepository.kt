@@ -1,7 +1,6 @@
 package repository
 
 import android.util.Log
-import com.example.cognitive.main.ConApplication
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -16,7 +15,7 @@ object UpdateRepository{
     private val mutex = Mutex()
     // 2. 内存缓存（私有，仅内部修改）
     private var mtodayBehavior: DailyBehaviorEntity? = null
-    private val behaviorDao = AppDatabase.getDatabase(ConApplication.context).dailyBehaviorDao()
+    private val behaviorDao by lazy { AppDatabase.getDatabase(AppDatabase.getAppContext()).dailyBehaviorDao() }
 
     fun initToday(todayBehavior: DailyBehaviorEntity? = null) {
             mtodayBehavior = todayBehavior

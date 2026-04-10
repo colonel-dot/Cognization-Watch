@@ -1,4 +1,4 @@
-package debug_login
+package remote
 
 import com.example.common.persistense.behavior.DailyBehaviorEntity
 import retrofit2.Response

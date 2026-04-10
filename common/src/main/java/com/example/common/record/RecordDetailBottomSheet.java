@@ -1,4 +1,4 @@
-package mine.ui;
+package com.example.common.record;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,18 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cognitive.R;
-import com.example.cogwatch_ui.children.record.vm.ElderRecordViewModel;
+import com.example.common.R;
 import com.example.common.persistense.risk.RiskLevel;
+import com.example.common.util.StringMap;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.time.LocalDate;
-
-import com.example.common.util.StringMap;
 
 public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
 
@@ -32,11 +31,11 @@ public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
         return f;
     }
 
-    private ElderRecordViewModel viewModel;
+    private RecordViewModel viewModel;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -56,7 +55,7 @@ public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
 
         LocalDate label = LocalDate.parse(dateStr);
 
-        viewModel = new ViewModelProvider(this).get(ElderRecordViewModel.class);
+        viewModel = new ViewModelProvider(this).get(RecordViewModel.class);
 
         viewModel.queryRiskByDate(label);
 

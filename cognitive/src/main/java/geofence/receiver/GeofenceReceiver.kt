@@ -11,6 +11,7 @@ import com.amap.api.location.DPoint
 import com.example.common.geofence.model.ElderMovement
 import com.example.common.persistense.geofence.GeofenceItem
 import com.example.common.persistense.geofence.GeofenceRepository
+import com.example.common.geofence.GeofenceConstants
 import geofence.network.ElderMovementRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ class GeofenceReceiver : BroadcastReceiver() {
 
     companion object {
         const val TAG = "GeofenceReceiver"
-        const val GEOFENCE_BROADCAST_ACTION = "com.location.apis.geofence.broadcast"
+        const val GEOFENCE_BROADCAST_ACTION = GeofenceConstants.GEOFENCE_BROADCAST_ACTION
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {

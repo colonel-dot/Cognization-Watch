@@ -26,6 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun geofenceItemDao(): GeofenceItemDao
     companion object {
         private var instance : AppDatabase ?= null
+        private var appContext: Context? = null
 
         @Synchronized
         fun getDatabase(context: Context): AppDatabase {
@@ -35,6 +36,20 @@ abstract class AppDatabase : RoomDatabase() {
             return Room.databaseBuilder(context.applicationContext,
                 AppDatabase::class.java, "daily_behavior_database")
                 .build().apply { instance = this }
+        }
+
+        @Synchronized
+        fun init(context: Context) {
+            appContext = context.applicationContext
+            getDatabase(context)
+        }
+
+        fun getInstance(): AppDatabase {
+            return instance ?: throw IllegalStateException("AppDatabase not initialized. Call init() first.")
+        }
+
+        fun getAppContext(): Context {
+            return appContext ?: throw IllegalStateException("AppDatabase context not initialized")
         }
     }
 }

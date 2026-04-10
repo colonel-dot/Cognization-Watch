@@ -1,4 +1,4 @@
-package com.example.cognitive.main;
+package com.example.cognitive.main.home;
 
 public class HomeRVModel {
     private int image;

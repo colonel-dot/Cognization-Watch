@@ -20,6 +20,7 @@ import com.example.cognitive.R;
 import com.example.common.persistense.AppDatabase;
 import com.example.common.persistense.risk.DailyRiskEntity;
 import com.example.common.persistense.risk.RiskRepository;
+import com.example.common.record.RecordDetailBottomSheet;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;

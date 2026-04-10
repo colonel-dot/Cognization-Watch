@@ -20,7 +20,7 @@ import com.example.cogwatch.login.remote.LoginRepository
 import com.example.common.login.remote.LoginStatusManager
 import com.example.bridge.main.ChildrenActivity
 import kotlinx.coroutines.launch
-import main.MainActivity
+import com.example.cognitive.main.MainActivity
 
 private const val TAG = "LoginActivity"
 private const val IDENTITY_ELDER = "elder"

@@ -24,6 +24,7 @@ import com.example.common.persistense.risk.DailyRiskEntity
 import com.example.common.persistense.risk.RiskRepository
 import com.example.common.repository.network.BindApiService
 import com.example.common.repository.network.RetrofitClient
+import com.example.common.record.RecordDetailBottomSheet
 import com.example.common.util.ItemSpacingDecoration
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis

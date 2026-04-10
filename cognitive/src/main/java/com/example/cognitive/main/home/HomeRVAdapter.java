@@ -1,4 +1,4 @@
-package com.example.cognitive.main;
+package com.example.cognitive.main.home;
 
 import android.view.LayoutInflater;
 import android.view.View;

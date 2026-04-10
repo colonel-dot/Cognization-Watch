@@ -9,10 +9,11 @@ import android.content.Context;
 import com.amap.api.fence.GeoFenceClient;
 import com.amap.api.fence.GeoFenceListener;
 import com.amap.api.location.DPoint;
+import com.example.common.geofence.GeofenceConstants;
 
 public class GeofenceManager {
 
-    public static final String GEOFENCE_BROADCAST_ACTION = "com.location.apis.geofence.broadcast";
+    public static final String GEOFENCE_BROADCAST_ACTION = GeofenceConstants.GEOFENCE_BROADCAST_ACTION;
 
     private GeoFenceClient mGeoFenceClient;
 

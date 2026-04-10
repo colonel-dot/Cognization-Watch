@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name="main.MainActivity"
+            android:name="com.example.cognitive.main.MainActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"
