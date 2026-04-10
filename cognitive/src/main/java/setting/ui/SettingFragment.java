@@ -18,6 +18,8 @@ import com.example.cognitive.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import risk.work.RiskConfigManager;
+import schulte.data.SchulteEvaluatorType;
 import setting.item.SettingItem;
 
 /**
@@ -95,17 +97,17 @@ public class SettingFragment extends Fragment {
 
     private void initRVAdapter() {
         List<SettingItem> items = new ArrayList<>();
-        items.add(new SettingItem(R.drawable.game, "舒尔特方格类型", 0, true));
-        items.add(new SettingItem(R.drawable.pulse, "重设步数和睡眠目标", 1, false));
+        SettingItem schulteItem = new SettingItem(R.drawable.game, "舒尔特方格 5×5模式", 0, true);
+        schulteItem.setChecked(
+            new RiskConfigManager(requireContext()).getSchulteEvaluatorType() == SchulteEvaluatorType.GRID_5
+        );
+        items.add(schulteItem);
 
         SettingAdapter adapter = new SettingAdapter(items, new SettingAdapter.OnSettingsClickListener() {
             @Override
             public void onItemClick(SettingItem item) {
                 switch (item.getPosition()) {
                     case 0:
-                        break;
-                    case 1:
-                        // TODO: 触发弹窗
                         break;
                 }
             }
@@ -114,9 +116,11 @@ public class SettingFragment extends Fragment {
             public void onSwitchChanged(SettingItem item, boolean isChecked) {
                 switch (item.getPosition()) {
                     case 0:
-                        // TODO: true -> 5 * 5, 更新文本
-                        break;
-                    case 1:
+                        SchulteEvaluatorType type = isChecked
+                            ? SchulteEvaluatorType.GRID_5
+                            : SchulteEvaluatorType.GRID_4;
+                        new RiskConfigManager(requireContext())
+                            .setSchulteEvaluatorType(type);
                         break;
                 }
             }

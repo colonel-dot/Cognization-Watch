@@ -15,8 +15,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
+import schulte.data.SchulteEvaluatorType
 import schulte.data.SchulteGridCell
 import schulte.engine.SchulteGridEngine
+import risk.work.RiskConfigManager
 import schulte.vm.SchulteGameViewModel
 import com.example.common.util.OnItemClickListener
 import com.example.common.util.TimerHelper
@@ -65,6 +67,8 @@ class SchulteGridActivity : AppCompatActivity() {
 
         // 绑定点击事件
         bindClickListener()
+
+        grid?.text = engine!!.getCur().toString() + " / " + engine!!.getEnd()
     }
 
     private fun bindView() {
@@ -88,7 +92,9 @@ class SchulteGridActivity : AppCompatActivity() {
      * 初始化游戏引擎和RecyclerView
      */
     private fun initGameEngine() {
-        engine = SchulteGridEngine()
+        val type = RiskConfigManager(this).getSchulteEvaluatorType()
+        Log.d("SchulteGridActivity", "读取到类型: ${type.name}, isFourSquared=${type == SchulteEvaluatorType.GRID_4}")
+        engine = SchulteGridEngine(type)
 
         // 初始化单元格数据
         val list: MutableList<SchulteGridCell?> = ArrayList<SchulteGridCell?>()

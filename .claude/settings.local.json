@@ -22,7 +22,8 @@
       "Bash(cmd //c \"type D:\\\\\\\\AndroidStudioProjects\\\\\\\\Cognization-Watch\\\\\\\\bridge\\\\\\\\src\\\\\\\\main\\\\\\\\java\\\\\\\\com\\\\\\\\example\\\\\\\\bridge\\\\\\\\geofence\\\\\\\\ui\\\\\\\\GenofenceDialogFragment.java\")",
       "Bash(powershell:*)",
       "Bash(git rm:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(ls:*)"
     ]
   }
 }
