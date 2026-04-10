@@ -61,6 +61,13 @@ object BindStatusManager {
         bindRemark = null
     }
 
+    fun clearBindStatus(context: Context) {
+        getSP(context).edit().clear().apply()
+        isBound = false
+        boundUsername = null
+        bindRemark = null
+    }
+
     fun isBound(context: Context): Boolean {
         return getSP(context).getBoolean(KEY_IS_BIND, false)
     }

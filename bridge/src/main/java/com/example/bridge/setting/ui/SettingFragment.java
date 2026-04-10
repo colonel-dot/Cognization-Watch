@@ -1,6 +1,7 @@
 package com.example.bridge.setting.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.appcompat.app.AlertDialog;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +32,7 @@ import com.example.bridge.geofence.vm.GeoViewModel;
 import com.example.bridge.setting.item.SettingItem;
 import com.example.common.geofence.model.BarrierInfo;
 import com.example.common.login.remote.LoginStatusManager;
+import com.example.common.bind_device.BindStatusManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class SettingFragment extends Fragment {
+
+    private static final String TAG = "SettingFragment";
 
     // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -165,8 +170,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onSwitchChanged(SettingItem item, boolean isChecked) {
                 switch (item.getPosition()) {
-                    case 0 -> { }
-                    case 1 -> { }
+                    case 0, 1 -> { }
                 }
             }
         });
@@ -176,8 +180,33 @@ public class SettingFragment extends Fragment {
     }
 
     private void initListener() {
-        signout.setOnClickListener(v -> {
-            // TODO: sign out
-        });
+        signout.setOnClickListener(v -> showLogoutConfirmDialog());
+    }
+
+    private void showLogoutConfirmDialog() {
+        if (!isAdded() || requireContext() == null) {
+            return;
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle("确认退出")
+                .setMessage("确定要退出登录吗？")
+                .setPositiveButton("退出", (dialog, which) -> {
+                    if (isAdded()) {
+                        performLogout();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void performLogout() {
+        LoginStatusManager.INSTANCE.logout(requireContext());
+        BindStatusManager.INSTANCE.clearBindStatus(requireContext());
+        Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClassName("com.example.cogwatch", "com.example.cogwatch.login.ui.LoginActivity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }

@@ -21,11 +21,14 @@ import com.example.common.login.remote.LoginStatusManager
 import com.example.bridge.main.ChildrenActivity
 import kotlinx.coroutines.launch
 import com.example.cognitive.main.MainActivity
+import com.example.common.router.RouterPaths
+import com.alibaba.android.arouter.facade.annotation.Route
 
 private const val TAG = "LoginActivity"
 private const val IDENTITY_ELDER = "elder"
 private const val IDENTITY_CHILD = "child"
 
+@Route(path = RouterPaths.LOGIN_MAIN)
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var title: TypewriterTextView
@@ -82,8 +85,9 @@ class LoginActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener {
-            // fakelogin()
-            login()
+            // TODO
+            fakelogin()
+            // login()
         }
     }
 

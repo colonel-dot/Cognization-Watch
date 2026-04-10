@@ -22,4 +22,9 @@ object UserManager {
         return otherId
     }
 
+    fun clear() {
+        userId = ""
+        otherId = null
+    }
+
 }

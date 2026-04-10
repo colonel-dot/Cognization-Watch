@@ -63,6 +63,7 @@ public class RemarkDialogFragment extends DialogFragment {
                 return;
             }
             BindStatusManager.INSTANCE.saveBindRemark(requireContext(), remark);
+            Toast.makeText(requireContext(), "保存成功", Toast.LENGTH_SHORT).show();
             dismiss();
         });
     }

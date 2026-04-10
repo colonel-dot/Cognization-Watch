@@ -1,5 +1,7 @@
 package setting.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,11 +10,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import com.example.cognitive.R;
 
 import java.util.ArrayList;
@@ -21,6 +26,9 @@ import java.util.List;
 import risk.work.RiskConfigManager;
 import schulte.data.SchulteEvaluatorType;
 import setting.item.SettingItem;
+import user.UserManager;
+import com.example.common.login.remote.LoginStatusManager;
+import com.example.common.bind_device.BindStatusManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +36,8 @@ import setting.item.SettingItem;
  * create an instance of this fragment.
  */
 public class SettingFragment extends Fragment {
+
+    private static final String TAG = "SettingFragment";
 
     // Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -131,8 +141,34 @@ public class SettingFragment extends Fragment {
     }
 
     private void initListener() {
-        signout.setOnClickListener(v -> {
-            // TODO: sign out
-        });
+        signout.setOnClickListener(v -> showLogoutConfirmDialog());
+    }
+
+    private void showLogoutConfirmDialog() {
+        if (!isAdded() || requireContext() == null) {
+            return;
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle("确认退出")
+                .setMessage("确定要退出登录吗？")
+                .setPositiveButton("退出", (dialog, which) -> {
+                    if (isAdded()) {
+                        performLogout();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void performLogout() {
+        LoginStatusManager.INSTANCE.logout(requireContext());
+        BindStatusManager.INSTANCE.clearBindStatus(requireContext());
+        UserManager.INSTANCE.clear();
+        Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClassName("com.example.cogwatch", "com.example.cogwatch.login.ui.LoginActivity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }
