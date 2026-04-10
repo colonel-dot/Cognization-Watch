@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.provider.Settings;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -165,16 +167,25 @@ public class SettingFragment extends Fragment {
         } else {
             requireContext();
         }
-        new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                 .setTitle("确认退出")
                 .setMessage("确定要退出登录吗？")
-                .setPositiveButton("退出", (dialog, which) -> {
+                .setPositiveButton("退出", (dia, which) -> {
                     if (isAdded()) {
                         performLogout();
                     }
                 })
                 .setNegativeButton("取消", null)
-                .show();
+                .create();
+
+        dialog.show();
+
+        Drawable background = ContextCompat.getDrawable(requireContext(), R.drawable.background_rounded);
+        if (background != null) {
+            Drawable wrappedDrawable = DrawableCompat.wrap(background.mutate());
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(requireContext(), R.color.white_background));
+            dialog.getWindow().setBackgroundDrawable(wrappedDrawable);
+        }
     }
 
     private void performLogout() {

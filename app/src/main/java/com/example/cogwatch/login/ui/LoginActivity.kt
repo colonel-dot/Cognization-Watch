@@ -95,6 +95,33 @@ class LoginActivity : AppCompatActivity() {
         }
         val userName = username.text.toString()
         val passWord = password.text.toString()
+
+        // 验证账号格式
+        if (!InputValidator.isUsernameValid(userName)) {
+            Toast.makeText(this, "账号格式不正确（支持手机号/邮箱/3-20位字母数字）", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 验证密码复杂度
+        if (!InputValidator.isPasswordValid(passWord)) {
+            val strengthLevel = InputValidator.getPasswordStrengthLevel(passWord)
+            val strengthText = InputValidator.getPasswordStrengthText(strengthLevel)
+            Toast.makeText(this, "密码不符合要求（当前强度：$strengthText）", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 防爆检测：检测连续重复字符
+        if (InputValidator.hasExcessiveRepeatingChars(passWord)) {
+            Toast.makeText(this, "密码不允许超过5位连续重复字符", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 防爆检测：检测键盘序列
+        if (InputValidator.hasKeyboardSequence(passWord)) {
+            Toast.makeText(this, "密码不允许使用键盘连续序列", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         lifecycleScope.launch {
             LoginRepository().login(userName, passWord).collect { result ->
                 result.fold(

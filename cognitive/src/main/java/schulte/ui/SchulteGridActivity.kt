@@ -2,6 +2,7 @@ package schulte.ui
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -100,7 +103,7 @@ class SchulteGridActivity : AppCompatActivity() {
                     start!!.text = "开始"
                     pause!!.text = "暂停"
                     showFinishedDialog()
-                    Log.d(TAG, "initGameEngine: 要保存并更新舒尔特成绩了")
+                    Log.d(TAG, "initGameEngine: 即将保存和更新舒尔特成绩")
                     viewModel.saveGameTime(if (engine!!.isFourSquared) 4 else 5, ms)
                     mainViewModel.notifyRecordChanged()
                 }
@@ -157,17 +160,24 @@ class SchulteGridActivity : AppCompatActivity() {
     private fun showFinishedDialog() {
         val seconds = ms / 1000.0
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this)
             .setTitle("完成！")
             .setMessage(String.format("用时 %.3f 秒", seconds))
-            .setPositiveButton(
-                "确定"
-            ) { dialog: DialogInterface?, _: Int ->
+            .setPositiveButton("确定") { dialog, _ ->
                 time!!.text = "0"
                 grid!!.text = "0 / " + engine!!.end
-                dialog!!.dismiss()
+                dialog.dismiss()
             }
-            .show()
+            .create()
+
+        dialog.show()
+
+        val background = ContextCompat.getDrawable(this, R.drawable.background_rounded)
+        if (background != null) {
+            val wrappedDrawable = DrawableCompat.wrap(background.mutate())
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(this, R.color.white_background))
+            dialog.window?.setBackgroundDrawable(wrappedDrawable)
+        }
     }
 
     override fun onDestroy() {
