@@ -24,21 +24,15 @@ public class StringMap {
         }
     }
 
-    /**
-     * @param totalMinutesFromEpoch 从1970年开始的分钟值 (int 类型)
-     */
     public static String mapMinuteToRelativeTime(Integer totalMinutesFromEpoch) {
         if (totalMinutesFromEpoch == null) {
             return "null";
         }
 
-        // 1. 获取当前时间的总分钟数并转为 int
         int nowTotalMinutes = (int) (Instant.now().getEpochSecond() / 60);
 
-        // 2. 计算差值
         int diff = nowTotalMinutes - totalMinutesFromEpoch;
 
-        // 3. 逻辑判断
         if (diff >= 0 && diff <= 60) {
             if (diff == 0) {
                 return "just now";
@@ -46,25 +40,19 @@ public class StringMap {
             return diff + " min ago";
         }
 
-        // 4. 超过一小时，显示具体时间
         return mapMinuteToTime(totalMinutesFromEpoch);
     }
 
-    /**
-     * 将总分钟数转换为具体的时间字符串
-     */
     public static String mapMinuteToTime(Integer totalMinutesFromEpoch) {
         if (totalMinutesFromEpoch == null) {
             return "null";
         }
 
-        // 注意：这里必须先转 long 再乘 60，否则 int * 60 会导致溢出
         long totalSeconds = (long) totalMinutesFromEpoch * 60;
 
         Instant instant = Instant.ofEpochSecond(totalSeconds);
         LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
-        // 如果是历史久远的时间，建议格式化加上日期，例如 "yyyy-MM-dd HH:mm"
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 

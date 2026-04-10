@@ -46,10 +46,6 @@ public class RtcActivity extends AppCompatActivity {
 
     private RtcManager manager;
 
-    /**
-     * 按设备Android版本获得视频通话功能需要的权限
-     * @return 权限字符串数组
-     */
     private String[] getRequiredPermissions() {
         return new String[]{
                 Manifest.permission.RECORD_AUDIO,
@@ -273,7 +269,7 @@ public class RtcActivity extends AppCompatActivity {
                 super.onExitRoom(reason);
                 Log.d(TAG, "onExitRoom called with reason: " + reason);
                 runOnUiThread(() -> {
-                    // TODO
+                    // TODO：通知对方退房
                     if (!isFinishing()) {
                         finish();
                         Log.d(TAG, "Activity finished from onExitRoom");

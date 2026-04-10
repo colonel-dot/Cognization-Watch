@@ -17,14 +17,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 private const val TAG = "NetWorkRepository"
-val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE // 格式：yyyy-MM-dd
+val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE // yyyy-MM-dd
 
 object NetWorkRepository {
     fun updateDailyBehavior(account: String, date: LocalDate, record: DailyBehaviorEntity): Flow<Result<Int>> = flow {
         try {
             val dateStr = date.toString()
 
-            // 将实体转换为 Map
             val dataMap = mapOf(
                 "wake_time" to record.wakeMinute,
                 "sleep_time" to record.sleepMinute,
@@ -61,14 +60,12 @@ object NetWorkRepository {
         try {
             val dateStr = date.toString()
 
-            // 将风险结果转换为 Map
             val dataMap = mutableMapOf<String, Any?>().apply {
                 put("overallRiskLevel", riskResult.riskLevel)
                 put("overallRiskScore", riskResult.riskScore)
                 put("schulteRisk", riskResult.schulteRiskScore)
                 put("speechRisk", riskResult.readRiskScore)
                 put("sleepRisk", riskResult.scheduleRiskScore)
-                // 如果有其他字段也一并添加
             }
 
             val request = UpdateDailyRiskRequest(
@@ -84,17 +81,16 @@ object NetWorkRepository {
                 Log.d(TAG, "数据更新成功，响应码: ${response.code()}")
                 emit(Result.success(response.code()))
             } else {
-                // 处理非成功响应
                 val errorMsg = "数据更新失败: ${response.code()} - ${response.errorBody()?.use { it.string() }}"
                 Log.e(TAG, errorMsg)
                 emit(Result.failure(IllegalStateException(errorMsg)))
             }
-            /*if (response.isSuccessful) {
+         /* if (response.isSuccessful) {
                 Log.d(TAG, "风险数据更新成功")
             } else {
                 Log.e(TAG, " 风险数据更新失败: ${response.code()} - ${response.errorBody()?.string()}")
-            }*/
-        }catch (e: Exception) {
+            } */
+        } catch (e: Exception) {
             Log.e(TAG, " 风险数据更新异常: ${e.message}", e)
             emit(Result.failure(e))
         }
@@ -106,10 +102,8 @@ object NetWorkRepository {
                 throw IllegalArgumentException("Account cannot be null")
             }
             val response = RetrofitClient.createService(ApiService::class.java).getDailyRisk(UserManager.getUserId(), otheraccount, date.format(DATE_FORMATTER))
-            // 发送成功结果
             emit(Result.success(response.toResult()))
         } catch (e: Exception) {
-            // 捕获所有异常，发送失败结果
             emit(Result.failure(e))
         }
     }.flowOn(Dispatchers.IO)
@@ -120,10 +114,8 @@ object NetWorkRepository {
                 throw IllegalArgumentException("Account cannot be null")
             }
             val response = RetrofitClient.createService(ApiService::class.java).getDailyBehavior(UserManager.getUserId(), account, date.format(DATE_FORMATTER))
-            // 发送成功结果
             emit(Result.success(response))
         } catch (e: Exception) {
-            // 捕获所有异常，发送失败结果
             emit(Result.failure(e))
         }
     }.flowOn(Dispatchers.IO)

@@ -1,33 +1,35 @@
-package collection;
+package com.example.cognitive.main.home.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.List;
 
+import com.example.cognitive.main.home.model.HomeRVModel;
 import com.example.common.util.OnItemClickListener;
-import com.example.common.util.StringMap;
 
-public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonitoringRVAdapter.Holder> {
+public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
+    private static final String TAG = "HomeRVAdapter";
+    List<HomeRVModel> list;
 
-    private final List<HealthMonitoringRVModel> list;
-
-    public HealthMonitoringRVAdapter(List<HealthMonitoringRVModel> list) {
+    public HomeRVAdapter(List<HomeRVModel> list) {
+        super();
         this.list = list;
     }
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_health_monitoring, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
         return new Holder(view);
     }
 
@@ -42,23 +44,21 @@ public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonito
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-
+        ImageView icon;
         TextView function;
-        TextView data;
-        LinearProgressIndicator progress;
 
-        public Holder(@NonNull View itemView) {
+        public Holder(View itemView) {
             super(itemView);
+            icon = itemView.findViewById(R.id.icon);
             function = itemView.findViewById(R.id.function);
-            data = itemView.findViewById(R.id.data);
-            progress = itemView.findViewById(R.id.progress);
         }
 
         public void bindView(int position) {
-            HealthMonitoringRVModel item = list.get(position);
-            function.setText(item.getFunction());
-            data.setText(StringMap.mapNumberWithUnit(item.getData(), item.getUnit()));
-            progress.setProgress((int)(100 * item.getData() / item.getTarget()));
+            icon.setImageResource(list.get(position).getImage());
+            function.setText(list.get(position).getFunction());
+            itemView.setBackgroundTintList(
+                    ContextCompat.getColorStateList(itemView.getContext(), list.get(position).getBackground())
+            );
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

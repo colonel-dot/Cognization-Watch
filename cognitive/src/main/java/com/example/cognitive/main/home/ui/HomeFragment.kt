@@ -1,4 +1,4 @@
-package com.example.cognitive.main.home
+package com.example.cognitive.main.home.ui
 
 import android.Manifest
 import android.content.Intent
@@ -16,14 +16,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import collection.HealthMonitoringFragment
+import collection.ui.HealthMonitoringFragment
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
+import com.example.cognitive.main.home.model.HomeRVModel
 import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.rtc.RtcActivity
 import com.example.common.util.ItemSpacingDecoration
-import game.BrainTrainingFragment
+import game.ui.BrainTrainingFragment
 import read_assessment.ui.ReadFragment
 import sports.data.StepForegroundService
 
@@ -146,19 +147,5 @@ class HomeFragment : Fragment() {
     private fun startStepService() {
         val intent = Intent(requireContext(), StepForegroundService::class.java)
         requireContext().startForegroundService(intent)
-    }
-
-    companion object {
-        private const val ARG_PARAM1 = "param1"
-        private const val ARG_PARAM2 = "param2"
-
-        fun newInstance(param1: String?, param2: String?): HomeFragment {
-            val fragment = HomeFragment()
-            val args = Bundle()
-            args.putString(ARG_PARAM1, param1)
-            args.putString(ARG_PARAM2, param2)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

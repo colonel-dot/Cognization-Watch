@@ -32,7 +32,7 @@ public class GeofenceDialogFragment extends DialogFragment {
     private SeekBar seekBar;
     private TextView tvValue;
 
-    // 回调接口：围栏参数准备好后通知 GeofenceFragment，由其发送给绑定设备
+    // 围栏参数准备好后通知 GeofenceFragment 发送给绑定设备
     public interface OnFenceCreatedListener {
         void onFenceCreated(double lat, double lng, float radius);
     }
@@ -79,7 +79,6 @@ public class GeofenceDialogFragment extends DialogFragment {
         seekBar = view.findViewById(R.id.fence_seekbar);
         tvValue = view.findViewById(R.id.fence_value_text);
 
-        // 初始化 SeekBar 显示
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -126,14 +125,12 @@ public class GeofenceDialogFragment extends DialogFragment {
     private void createFence(float radius) throws Exception {
         Log.d(TAG, "come to createFence");
 
-        // 检查定位权限
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
 
-        // 使用高德定位 SDK 获取当前设备位置
         option = new AMapLocationClientOption();
         option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         option.setOnceLocation(true);
@@ -154,11 +151,9 @@ public class GeofenceDialogFragment extends DialogFragment {
 
                     Log.d(TAG, "获取位置成功: lat=" + latitude + ", lng=" + longitude + ", radius=" + radius);
 
-                    // 标记围栏已设置（本地保存状态）
                     GeofenceStatusManager.setFenceEnabled(requireContext(), true);
                     GeofenceStatusManager.saveFenceInfo(requireContext(), "", radius, latitude, longitude);
 
-                    // 将围栏参数通过回调传递给 GeofenceFragment，由其发送给绑定设备
                     if (listener != null) {
                         listener.onFenceCreated(latitude, longitude, radius);
                     }

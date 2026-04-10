@@ -18,8 +18,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // 仅Android 12+生效
-            installSplashScreen() // 加载Theme.MyApp.Splash中的启动屏属性
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            installSplashScreen() // 加载 Theme.MyApp.Splash 的启动屏属性
         }
 
         enableEdgeToEdge()

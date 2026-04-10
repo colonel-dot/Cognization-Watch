@@ -73,7 +73,7 @@ class GeofenceReceiver : BroadcastReceiver() {
             GeofenceRepository.insertEventBlocking(item)
             Log.d(TAG, "Geofence event saved: status=$localStatus, customId=$customId")
 
-            // 上报事件到服务器
+            // 上报事件到后端
             reportElderMovement(customId, lng, lat, localStatus)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save geofence event", e)

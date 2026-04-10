@@ -10,7 +10,7 @@ import com.example.common.geofence.GeofenceConstants
 import com.example.common.geofence.model.BarrierInfo
 import androidx.core.content.edit
 
-class CognitiveGeofenceManager(context: Context) {
+class GeofenceManager(context: Context) {
 
     companion object {
         private const val TAG = "CognitiveGeofenceMgr"
@@ -41,11 +41,6 @@ class CognitiveGeofenceManager(context: Context) {
         geoFenceClient.setGeoFenceListener(listener)
     }
 
-    /**
-     * 根据服务器下发的 BarrierInfo 创建本地围栏
-     * @param barrierInfo 服务器返回的围栏配置
-     * @return true = 创建成功，false = 重复创建或其他失败
-     */
     fun createGeofence(barrierInfo: BarrierInfo): Boolean {
         val customId = barrierInfo.eldername
         if (customId == currentFenceId) {
@@ -59,16 +54,12 @@ class CognitiveGeofenceManager(context: Context) {
         geoFenceClient.addGeoFence(center, radius, customId)
         currentFenceId = customId
 
-        // 保存到本地
         saveBarrierInfo(barrierInfo)
 
         Log.d(TAG, "Geofence created: eldername=$customId, lat=${barrierInfo.lat}, lon=${barrierInfo.lon}, radius=$radius")
         return true
     }
 
-    /**
-     * 从本地存储恢复围栏
-     */
     fun restoreGeofenceIfExists(): Boolean {
         val eldername = sp.getString(KEY_ELDERNAME, null) ?: return false
         val lat = sp.getFloat(KEY_LAT, 0f).toDouble()
@@ -84,9 +75,6 @@ class CognitiveGeofenceManager(context: Context) {
         return createGeofence(barrierInfo)
     }
 
-    /**
-     * 保存围栏信息到本地
-     */
     private fun saveBarrierInfo(barrierInfo: BarrierInfo) {
         sp.edit {
             putString(KEY_ELDERNAME, barrierInfo.eldername)
@@ -97,9 +85,6 @@ class CognitiveGeofenceManager(context: Context) {
         Log.d(TAG, "BarrierInfo saved to local")
     }
 
-    /**
-     * 获取本地保存的围栏信息
-     */
     fun getSavedBarrierInfo(): BarrierInfo? {
         val eldername = sp.getString(KEY_ELDERNAME, null) ?: return null
         val lat = sp.getFloat(KEY_LAT, 0f).toDouble()
@@ -112,9 +97,6 @@ class CognitiveGeofenceManager(context: Context) {
         return BarrierInfo(eldername, lon, lat, radius)
     }
 
-    /**
-     * 删除所有围栏
-     */
     fun removeAllGeofences() {
         geoFenceClient.removeGeoFence()
         currentFenceId = null
@@ -122,9 +104,6 @@ class CognitiveGeofenceManager(context: Context) {
         Log.d(TAG, "All geofences removed")
     }
 
-    /**
-     * 删除指定围栏
-     */
     fun removeGeofence(customId: String) {
         geoFenceClient.removeGeoFence()
         if (currentFenceId == customId) {
@@ -133,9 +112,6 @@ class CognitiveGeofenceManager(context: Context) {
         Log.d(TAG, "Geofence removed: $customId")
     }
 
-    /**
-     * 清除本地存储
-     */
     private fun clearLocalStorage() {
         sp.edit { clear() }
         Log.d(TAG, "Local storage cleared")

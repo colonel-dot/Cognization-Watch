@@ -19,10 +19,8 @@ class CogwatchApp: Application() {
         ARouter.init(this)
         Log.e("ARouterDebug", "ARouter init finished")
 
-        // 初始化 AppDatabase
         AppDatabase.init(this)
 
-        // 初始化 Manager 类
         BindStatusManager.init(this)
         UserManager.init(this)
     }

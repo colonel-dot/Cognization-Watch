@@ -20,7 +20,7 @@ class StepRepository(
     // Service 生命周期作用域
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    //计步传感器
+    // 计步传感器
     private val stepCounter =
         sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 

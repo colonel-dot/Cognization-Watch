@@ -150,7 +150,7 @@ class DashboardFragment : Fragment() {
         val today = LocalDate.now()
         val yesterday = today.minusDays(1)
 
-        // 并行请求今日风险、昨日风险、行为数据
+        // 并行请求今日风险、昨日风险和行为数据
         val todayRiskDeferred = async { fetchTodayRisk(childAccount, elderAccount, today, riskDao) }
         val yesterdayRiskDeferred = async { fetchYesterdayRisk(childAccount, elderAccount, yesterday, riskDao) }
         val behaviorDeferred = async { fetchBehavior(childAccount, elderAccount, today, behaviorDao) }

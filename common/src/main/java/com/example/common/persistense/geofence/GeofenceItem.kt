@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "geofence_event")
 data class GeofenceItem(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val timestamp: Int, // 事件发生的时间戳（1970到现在的分钟值）
+    val timestamp: Int, // 1970到事件发生的分钟值时间戳
     val lat: Double,    // 纬度
     val lng: Double,    // 经度
     val status: Int     // 状态码

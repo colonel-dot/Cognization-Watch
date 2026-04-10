@@ -50,7 +50,8 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         initScheduleFromDbOrSystem()
     }
 
-    /** ================= 初始化 ================= */
+
+    /* ================= 初始化 ================= */
 
     private fun initScheduleFromDbOrSystem() {
         viewModelScope.launch {
@@ -151,7 +152,7 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
 
 
-    /** ================= UI 同步 ================= */
+    /* ================= UI 同步 ================= */
 
     private fun applyScheduleToUI(
         sleepHour: Int,
@@ -197,7 +198,8 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         wakeMinutePos = minutePos
     }
 
-    /** ================= 用户确认保存 ================= */
+
+    /* ================= 用户确认保存 ================= */
 
     fun saveScheduleToDb(
         bedHour: String,
@@ -211,16 +213,16 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
             UpdateRepository.updateScheduleTime(wakeMinuteOfDay, sleepMinuteOfDay)
             Log.d(TAG, "saveScheduleToDb: 已经调用了更新数据库的方法")
-            /*dailyBehaviorDao.updateSchedule(
+         /* dailyBehaviorDao.updateSchedule(
                 date = today,
                 wakeMinute = wakeMinuteOfDay,
                 sleepMinute = sleepMinuteOfDay
-            )*/
+            ) */
         }
     }
 
 
-    /** ================= 工具 ================= */
+    /* ================= 工具 ================= */
 
     private fun toMinuteOfDay(hour: Int, minute: Int): Int {
         return hour * 60 + minute

@@ -51,13 +51,10 @@ class SchulteGridActivity : AppCompatActivity() {
         // 绑定视图
         bindView()
 
-        // 初始化计时器
         initTimer()
 
-        // 初始化游戏引擎和RecyclerView
         initGameEngine()
 
-        // 绑定点击事件
         bindClickListener()
 
         grid?.text = engine!!.cur.toString() + " / " + engine!!.end
@@ -80,20 +77,16 @@ class SchulteGridActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * 初始化游戏引擎和RecyclerView
-     */
     private fun initGameEngine() {
         val type = RiskConfigManager(this).getSchulteEvaluatorType()
         Log.d("SchulteGridActivity", "读取到类型: ${type.name}, isFourSquared=${type == SchulteEvaluatorType.GRID_4}")
         engine = SchulteGridEngine(type)
 
-        // 初始化单元格数据
         val list = ArrayList<SchulteGridCell?>()
         for (i in 1..engine!!.end) {
             list.add(SchulteGridCell(i))
         }
-        // 设置RecyclerView适配器
+
         adapter = SchulteGridRVAdapter(list)
         schulte!!.setAdapter(adapter)
 
@@ -122,11 +115,8 @@ class SchulteGridActivity : AppCompatActivity() {
         schulte!!.setLayoutManager(GridLayoutManager(this, span))
     }
 
-    /**
-     * 绑定按钮点击事件
-     */
     private fun bindClickListener() {
-        // 暂停/继续按钮
+        // 暂停继续按钮
         pause!!.setOnClickListener { _: View? ->
             if (engine!!.state == SchulteGridEngine.State.RUNNING) {
                 timer!!.pause()
@@ -139,7 +129,7 @@ class SchulteGridActivity : AppCompatActivity() {
             }
         }
 
-        // 开始/结束按钮
+        // 开始结束按钮
         start!!.setOnClickListener { _: View? ->
             if (engine!!.state == SchulteGridEngine.State.STOPPED) {
                 timer!!.start()
@@ -148,7 +138,6 @@ class SchulteGridActivity : AppCompatActivity() {
                 start!!.text = "结束"
                 pause!!.text = "暂停"
             } else {
-                // 重置游戏状态
                 timer!!.stop()
                 engine!!.stop()
                 start!!.text = "开始"
@@ -166,19 +155,15 @@ class SchulteGridActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * 游戏完成弹窗
-     */
     private fun showFinishedDialog() {
         val seconds = ms / 1000.0
 
-        AlertDialog.Builder(this) // Activity中直接用this替代requireContext()
+        AlertDialog.Builder(this)
             .setTitle("完成！")
             .setMessage(String.format("用时 %.3f 秒", seconds))
             .setPositiveButton(
                 "确定"
             ) { dialog: DialogInterface?, _: Int ->
-                // 重置显示
                 time!!.text = "0"
                 grid!!.text = "0 / " + engine!!.end
                 dialog!!.dismiss()

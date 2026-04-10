@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.geofence.model.BarrierInfo
-import geofence.manager.CognitiveGeofenceManager
+import geofence.manager.GeofenceManager
 import geofence.network.ElderMovementRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,13 +19,13 @@ sealed class GeofenceInitState {
     data class Error(val msg: String) : GeofenceInitState()
 }
 
-class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(application) {
+class GeofenceViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val TAG = "CognitiveGeoViewModel"
     }
 
-    private val geofenceManager = CognitiveGeofenceManager(application)
+    private val geofenceManager = GeofenceManager(application)
 
     private val _initState = MutableStateFlow<GeofenceInitState>(GeofenceInitState.Idle)
     val initState: StateFlow<GeofenceInitState> = _initState.asStateFlow()
@@ -33,7 +33,6 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
     private var isInitialized = false
 
     init {
-        // 设置围栏创建回调
         geofenceManager.setFenceListener { geoFenceList, errorCode, errorMsg ->
             if (errorCode == 0 && !geoFenceList.isNullOrEmpty()) {
                 Log.d(TAG, "Geofence created successfully: ${geoFenceList[0].fenceId}")
@@ -42,13 +41,9 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
             }
         }
 
-        // 尝试从本地恢复围栏（应用重启时）
         tryRestoreFromLocal()
     }
 
-    /**
-     * 尝试从本地存储恢复围栏
-     */
     private fun tryRestoreFromLocal() {
         val restored = geofenceManager.restoreGeofenceIfExists()
         if (restored) {
@@ -58,10 +53,6 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
         }
     }
 
-    /**
-     * 拉取围栏配置并创建本地围栏
-     * @param childname Bridge 设备的账号（作为围栏创建者的标识）
-     */
     fun pullAndCreateGeofence(childname: String) {
         if (isInitialized) {
             Log.w(TAG, "Geofence already initialized, skip")
@@ -91,9 +82,6 @@ class CognitiveGeofenceViewModel(application: Application) : AndroidViewModel(ap
         }
     }
 
-    /**
-     * 移除所有本地围栏
-     */
     fun removeGeofence() {
         geofenceManager.removeAllGeofences()
         isInitialized = false

@@ -23,13 +23,11 @@ class CircularSnapHelper(
             return RecyclerView.NO_POSITION
         }
 
-        // 1. 先让父类计算目标位置
         val targetPos = super.findTargetSnapPosition(layoutManager, velocityX, velocityY)
         if (targetPos == RecyclerView.NO_POSITION) {
             return RecyclerView.NO_POSITION
         }
 
-        // 2. 将目标位置映射到中间区域附近
         return normalizeToMiddleRegion(targetPos)
     }
 
@@ -37,10 +35,8 @@ class CircularSnapHelper(
         layoutManager: RecyclerView.LayoutManager,
         targetView: View
     ): IntArray {
-        // 调用父类计算距离
         val distance = super.calculateDistanceToFinalSnap(layoutManager, targetView) ?: return intArrayOf(0, 0)
 
-        // 确保视图完全对齐到中心
         val layout = layoutManager as? LinearLayoutManager ?: return distance
         val childCenter = getChildCenter(layout, targetView)
         val parentCenter = if (layout.orientation == LinearLayoutManager.VERTICAL) {
@@ -67,15 +63,12 @@ class CircularSnapHelper(
     }
 
     private fun normalizeToMiddleRegion(position: Int): Int {
-        // 计算相对于中间位置的偏移
         val realPos = (position % originalSize + originalSize) % originalSize
-        // 返回中间区域的位置
         return middlePosition + realPos
     }
 
     override fun findSnapView(layoutManager: RecyclerView.LayoutManager): View? {
         val snapView = super.findSnapView(layoutManager)
-        // 如果找不到，尝试找到最接近中心的视图
         if (snapView == null && layoutManager is LinearLayoutManager) {
             return findViewNearestCenter(layoutManager)
         }

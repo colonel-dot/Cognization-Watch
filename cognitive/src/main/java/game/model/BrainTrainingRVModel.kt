@@ -1,4 +1,4 @@
-package game
+package game.model
 
 class BrainTrainingRVModel(
     val function: String?,

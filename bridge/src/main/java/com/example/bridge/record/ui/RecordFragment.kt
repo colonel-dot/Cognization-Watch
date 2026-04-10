@@ -51,14 +51,6 @@ class RecordFragment : Fragment() {
     private var riskDataList: MutableList<DailyRiskEntity> = ArrayList()
     private var selectedDays = 15
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            // mParam1 = it.getString(ARG_PARAM1)
-            // mParam2 = it.getString(ARG_PARAM2)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -102,16 +94,11 @@ class RecordFragment : Fragment() {
         }
         updateButtonAppearance()
 
-        // 设置下拉刷新
         swipeRefresh?.setOnRefreshListener {
-            // 从网络获取最新数据
             refreshFromNetwork()
         }
     }
 
-    /**
-     * 从网络获取绑定设备的风险数据并更新本地数据库和UI
-     */
     private fun refreshFromNetwork() {
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         if (eldername.isEmpty()) {
@@ -154,9 +141,6 @@ class RecordFragment : Fragment() {
         }
     }
 
-    /**
-     * 首次加载：先从网络拉取并存库，再读库更新UI
-     */
     private fun loadRecordDataWithNetworkFirst() {
         viewLifecycleOwner.lifecycleScope.launch {
             swipeRefresh?.isRefreshing = true
@@ -187,7 +171,7 @@ class RecordFragment : Fragment() {
             return@withContext Pair(emptyList(), false)
         }
 
-        // 从网络拉取并存库
+        // 网络接口拉取和存库
         var networkSuccess = false
         try {
             val apiService = RetrofitClient.createService(BindApiService::class.java)
@@ -282,7 +266,6 @@ class RecordFragment : Fragment() {
                 val fromDate: LocalDate = LocalDate.now().minusDays((selectedDays - 1).toLong())
                 val list = RiskRepository.getFromBlocking(database.dailyRiskDao(), fromDate)
 
-                // Reverse to show latest first
                 val result: MutableList<DailyRiskEntity> = ArrayList(list)
                 result.reverse()
 
@@ -333,7 +316,6 @@ class RecordFragment : Fragment() {
                 }
             }
         } else {
-            // Set default range if no data
             yAxis?.axisMinimum = 0f
             yAxis?.axisMaximum = 1f
         }

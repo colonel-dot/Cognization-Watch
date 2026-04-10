@@ -20,8 +20,6 @@ class BindDialogFragment : DialogFragment() {
     private lateinit var btnBind: MaterialButton
     private lateinit var etBind: EditText
 
-    // 使用 activityViewModels() 可以在 Activity 和 Dialog 之间共享数据
-    // 如果只需要 Dialog 自己用，就用 viewModels()
     private val viewModel: BindViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +43,12 @@ class BindDialogFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // 使用你之前重绘的 dialog_bind.xml
         return inflater.inflate(R.layout.dialog_fragment_bind, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 设置背景透明（如果你在 XML 里用了 MaterialCardView 的圆角）
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         btnBind = view.findViewById(R.id.bind_button)
@@ -72,7 +68,6 @@ class BindDialogFragment : DialogFragment() {
 
     private fun observeBindAndLoadState() {
         viewLifecycleOwner.lifecycleScope.launch {
-            // 注意：Fragment 中使用 viewLifecycleOwner
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.bindAndLoadState.collect { state ->
                     when (state) {

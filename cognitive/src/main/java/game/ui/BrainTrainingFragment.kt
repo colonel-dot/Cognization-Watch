@@ -1,4 +1,4 @@
-package game
+package game.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
-import schulte.ui.SchulteGridActivity
 import com.example.common.util.ItemSpacingDecoration
+import game.model.BrainTrainingRVModel
+import schulte.ui.SchulteGridActivity
 
 class BrainTrainingFragment : Fragment() {
 

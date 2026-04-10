@@ -36,12 +36,15 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun initTodaySaveYesterday() {
         viewModelScope.launch {
+
+            // TODO
             // Log.d(TAG, "initTodaySaveYesterday: today = $today")
             // 以下为调试代码
             // InsertData.init(getApplication())
             // InsertData.insertBehaviorData()
             // InsertData.insertRiskData()
             // 以上为调试代码
+
             val todayBehavior = behaviorDao.getOrInitTodayBehavior(today)
             val behaviorRecords = behaviorDao.loadPrev15Days(today)
             val evaluatorType = riskConfigManager.getSchulteEvaluatorType()
@@ -52,6 +55,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             // 以下为调试代码
             // debug_post()
             // 以上为调试代码
+
             Log.d(TAG, "initTodaySaveYesterday: 要给更新仓库传过去的todayBehavior是 $todayBehavior")
             UpdateRepository.initToday(todayBehavior)
             NetWorkRepository.updateDailyBehavior(account = UserManager.getUserId(), date = today, todayBehavior)

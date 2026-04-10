@@ -1,33 +1,35 @@
-package game;
+package collection.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.List;
 
 import com.example.common.util.OnItemClickListener;
+import com.example.common.util.StringMap;
 
-public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRVAdapter.Holder> {
-    List<BrainTrainingRVModel> list;
+import collection.model.HealthMonitoringRVModel;
 
-    public BrainTrainingRVAdapter(List<BrainTrainingRVModel> list) {
-        super();
+public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonitoringRVAdapter.Holder> {
+
+    private final List<HealthMonitoringRVModel> list;
+
+    public HealthMonitoringRVAdapter(List<HealthMonitoringRVModel> list) {
         this.list = list;
     }
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_brain_training, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_health_monitoring, parent, false);
         return new Holder(view);
     }
 
@@ -44,23 +46,21 @@ public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRV
     public class Holder extends RecyclerView.ViewHolder {
 
         TextView function;
-        ImageView icon;
-        TextView state;
+        TextView data;
+        LinearProgressIndicator progress;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             function = itemView.findViewById(R.id.function);
-            icon = itemView.findViewById(R.id.icon);
-            state = itemView.findViewById(R.id.state);
+            data = itemView.findViewById(R.id.data);
+            progress = itemView.findViewById(R.id.progress);
         }
 
         public void bindView(int position) {
-            function.setText(list.get(position).getFunction());
-            icon.setImageResource(list.get(position).getIcon());
-            state.setText(list.get(position).getState());
-            itemView.setBackgroundTintList(
-                    ContextCompat.getColorStateList(itemView.getContext(), list.get(position).getBackground())
-            );
+            HealthMonitoringRVModel item = list.get(position);
+            function.setText(item.getFunction());
+            data.setText(StringMap.mapNumberWithUnit(item.getData(), item.getUnit()));
+            progress.setProgress((int)(100 * item.getData() / item.getTarget()));
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

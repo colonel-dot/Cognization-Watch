@@ -1,4 +1,4 @@
-package collection
+package collection.model
 
 data class HealthMonitoringRVModel(
     val function: String?,

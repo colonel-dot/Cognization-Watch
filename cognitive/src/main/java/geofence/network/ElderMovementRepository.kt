@@ -44,17 +44,11 @@ object ElderMovementRepository {
         emit(Result.failure(e))
     }
 
-    /**
-     * 获取围栏配置信息（cognitive 端从服务器拉取）
-     */
     fun getBarrierInfo(childname: String): Flow<Result<BarrierInfo>> =
         wrapRequest("获取围栏配置失败") {
             geoApiService.getBarrierInfo(childname)
         }
 
-    /**
-     * 上报老人轨迹事件（cognitive 端主动推送）
-     */
     fun postElderMovement(childname: String, elderMovement: ElderMovement): Flow<Result<Unit>> =
         wrapPostRequest("轨迹上报失败") {
             val dataMap = mapOf(

@@ -26,14 +26,12 @@ class ReadFragment : Fragment() {
     private lateinit var bar_3: View
     private lateinit var bar_4: View
     private lateinit var bar_5: View
-    // 修复1：存储所有属性动画实例，用于后续停止
+
     private val voiceAnimators = mutableListOf<ObjectAnimator>()
 
-    // 修复2：viewModels 委托无需显式指定泛型（Kotlin自动推导），且移除多余的!!
     private val viewModel: ReadViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
 
-    // 修复3：控件用 lateinit 替代可空，避免!!断言
     private lateinit var read: TextView
     private lateinit var mic: ImageView
     private lateinit var stop: TextView
@@ -41,7 +39,6 @@ class ReadFragment : Fragment() {
 
     private var speakText: String? = null
 
-    // 修复4：修正权限申请泛型（去掉可空，避免类型不匹配）
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -68,13 +65,11 @@ class ReadFragment : Fragment() {
     }
 
     private fun bindView(view: View) {
-        // 修复5：去掉可空，直接赋值（lateinit保证初始化）
         read = view.findViewById(R.id.read)
         mic = view.findViewById(R.id.mic)
         stop = view.findViewById(R.id.stop)
         result = view.findViewById(R.id.result)
 
-        // 修复6：安全获取文本，避免空指针
         speakText = viewModel.getText()
         read.text = speakText
 
@@ -85,9 +80,7 @@ class ReadFragment : Fragment() {
         bar_5 = view.findViewById(R.id.bar_5)
     }
 
-    // 启动所有属性动画（保存实例到列表）
     fun startAllVoiceAnimation() {
-        // 先清空旧动画，避免重复启动
         stopAllVoiceAnimation()
         voiceAnimators.clear()
 
@@ -98,15 +91,13 @@ class ReadFragment : Fragment() {
         startVoiceAnim(bar_5, 0)
     }
 
-    // 正确停止属性动画（取消动画实例+清空列表）
     fun stopAllVoiceAnimation() {
         voiceAnimators.forEach { animator ->
-            animator.cancel() // 终止属性动画运行
-            animator.removeAllUpdateListeners() // 移除监听，避免内存泄漏
+            animator.cancel()
+            animator.removeAllUpdateListeners()
         }
         voiceAnimators.clear()
 
-        // 额外：重置View的scaleY属性，避免停在动画中间状态
         bar_1.scaleY = 1f
         bar_2.scaleY = 1f
         bar_3.scaleY = 1f
@@ -122,7 +113,6 @@ class ReadFragment : Fragment() {
             startDelay = delay.toLong()
         }
         animator.start()
-        // 保存动画实例到列表
         voiceAnimators.add(animator)
     }
 
@@ -137,7 +127,7 @@ class ReadFragment : Fragment() {
         mic.setOnClickListener {
             if (checkPermissions()) {
                 startRecord()
-                startAllVoiceAnimation() // 启动录音 + 动画
+                startAllVoiceAnimation()
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
             }
@@ -145,8 +135,7 @@ class ReadFragment : Fragment() {
 
         stop.setOnClickListener {
             viewModel.stopRecord()
-            stopAllVoiceAnimation() // 停止录音 + 动画
-            // 停止后自动触发评估
+            stopAllVoiceAnimation()
             speakText?.let { text ->
                 result.text = "评估中..."
                 viewModel.evaluateSpeech(text, "zh-CHS")
@@ -155,8 +144,6 @@ class ReadFragment : Fragment() {
                 result.text = "暂无朗读文本"
             }
         }
-
-        // result 不再需要点击触发评估，评估结果会通过 observe 自动更新
     }
 
     private fun observeViewModel() {
@@ -195,7 +182,6 @@ class ReadFragment : Fragment() {
         }
     }
 
-    // 修复10：Fragment销毁时停止所有动画，避免内存泄漏
     override fun onDestroyView() {
         super.onDestroyView()
         stopAllVoiceAnimation()

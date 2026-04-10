@@ -42,7 +42,6 @@ object GeofenceRepository {
         }
     }
 
-    // 获取所有事件（阻塞）
     fun getAllEventsBlocking(): List<GeofenceItem> {
         ensureInitialized()
         return runBlocking(Dispatchers.IO) {
@@ -50,10 +49,8 @@ object GeofenceRepository {
         }
     }
 
-    // 获取所有事件（Flow）
     fun getAllEventsFlow() = dao.getAllFlow()
 
-    // 按状态查询（阻塞）
     fun getEventsByStatusBlocking(status: Int): List<GeofenceItem> {
         ensureInitialized()
         return runBlocking(Dispatchers.IO) {
@@ -61,7 +58,6 @@ object GeofenceRepository {
         }
     }
 
-    // 按时间范围查询（阻塞）
     fun getEventsInRangeBlocking(start: Int, end: Int): List<GeofenceItem> {
         ensureInitialized()
         return runBlocking(Dispatchers.IO) {
@@ -69,10 +65,8 @@ object GeofenceRepository {
         }
     }
 
-    // 按时间范围查询（Flow）
     fun getEventsInRangeFlow(start: Int, end: Int) = dao.loadRangeFlow(start, end)
 
-    // 删除所有事件（后台协程）
     fun deleteAllEvents() {
         ensureInitialized()
         CoroutineScope(Dispatchers.IO).launch {
@@ -80,7 +74,6 @@ object GeofenceRepository {
         }
     }
 
-    // 删除特定事件（阻塞）
     fun deleteEventBlocking(item: GeofenceItem) {
         ensureInitialized()
         runBlocking(Dispatchers.IO) {

@@ -44,7 +44,6 @@ class StepForegroundService : Service() {
         val notificationsEnabled = nm.areNotificationsEnabled()
         Log.d(TAG, "系统通知全局开关: $notificationsEnabled")
 
-        // 检查 Android 13+ 的通知权限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val hasNotifyPermission = checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED
             Log.d(TAG, "Android 13+ 通知权限授予状态: $hasNotifyPermission")
@@ -114,7 +113,7 @@ class StepForegroundService : Service() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     setShowBadge(false) // 不在应用图标上显示角标
                 }
-                // 设置锁屏可见性（Android 5.0+）
+                // 设置锁屏可见性
                 lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
             }
 

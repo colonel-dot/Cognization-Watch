@@ -54,7 +54,8 @@ public class RtcManager {
         trtcParams.userId = userId;
         trtcParams.userSig = GenerateTestUserSig.genTestUserSig(trtcParams.userId);
         if (!isElder) {
-            trtcParams.roomId = StringMap.mapStringToSixDigitInt(userId + targetId); // * roomId = children userId + elder targetId
+            trtcParams.roomId = StringMap.mapStringToSixDigitInt(userId + targetId);
+            // * roomId = children userId + elder targetId
         } else {
             trtcParams.roomId = StringMap.mapStringToSixDigitInt(targetId + userId);
         }

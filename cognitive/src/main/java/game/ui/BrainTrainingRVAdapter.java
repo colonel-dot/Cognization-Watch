@@ -1,4 +1,4 @@
-package com.example.cognitive.main.home;
+package game.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +16,12 @@ import java.util.List;
 
 import com.example.common.util.OnItemClickListener;
 
-public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
-    private static final String TAG = "HomeRVAdapter";
-    List<HomeRVModel> list;
+import game.model.BrainTrainingRVModel;
 
-    public HomeRVAdapter(List<HomeRVModel> list) {
+public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRVAdapter.Holder> {
+    List<BrainTrainingRVModel> list;
+
+    public BrainTrainingRVAdapter(List<BrainTrainingRVModel> list) {
         super();
         this.list = list;
     }
@@ -28,7 +29,7 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_brain_training, parent, false);
         return new Holder(view);
     }
 
@@ -43,18 +44,22 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        ImageView icon;
-        TextView function;
 
-        public Holder(View itemView) {
+        TextView function;
+        ImageView icon;
+        TextView state;
+
+        public Holder(@NonNull View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.icon);
             function = itemView.findViewById(R.id.function);
+            icon = itemView.findViewById(R.id.icon);
+            state = itemView.findViewById(R.id.state);
         }
 
         public void bindView(int position) {
-            icon.setImageResource(list.get(position).getImage());
             function.setText(list.get(position).getFunction());
+            icon.setImageResource(list.get(position).getIcon());
+            state.setText(list.get(position).getState());
             itemView.setBackgroundTintList(
                     ContextCompat.getColorStateList(itemView.getContext(), list.get(position).getBackground())
             );

@@ -37,10 +37,6 @@ import com.example.common.persistense.BusinessDataManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * create an instance of this fragment.
- */
 public class SettingFragment extends Fragment {
 
     private static final String TAG = "SettingFragment";

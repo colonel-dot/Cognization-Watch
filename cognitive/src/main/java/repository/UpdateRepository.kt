@@ -11,9 +11,11 @@ import user.UserManager
 private const val TAG = "UpdateRepository"
 
 object UpdateRepository{
-    // 1. 互斥锁保证线程安全（多协程修改 todayBehavior 时串行执行）
+
+    // 多协程修改 todayBehavior 串行执行保证线程安全
     private val mutex = Mutex()
-    // 2. 内存缓存（私有，仅内部修改）
+
+    // 内存缓存
     private var mtodayBehavior: DailyBehaviorEntity? = null
     private val behaviorDao by lazy { AppDatabase.getDatabase(AppDatabase.getAppContext()).dailyBehaviorDao() }
 
@@ -47,7 +49,6 @@ object UpdateRepository{
         }
     }
 
-    // 4. 具体业务方法（极简，仅关注字段修改）
     suspend fun update16Schulte(time: Double) {
         updateBehavior { it.copy(schulte16TimeSec = time) }
     }
@@ -78,14 +79,13 @@ object UpdateRepository{
         updateBehavior { it.copy( wakeMinute = wakeMinute, sleepMinute = sleepMinute) }
     }
 
-    // 5. 通用网络同步逻辑（集中处理异常和日志）
+    // 通用网络同步逻辑
     private suspend fun syncToNetwork(entity: DailyBehaviorEntity) {
         NetWorkRepository.updateDailyBehavior(
             account = UserManager.getUserId(),
             date = entity.date,
             record = entity
         )
-            // 捕获网络调用异常，避免崩溃
             .catch { e ->
                 Log.e(TAG, "同步每日行为数据到网络失败", e)
             }
