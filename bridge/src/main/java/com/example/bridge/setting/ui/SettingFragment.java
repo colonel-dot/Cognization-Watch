@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bridge.R;
+import com.example.bridge.dashboard.ui.RemarkDialogFragment;
 import com.example.bridge.geofence.ui.GeofenceDialogFragment;
 import com.example.bridge.geofence.vm.FenceUiState;
 import com.example.bridge.geofence.vm.GeoViewModel;
@@ -159,7 +160,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onItemClick(SettingItem item) {
                 switch (item.getPosition()) {
-                    case 0 -> { /* TODO: 触发弹窗 */ }
+                    case 0 -> new RemarkDialogFragment().show(getChildFragmentManager(), "RemarkDialog");
                     case 1 -> checkLocationPermissionAndShowDialog();
                 }
             }

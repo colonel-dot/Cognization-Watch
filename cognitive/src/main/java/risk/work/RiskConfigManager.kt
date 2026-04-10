@@ -20,6 +20,7 @@ class RiskConfigManager(context: Context) {
             SchulteEvaluatorType.GRID_5.name   // 默认 5×5
         ) ?: SchulteEvaluatorType.GRID_5.name
 
+        android.util.Log.d("RiskConfigManager", "从SP读取: $name")
         return runCatching {
             SchulteEvaluatorType.valueOf(name)
         }.getOrElse {
@@ -28,6 +29,7 @@ class RiskConfigManager(context: Context) {
     }
 
     fun setSchulteEvaluatorType(type: SchulteEvaluatorType) {
+        android.util.Log.d("RiskConfigManager", "保存类型: ${type.name}")
         sp.edit()
             .putString(KEY_SCHULTE_TYPE, type.name)
             .apply()

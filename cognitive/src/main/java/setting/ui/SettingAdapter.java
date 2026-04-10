@@ -69,6 +69,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
             if (item.isSwitch()) {
                 switch_.setVisibility(View.VISIBLE);
                 expand_iv.setVisibility(View.GONE);
+                switch_.setChecked(item.isChecked());
                 switch_.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     listener.onSwitchChanged(item, isChecked);
                 });

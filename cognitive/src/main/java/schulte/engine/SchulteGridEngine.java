@@ -1,5 +1,7 @@
 package schulte.engine;
 
+import schulte.data.SchulteEvaluatorType;
+
 public class SchulteGridEngine {
 
     public enum State {
@@ -8,15 +10,21 @@ public class SchulteGridEngine {
         PAUSED
     }
 
-    private boolean isFourSquared = false;
+    private final boolean isFourSquared;
 
     private int cur = 0;
-    private int end = 16;
+    private int end;
 
     private State state = State.STOPPED;
 
-    public SchulteGridEngine() {
-        end = isFourSquared ? 16 : 25;
+    public SchulteGridEngine(SchulteEvaluatorType type) {
+        if (type == SchulteEvaluatorType.GRID_4) {
+            isFourSquared = true;
+            end = 16;
+        } else {
+            isFourSquared = false;
+            end = 25;
+        }
     }
 
     public boolean isFourSquared() {

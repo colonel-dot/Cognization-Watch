@@ -116,6 +116,7 @@ class DashboardFragment : Fragment() {
 
     private fun loadDashboardDataWithRefreshComplete() {
         lifecycleScope.launch {
+            swipeRefresh?.isRefreshing = true
             try {
                 val (data, hasData) = withContext(Dispatchers.IO) {
                     loadDashboardData()
@@ -227,7 +228,10 @@ class DashboardFragment : Fragment() {
     private fun updateDashboardUI(data: DashboardData) {
         Log.d(TAG, "$TAG.updateDashboardUI")
         if (adapter!!.list.size > 0) {
-            adapter!!.list[0] = DashboardRtcItem(data.username)
+            val boundUsername = BindStatusManager.getBindStatus().second
+            val remark = BindStatusManager.getBindRemark(requireContext())
+            val displayName = remark ?: boundUsername ?: data.username
+            adapter!!.list[0] = DashboardRtcItem(displayName)
         }
         if (adapter!!.list.size > 1) {
             adapter!!.list[1] = DashboardRiskItem(data.todayRiskScore, data.yesterdayRiskScore)
