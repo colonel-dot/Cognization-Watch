@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         login.setOnClickListener {
-            // TODO
+            // TODO: 假作真时真亦假
             fakelogin()
             // login()
         }

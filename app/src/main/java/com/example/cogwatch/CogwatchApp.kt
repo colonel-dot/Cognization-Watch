@@ -12,10 +12,10 @@ class CogwatchApp: Application() {
     override fun onCreate() {
         super.onCreate()
         Log.e("ARouterDebug", "Application onCreate")
-        if (BuildConfig.DEBUG) {
-            ARouter.openLog()
-            ARouter.openDebug() // TODO: ARouter debug
-        }
+//        if (BuildConfig.DEBUG) {
+//            ARouter.openLog()
+//            ARouter.openDebug()
+//        }
         ARouter.init(this)
         Log.e("ARouterDebug", "ARouter init finished")
 

@@ -109,15 +109,6 @@ public class RtcActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (manager != null) {
-            manager.destroy();
-        }
-        handler.removeCallbacks(timerRunnable);
-    }
-
     private TXCloudVideoView video;
     private TXCloudVideoView camera;
 
@@ -135,6 +126,17 @@ public class RtcActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private long startTimeMillis;
     private Runnable timerRunnable;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (manager != null) {
+            manager.destroy();
+        }
+        handler.removeCallbacks(timerRunnable);
+        cloud.removeListener(listener);
+        listener = null;
+    }
 
     private void bindView() {
         video = findViewById(R.id.video);
@@ -267,7 +269,6 @@ public class RtcActivity extends AppCompatActivity {
                 super.onExitRoom(reason);
                 Log.d(TAG, "onExitRoom called with reason: " + reason);
                 runOnUiThread(() -> {
-                    // TODO：通知对方退房
                     if (!isFinishing()) {
                         finish();
                         Log.d(TAG, "Activity finished from onExitRoom");
@@ -283,6 +284,18 @@ public class RtcActivity extends AppCompatActivity {
                 Log.d(TAG, "initTrtcApplicationAndPresenter TRTCCloudListener: 对方视频流准备完成 开始推流");
                 cloud.startRemoteView(userId, TRTCCloudDef.TRTC_VIDEO_STREAM_TYPE_BIG, video);
                 cloud.startLocalPreview(true, camera);
+            }
+
+            @Override
+            public void onRemoteUserLeaveRoom(String userId, int reason) {
+                super.onRemoteUserLeaveRoom(userId, reason);
+                Log.d(TAG, "对方(" + userId + ")已退出房间, reason: " + reason);
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "对方已挂断", Toast.LENGTH_SHORT).show();
+                    if (!isFinishing()) {
+                        finish();
+                    }
+                });
             }
         };
         cloud.addListener(listener);
