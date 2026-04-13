@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import com.example.common.persistense.AppDatabase
 import com.example.common.persistense.behavior.DailyBehaviorEntity
@@ -25,6 +24,8 @@ sealed class BindAndLoadState {
     ) : BindAndLoadState() // 数据加载成功
     data class DataLoadFailure(val message: String) : BindAndLoadState() // 数据加载失败
     object BindFailure : BindAndLoadState() // 绑定失败
+    object UnbindSuccess : BindAndLoadState() // 解绑成功
+    data class UnbindFailure(val message: String) : BindAndLoadState() // 解绑失败
 }
 
 class BindViewModel(application: Application) : AndroidViewModel(application) {
@@ -37,7 +38,6 @@ class BindViewModel(application: Application) : AndroidViewModel(application) {
 
     fun bind(bindname: String) {
         viewModelScope.launch {
-            // TODO: bindname
             val mname = getApplication<Application>()
                 .getSharedPreferences("login_status", Context.MODE_PRIVATE)
                 .getString("username", "") ?: ""
@@ -89,15 +89,8 @@ class BindViewModel(application: Application) : AndroidViewModel(application) {
         _bindAndLoadState.emit(BindAndLoadState.DataLoading)
 
         try {
-            val behaviorDeferred = viewModelScope.async {
-                BindRepository.getOtherAllBehavior(account).first()
-            }
-            val riskDeferred = viewModelScope.async {
-                BindRepository.getOtherAllRisk(account).first()
-            }
-
-            val behaviorResult = behaviorDeferred.await()
-            val riskResult = riskDeferred.await()
+            val behaviorResult = BindRepository.getOtherAllBehavior(account).first()
+            val riskResult = BindRepository.getOtherAllRisk(account).first()
 
             val behaviorList = behaviorResult.getOrThrow()
             val riskList = riskResult.getOrThrow()
@@ -110,6 +103,27 @@ class BindViewModel(application: Application) : AndroidViewModel(application) {
         } catch (e: Exception) {
             Log.d(TAG, "loadOtherData: ${e.message}")
             _bindAndLoadState.emit(BindAndLoadState.DataLoadFailure(e.message ?: "数据加载失败"))
+        }
+    }
+
+    fun unbind() {
+        viewModelScope.launch {
+            try {
+                val (isBound, boundUsername) = BindStatusManager.getBindStatus()
+                if (!isBound || boundUsername == null) {
+                    _bindAndLoadState.emit(BindAndLoadState.UnbindSuccess)
+                    return@launch
+                }
+
+                BindStatusManager.clearBindStatus(getApplication())
+                behaviorDao.deleteAll()
+                riskDao.deleteAll()
+
+                _bindAndLoadState.emit(BindAndLoadState.UnbindSuccess)
+            } catch (e: Exception) {
+                Log.d(TAG, "unbind: ${e.message}")
+                _bindAndLoadState.emit(BindAndLoadState.UnbindFailure(e.message ?: "解绑失败"))
+            }
         }
     }
 }

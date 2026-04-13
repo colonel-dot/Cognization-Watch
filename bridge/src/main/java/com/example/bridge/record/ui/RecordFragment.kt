@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.bridge.R
+import com.example.common.login.GuestStateHolder
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.persistense.AppDatabase
 import com.example.common.persistense.risk.DailyRiskEntity
@@ -100,6 +101,13 @@ class RecordFragment : Fragment() {
     }
 
     private fun refreshFromNetwork() {
+        if (GuestStateHolder.isGuest()) {
+            Log.d("RecordFragment", "游客模式，直接刷新本地数据")
+            loadRiskDataFromDatabase()
+            swipeRefresh?.isRefreshing = false
+            return
+        }
+
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         if (eldername.isEmpty()) {
             Log.w("RecordFragment", "未登录，无法获取绑定设备数据")
@@ -126,7 +134,8 @@ class RecordFragment : Fragment() {
                 } else {
                     Log.d("RecordFragment", "网络数据为空")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "暂无数据", Toast.LENGTH_SHORT).show()
+                        // TODO：暂时注释
+                        // Toast.makeText(context, "暂无数据", Toast.LENGTH_SHORT).show()
                         swipeRefresh?.isRefreshing = false
                     }
                 }
@@ -153,7 +162,8 @@ class RecordFragment : Fragment() {
                 if (networkSuccess) {
                     Toast.makeText(requireContext(), "同步成功", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "暂无数据", Toast.LENGTH_SHORT).show()
+                    // TODO：暂时注释
+                    // Toast.makeText(requireContext(), "暂无数据", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -169,6 +179,17 @@ class RecordFragment : Fragment() {
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         if (eldername.isEmpty()) {
             return@withContext Pair(emptyList(), false)
+        }
+
+        // 游客模式直接读本地，不走网络
+        if (GuestStateHolder.isGuest()) {
+            Log.d("RecordFragment", "游客模式，直接读取本地数据")
+            val database = AppDatabase.getDatabase(requireContext())
+            val fromDate: LocalDate = LocalDate.now().minusDays((selectedDays - 1).toLong())
+            val list = RiskRepository.getFromBlocking(database.dailyRiskDao(), fromDate)
+            val result: MutableList<DailyRiskEntity> = ArrayList(list)
+            result.reverse()
+            return@withContext Pair(result, false)
         }
 
         // 网络接口拉取和存库
@@ -283,10 +304,11 @@ class RecordFragment : Fragment() {
 
     private fun updateLineChartData(list: List<DailyRiskEntity>?) {
         val entries: MutableList<Entry> = ArrayList()
+        var x = 0
         if (list != null && !list.isEmpty()) {
-            for (i in 1 until list.size) {
+            for (i in list.size - 1 downTo  0) {
                 val entity = list[i]
-                entries.add(Entry(i.toFloat(), entity.riskScore.toFloat()))
+                entries.add(Entry((++x).toFloat(), entity.riskScore.toFloat()))
             }
         }
         val dataSet = LineDataSet(entries, "")

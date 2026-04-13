@@ -100,4 +100,7 @@ dependencies {
     implementation "com.alibaba:arouter-api:1.5.2"
     // arouter 注解处理器
     kapt 'com.alibaba:arouter-compiler:1.5.2'
+
+    implementation "androidx.activity:activity:1.9.0"
+    implementation 'androidx.activity:activity-ktx:1.9.0'
 }

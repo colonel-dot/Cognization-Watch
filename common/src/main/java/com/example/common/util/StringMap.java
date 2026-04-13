@@ -56,6 +56,21 @@ public class StringMap {
         return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
+    public static String mapMinuteOfDayToTime(Integer minuteOfDay) {
+        if (minuteOfDay == null) {
+            return "null";
+        }
+
+        if (minuteOfDay < 0 || minuteOfDay > 1439) {
+            return "invalid";
+        }
+
+        int hour = minuteOfDay / 60;
+        int minute = minuteOfDay % 60;
+
+        return String.format("%02d:%02d", hour, minute);
+    }
+
     public static String mapDateToRelativeLabel(LocalDate targetDate) {
 
         LocalDate today = LocalDate.now();

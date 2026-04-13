@@ -1,14 +1,10 @@
-package com.example.cogwatch.login.ui;
+package com.example.cogwatch.login.validator;
 
 import java.util.regex.Pattern;
 
-/**
- * 账号密码输入验证器
- * 使用正则表达式进行格式验证，防止暴力破解
- */
 public class InputValidator {
 
-    /**
+    /*
      * 密码复杂度要求：
      * - 至少8位
      * - 包含大写字母
@@ -43,23 +39,12 @@ public class InputValidator {
     };
 
     private InputValidator() {
-        // 工具类，禁止实例化
     }
 
-    /**
-     * 验证密码复杂度
-     * @param password 密码
-     * @return true 表示密码符合要求
-     */
     public static boolean isPasswordValid(String password) {
         return password != null && PASSWORD_PATTERN.matcher(password).matches();
     }
 
-    /**
-     * 验证账号格式
-     * @param username 账号（支持手机号、邮箱、字母数字组合）
-     * @return true 表示账号符合要求
-     */
     public static boolean isUsernameValid(String username) {
         return username != null && USERNAME_PATTERN.matcher(username).matches();
     }
@@ -86,9 +71,6 @@ public class InputValidator {
         return level;
     }
 
-    /**
-     * 获取密码强度描述
-     */
     public static String getPasswordStrengthText(int level) {
         switch (level) {
             case 0: return "密码不符合要求";
@@ -100,16 +82,10 @@ public class InputValidator {
         }
     }
 
-    /**
-     * 检测连续重复字符（防爆）
-     */
     public static boolean hasExcessiveRepeatingChars(String input) {
         return input != null && REPEATING_CHARS_PATTERN.matcher(input).find();
     }
 
-    /**
-     * 检测键盘常见序列（防爆）
-     */
     public static boolean hasKeyboardSequence(String input) {
         if (input == null) return false;
         String lower = input.toLowerCase();

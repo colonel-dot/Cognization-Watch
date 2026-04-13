@@ -30,6 +30,9 @@ interface GeofenceItemDao {
     @Query("SELECT * FROM geofence_event ORDER BY timestamp DESC")
     fun getAllFlow(): Flow<List<GeofenceItem>>
 
+    @Query("SELECT * FROM geofence_event ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLatest(): GeofenceItem?
+
     @Query("SELECT * FROM geofence_event WHERE status = :status ORDER BY timestamp DESC")
     suspend fun getByStatus(status: Int): List<GeofenceItem>
 

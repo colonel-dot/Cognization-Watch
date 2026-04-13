@@ -164,7 +164,7 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
                 trend.setText("没有数据源");
             } else {
                 trend.setText((int) Math.round(
-                        (dri.getRisk() - dri.getYesterday()) / dri.getYesterday() * 100) + "% 据上周增长");
+                        (dri.getRisk() - dri.getYesterday()) / dri.getYesterday() * 100) + "% 据昨日增长");
             }
         }
     }

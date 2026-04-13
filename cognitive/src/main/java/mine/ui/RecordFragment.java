@@ -167,10 +167,11 @@ public class RecordFragment extends Fragment {
 
     private void updateLineChartData(List<DailyRiskEntity> list) {
         List<Entry> entries = new ArrayList<>();
+        int x = 0;
         if (list != null && !list.isEmpty()) {
-            for (int i = 1; i < list.size(); i++) {
+            for (int i = list.size() - 1; i >= 0; i--) {
                 DailyRiskEntity entity = list.get(i);
-                entries.add(new Entry(i, (float) entity.getRiskScore()));
+                entries.add(new Entry(++x, (float) entity.getRiskScore()));
             }
         }
         LineDataSet dataSet = new LineDataSet(entries, "");

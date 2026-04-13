@@ -1,6 +1,7 @@
 package com.example.common.persistense.geofence
 
 import android.content.Context
+import com.example.common.persistense.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ object GeofenceRepository {
     @JvmStatic
     fun initialize(context: Context) {
         if (!::dao.isInitialized) {
-            val database = GeofenceDatabase.getDatabase(context)
+            val database = AppDatabase.getDatabase(context)
             dao = database.geofenceItemDao()
         }
     }
@@ -23,6 +24,13 @@ object GeofenceRepository {
         if (!::dao.isInitialized) {
             throw IllegalStateException("GeofenceRepository not initialized. Call initialize(context) first.")
         }
+    }
+
+    private fun getDao(context: Context): GeofenceItemDao {
+        if (!::dao.isInitialized) {
+            dao = AppDatabase.getDatabase(context).geofenceItemDao()
+        }
+        return dao
     }
 
     // 插入事件 后台协程
@@ -50,6 +58,10 @@ object GeofenceRepository {
     }
 
     fun getAllEventsFlow() = dao.getAllFlow()
+
+    suspend fun getLatestEvent(context: Context): GeofenceItem? {
+        return getDao(context).getLatest()
+    }
 
     fun getEventsByStatusBlocking(status: Int): List<GeofenceItem> {
         ensureInitialized()

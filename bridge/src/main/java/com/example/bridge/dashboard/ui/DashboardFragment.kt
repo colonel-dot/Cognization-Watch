@@ -19,8 +19,11 @@ import com.example.bridge.dashboard.item.DashboardRiskItem
 import com.example.bridge.dashboard.item.DashboardRtcItem
 import com.example.bridge.main.ChildrenActivity
 import com.example.common.bind_device.BindStatusManager
+import com.example.common.login.GuestStateHolder
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.persistense.AppDatabase
+import com.example.common.persistense.geofence.GeofenceItem
+import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.persistense.behavior.DailyBehaviorDao
 import com.example.common.persistense.behavior.DailyBehaviorEntity
 import com.example.common.persistense.risk.DailyRiskDao
@@ -117,7 +120,8 @@ class DashboardFragment : Fragment() {
                 if (hasData) {
                     Toast.makeText(requireContext(), "刷新成功", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "暂无数据", Toast.LENGTH_SHORT).show()
+                    // TODO：暂时注释
+                    // Toast.makeText(requireContext(), "暂无数据", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
@@ -150,10 +154,36 @@ class DashboardFragment : Fragment() {
         val today = LocalDate.now()
         val yesterday = today.minusDays(1)
 
+        val isGuest = GuestStateHolder.isGuest()
+
         // 并行请求今日风险、昨日风险和行为数据
-        val todayRiskDeferred = async { fetchTodayRisk(childAccount, elderAccount, today, riskDao) }
-        val yesterdayRiskDeferred = async { fetchYesterdayRisk(childAccount, elderAccount, yesterday, riskDao) }
-        val behaviorDeferred = async { fetchBehavior(childAccount, elderAccount, today, behaviorDao) }
+        val todayRiskDeferred = async {
+            if (isGuest) {
+                val result = withContext(Dispatchers.IO) { riskDao.getByDate(today) }
+                Log.d(TAG, "guest todayRisk query result: $result")
+                result
+            } else {
+                fetchTodayRisk(childAccount, elderAccount, today, riskDao)
+            }
+        }
+        val yesterdayRiskDeferred = async {
+            if (isGuest) {
+                val result = withContext(Dispatchers.IO) { riskDao.getByDate(yesterday) }
+                Log.d(TAG, "guest yesterdayRisk query result: $result")
+                result
+            } else {
+                fetchYesterdayRisk(childAccount, elderAccount, yesterday, riskDao)
+            }
+        }
+        val behaviorDeferred = async {
+            if (isGuest) {
+                val result = withContext(Dispatchers.IO) { behaviorDao.getByDate(today) }
+                Log.d(TAG, "guest behavior query result: steps=${result?.steps}, sleepMinute=${result?.sleepMinute}")
+                result
+            } else {
+                fetchBehavior(childAccount, elderAccount, today, behaviorDao)
+            }
+        }
 
         val todayRisk = todayRiskDeferred.await()
         val yesterdayRisk = yesterdayRiskDeferred.await()
@@ -162,11 +192,26 @@ class DashboardFragment : Fragment() {
         val todayRiskScore = todayRisk?.riskScore ?: 0.0
         val yesterdayRiskScore = yesterdayRisk?.riskScore ?: 0.0
         val todaySteps = behavior?.steps ?: 0
-        val todaySleepHours = (behavior?.sleepMinute ?: 0) / 60.0
+        val sleepMins = behavior?.sleepMinute ?: 0
+        val wakeMins = behavior?.wakeMinute ?: 0
+        val sleepDurationMins = if (wakeMins >= sleepMins) {
+            wakeMins - sleepMins
+        } else {
+            (24 * 60 - sleepMins) + wakeMins
+        }
+        val todaySleepHours = sleepDurationMins / 60.0
 
-        val hasData = todayRisk != null || behavior != null
+        // 获取最新围栏事件
+        val latestGeofence = withContext(Dispatchers.IO) {
+            GeofenceRepository.getLatestEvent(requireContext())
+        }
+        val alertTip = latestGeofence?.let { getGeofenceTip(it) } ?: "没有数据源"
+
+        Log.d(TAG, "loadDashboardData: todayRisk=${todayRisk?.riskScore}, behavior.steps=${behavior?.steps}, latestGeofence=$latestGeofence")
+
+        val hasData = todayRisk != null || behavior != null || latestGeofence != null
         DashboardLoadResult(
-            DashboardData(username, todayRiskScore, yesterdayRiskScore, todaySteps, todaySleepHours, "没有数据源"),
+            DashboardData(username, todayRiskScore, yesterdayRiskScore, todaySteps, todaySleepHours, alertTip),
             hasData
         )
     }
@@ -244,4 +289,14 @@ class DashboardFragment : Fragment() {
         val todaySleepHours: Double,
         val alertTip: String
     )
+
+    private fun getGeofenceTip(item: GeofenceItem): String {
+        return when (item.status) {
+            GeofenceItem.STATUS_IN -> "已进入围栏"
+            GeofenceItem.STATUS_OUT -> "已离开围栏"
+            GeofenceItem.STATUS_STAYED -> "已停留10分钟"
+            GeofenceItem.STATUS_LOCAL -> "定位失败"
+            else -> "未知状态"
+        }
+    }
 }

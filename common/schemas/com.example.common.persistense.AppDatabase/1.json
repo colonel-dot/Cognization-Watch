@@ -1,0 +1,179 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "4e7d0f671ca1006e9d214f52157fd27e",
+    "entities": [
+      {
+        "tableName": "daily_behavior",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` INTEGER NOT NULL, `wakeMinute` INTEGER, `sleepMinute` INTEGER, `schulte16TimeSec` REAL, `schulte25TimeSec` REAL, `speechScore` REAL, `steps` INTEGER, `activeTime` INTEGER, `restTime` INTEGER, PRIMARY KEY(`date`))",
+        "fields": [
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wakeMinute",
+            "columnName": "wakeMinute",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "sleepMinute",
+            "columnName": "sleepMinute",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "schulte16TimeSec",
+            "columnName": "schulte16TimeSec",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "schulte25TimeSec",
+            "columnName": "schulte25TimeSec",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "speechScore",
+            "columnName": "speechScore",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "steps",
+            "columnName": "steps",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "activeTime",
+            "columnName": "activeTime",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "restTime",
+            "columnName": "restTime",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "date"
+          ]
+        }
+      },
+      {
+        "tableName": "daily_risk",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`date` INTEGER NOT NULL, `riskScore` REAL NOT NULL, `riskLevel` TEXT NOT NULL, `sleepRisk` REAL NOT NULL, `schulteRisk` REAL NOT NULL, `stepsRisk` REAL NOT NULL, `speechRisk` REAL NOT NULL, `alerted` INTEGER NOT NULL, `explanations` TEXT NOT NULL, PRIMARY KEY(`date`))",
+        "fields": [
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "riskScore",
+            "columnName": "riskScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "riskLevel",
+            "columnName": "riskLevel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepRisk",
+            "columnName": "sleepRisk",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "schulteRisk",
+            "columnName": "schulteRisk",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stepsRisk",
+            "columnName": "stepsRisk",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speechRisk",
+            "columnName": "speechRisk",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alerted",
+            "columnName": "alerted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "explanations",
+            "columnName": "explanations",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "date"
+          ]
+        }
+      },
+      {
+        "tableName": "geofence_event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `lat` REAL NOT NULL, `lng` REAL NOT NULL, `status` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lat",
+            "columnName": "lat",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lng",
+            "columnName": "lng",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4e7d0f671ca1006e9d214f52157fd27e')"
+    ]
+  }
+}

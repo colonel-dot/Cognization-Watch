@@ -32,6 +32,7 @@ import com.example.bridge.geofence.ui.GeofenceDialogFragment;
 import com.example.bridge.geofence.vm.GeoViewModel;
 import com.example.bridge.setting.item.SettingItem;
 import com.example.common.geofence.model.BarrierInfo;
+import com.example.common.login.GuestStateHolder;
 import com.example.common.login.remote.LoginStatusManager;
 import com.example.common.bind_device.BindStatusManager;
 import com.example.common.persistense.BusinessDataManager;
@@ -106,6 +107,10 @@ public class SettingFragment extends Fragment {
     }
 
     private void sendBarrierInfoToRemote(double lat, double lng, float radius) {
+        if (GuestStateHolder.INSTANCE.isGuest()) {
+            Log.d("SettingFragment", "游客模式，跳过围栏信息上传");
+            return;
+        }
         String eldername = LoginStatusManager.INSTANCE.getLoggedInUserId(requireContext());
         BarrierInfo barrierInfo = new BarrierInfo(eldername, lng, lat, radius);
         viewModel.postBarrierInfo(eldername, barrierInfo);

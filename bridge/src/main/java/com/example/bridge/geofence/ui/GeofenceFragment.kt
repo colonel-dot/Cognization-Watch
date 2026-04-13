@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,7 @@ import com.example.bridge.geofence.vm.FenceUiState
 import com.example.bridge.geofence.vm.MovementUiState
 import com.example.common.persistense.geofence.GeofenceItem
 import com.example.common.persistense.geofence.GeofenceRepository
+import com.example.common.login.GuestStateHolder
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.util.ItemSpacingDecoration
 import com.example.common.util.StringMap
@@ -143,6 +145,10 @@ class GeofenceFragment : Fragment() {
     }
 
     private fun sendBarrierInfoToRemote(lat: Double, lng: Double, radius: Float) {
+        if (GuestStateHolder.isGuest()) {
+            Log.d("GeofenceFragment", "游客模式，跳过围栏信息上传")
+            return
+        }
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         val barrierInfo = BarrierInfo(eldername, lng, lat, radius.toDouble())
         viewModel.postBarrierInfo(eldername, barrierInfo)
@@ -185,6 +191,10 @@ class GeofenceFragment : Fragment() {
     }
 
     private fun pollElderMovement() {
+        if (GuestStateHolder.isGuest()) {
+            Log.d("GeofenceFragment", "游客模式，跳过轨迹轮询")
+            return
+        }
         val eldername = LoginStatusManager.getLoggedInUserId(requireContext())
         Log.d("GeofenceFragment", "轮询老人轨迹: eldername=$eldername")
         viewModel.getElderMovement(eldername)
@@ -201,6 +211,18 @@ class GeofenceFragment : Fragment() {
         map = view.findViewById(R.id.map)
         swipeRefresh = view.findViewById(R.id.swipe_refresh)
         record = view.findViewById(R.id.record)
+    }
+
+    private fun updateLocationStatus(item: GeofenceItem) {
+        val (text, colorRes) = when (item.status) {
+            GeofenceItem.STATUS_IN -> "围栏内" to R.color.green
+            GeofenceItem.STATUS_OUT -> "围栏外" to R.color.red
+            GeofenceItem.STATUS_STAYED -> "围栏驻留" to R.color.orange
+            GeofenceItem.STATUS_LOCAL -> "定位失败" to R.color.deep_grey
+            else -> "未知" to R.color.grey
+        }
+        location?.text = text
+        location?.backgroundTintList = ContextCompat.getColorStateList(requireContext(), colorRes)
     }
 
     private fun initMAWebViewWrapper() {
@@ -223,6 +245,7 @@ class GeofenceFragment : Fragment() {
                         .visible(true)
                 )
                 aMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                updateLocationStatus(item)
             }
         }
     }
@@ -258,6 +281,7 @@ class GeofenceFragment : Fragment() {
                         .visible(true)
                 )
                 aMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                updateLocationStatus(item)
             }
 
             adapter!!.notifyDataSetChanged()

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.geofence.model.BarrierInfo
+import com.example.common.login.GuestStateHolder
 import geofence.manager.GeofenceManager
 import geofence.network.ElderMovementRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,6 +55,10 @@ class GeofenceViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun pullAndCreateGeofence(childname: String) {
+        if (GuestStateHolder.isGuest()) {
+            Log.d(TAG, "游客模式，跳过拉取围栏")
+            return
+        }
         if (isInitialized) {
             Log.w(TAG, "Geofence already initialized, skip")
             return

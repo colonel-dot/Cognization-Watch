@@ -97,10 +97,10 @@ public class RecordDetailBottomSheet extends BottomSheetDialogFragment {
                 behavior.setText("该日期暂无行为数据。");
                 return;
             }
-            String behaviorBuilder = "• 起床时间：" + StringMap.mapMinuteToTime(behaviorEntity.getWakeMinute() != null ? behaviorEntity.getWakeMinute() : 0) + "\n" +
-                    "• 睡觉时间：" + StringMap.mapMinuteToTime(behaviorEntity.getSleepMinute() != null ? behaviorEntity.getSleepMinute() : 0) + "\n" +
-                    "• 舒尔特16格时间：" + String.format("%.2f", behaviorEntity.getSchulte16TimeSec() != null ? behaviorEntity.getSchulte16TimeSec() : 0.0) + " 秒\n" +
-                    "• 舒尔特25格时间：" + String.format("%.2f", behaviorEntity.getSchulte25TimeSec() != null ? behaviorEntity.getSchulte25TimeSec() : 0.0) + " 秒\n" +
+            String behaviorBuilder = "• 起床时间：" + StringMap.mapMinuteOfDayToTime(behaviorEntity.getWakeMinute() != null ? behaviorEntity.getWakeMinute() : 0) + "\n" +
+                    "• 睡觉时间：" + StringMap.mapMinuteOfDayToTime(behaviorEntity.getSleepMinute() != null ? behaviorEntity.getSleepMinute() : 0) + "\n" +
+                    "• 舒尔特16格时间：" + String.format("%.2f", behaviorEntity.getSchulte16TimeSec() != null ? behaviorEntity.getSchulte16TimeSec() / 1000 : 0.0) + " 秒\n" +
+                    "• 舒尔特25格时间：" + String.format("%.2f", behaviorEntity.getSchulte25TimeSec() != null ? behaviorEntity.getSchulte25TimeSec() / 1000 : 0.0) + " 秒\n" +
                     "• 语音评分：" + String.format("%.2f", behaviorEntity.getSpeechScore() != null ? behaviorEntity.getSpeechScore() : 0.0) + "\n" +
                     "• 步数：" + (behaviorEntity.getSteps() != null ? behaviorEntity.getSteps() : 0);
             behavior.setText(behaviorBuilder);

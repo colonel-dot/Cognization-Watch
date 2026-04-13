@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.common.login.GuestStateHolder
 import com.example.common.login.simulate.InsertData
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
@@ -50,7 +51,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             val evaluatorType = riskConfigManager.getSchulteEvaluatorType()
             val riskResult = DailyRiskCalculator
                 .calculate(behaviorRecords.toNormalizedList(), evaluatorType)
-            riskDao.upsert(riskResult.toEntity())
+            if (!GuestStateHolder.isGuest()) {
+                riskDao.upsert(riskResult.toEntity())
+            }
 
             // 以下为调试代码
             // debug_post()
@@ -70,44 +73,4 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     fun notifyRecordChanged() {
         _recordChanged.postValue(Unit)
     }
-
-    fun fakepost(){
-        val maccount = UserManager.getUserId()
-        Log.d(TAG, "debug_post: 要给后端传送过去的用户名是$maccount")
-        viewModelScope.launch {
-            NetWorkRepository.updateDailyBehavior(
-                account = UserManager.getUserId(),
-                date = today.plusDays(2),
-                InsertData.testEntity11
-            ).collect{
-                Log.d(TAG,"behavior1 $it")
-            }
-
-            NetWorkRepository.updateDailyBehavior(
-                account = UserManager.getUserId(),
-                date = today.plusDays(1),
-                InsertData.testEntity3
-            ).collect{
-                Log.d(TAG,"behavior2 $it")
-            }
-
-            NetWorkRepository.updateDailyRisk(
-                account = UserManager.getUserId(),
-                date = today.plusDays(1),
-                InsertData.riskEntity3.toResult()
-            ).collect{
-                Log.d(TAG,"risk1 $it")
-            }
-
-            NetWorkRepository.updateDailyRisk(
-                account = UserManager.getUserId(),
-                date = today.plusDays(2),
-                InsertData.riskEntity11.toResult()
-            ).collect{
-                Log.d(TAG,"risk2 $it")
-            }
-
-        }
-    }
-
 }

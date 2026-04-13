@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.common.R
+import com.example.common.login.GuestStateHolder
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 
@@ -55,6 +56,10 @@ class BindDialogFragment : DialogFragment() {
         etBind = view.findViewById(R.id.bind_username)
 
         if (::btnBind.isInitialized) btnBind.setOnClickListener {
+            if (GuestStateHolder.isGuest()) {
+                Toast.makeText(context, "游客模式，无需绑定", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val bindName = etBind.text.toString().trim()
             if (bindName.isBlank()) {
                 Toast.makeText(context, "请输入绑定用户名", Toast.LENGTH_SHORT).show()
