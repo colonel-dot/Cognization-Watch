@@ -145,7 +145,7 @@ dependencies {
     implementation 'com.github.squti:Android-Wave-Recorder:2.1.0'
 
     // Debug
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     // Modules
     implementation project(':common')
