@@ -1,48 +1,72 @@
 [versions]
-activityVersion = "1.9.0"
 agp = "8.10.1"
-junit = "4.13.2"
-junitVersion = "1.3.0"
-espressoCore = "3.7.0"
-appcompat = "1.7.1"
-material = "1.13.0"
-activity = "1.12.0"
-constraintlayout = "2.2.1"
 kotlin = "2.1.0"
-workRuntimeKtx = "2.11.0"
+
+junit = "4.13.2"
+androidxTestJunit = "1.3.0"
+espresso = "3.7.0"
+
+activity = "1.9.0"
+appcompat = "1.7.1"
+cameraX = "1.3.3"
+constraintlayout = "2.2.1"
 coreKtx = "1.17.0"
-cameraView = "1.5.3"
-room = "2.6.1"
-room3 = "2.8.4"
-room3CommonJvm = "3.0.0-alpha01"
-room3CommonJvmVersion = "3.0.0-alpha01"
-roomCommonJvm = "2.8.4"
-roomKtx = "2.8.4"
+coroutines = "1.7.3"
+fragment = "1.6.2"
+lifecycle = "2.8.4"
+material = "1.11.0"
+recyclerview = "1.4.0"
+room = "2.8.4"
+splashscreen = "1.0.1"
+swiperefreshlayout = "1.1.0"
+
+arouter = "1.5.2"
+liteavTrtc = "13.3.0.20247"
+mpandroidchart = "v3.1.0"
+pinyin4j = "2.5.0"
+retrofit = "2.9.0"
+waveRecorder = "2.1.0"
 
 [libraries]
-androidx-activity-v190 = { module = "androidx.activity:activity", version.ref = "activityVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestJunit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+
+activity-core = { module = "androidx.activity:activity", version.ref = "activity" }
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraX" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraX" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraX" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraX" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraView" }
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-room3-common-jvm = { group = "androidx.room3", name = "room3-common-jvm", version.ref = "room3CommonJvmVersion" }
-room3-runtime = { module = "androidx.room:room-runtime", version.ref = "room3" }
-room3-compiler = { module = "androidx.room:room-compiler", version.ref = "room3" }
-room3-ktx = { module = "androidx.room:room-ktx", version.ref = "room3" }
-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+arouter-api = { module = "com.alibaba:arouter-api", version.ref = "arouter" }
+arouter-compiler = { module = "com.alibaba:arouter-compiler", version.ref = "arouter" }
+liteav-trtc = { module = "com.tencent.liteav:LiteAVSDK_TRTC", version.ref = "liteavTrtc" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
+pinyin4j = { module = "com.belerweb:pinyin4j", version.ref = "pinyin4j" }
+retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+android-wave-recorder = { module = "com.github.squti:Android-Wave-Recorder", version.ref = "waveRecorder" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-

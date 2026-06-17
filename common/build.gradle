@@ -4,15 +4,44 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
+def localConfig = { String propertyName, String environmentName, String defaultValue = "" ->
+    def localValue = localProperties.getProperty(propertyName)
+    if (localValue != null && !localValue.trim().isEmpty()) {
+        return localValue
+    }
+    def environmentValue = System.getenv(environmentName)
+    if (environmentValue != null && !environmentValue.trim().isEmpty()) {
+        return environmentValue
+    }
+    return defaultValue
+}
+
+def quoted = { String value ->
+    "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+}
+
 android {
     namespace 'com.example.common'
     compileSdk 36
+
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         minSdk 26
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+        buildConfigField "String", "API_BASE_URL", quoted(localConfig("api.baseUrl", "API_BASE_URL", "http://127.0.0.1:8080/"))
+        buildConfigField "int", "TRTC_SDK_APP_ID", localConfig("trtc.sdkAppId", "TRTC_SDK_APP_ID", "0")
+        buildConfigField "String", "TRTC_SDK_SECRET_KEY", quoted(localConfig("trtc.sdkSecretKey", "TRTC_SDK_SECRET_KEY"))
 
         kapt {
             arguments {
@@ -41,41 +70,35 @@ dependencies {
     // 引用 libs 目录下的 jar 包（使用 api 使依赖可传递）
     api fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation libs.retrofit.core
+    implementation libs.retrofit.converter.gson
 
     // Splash启动页
-    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation libs.splashscreen
 
 
-    implementation "androidx.fragment:fragment-ktx:1.6.2"
+    implementation libs.fragment.ktx
 
     // 协程
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation libs.coroutines.android
 
     // Room
-    implementation "androidx.room:room-runtime:2.8.4"
-    implementation "androidx.room:room-ktx:2.8.4"
-    kapt "androidx.room:room-compiler:2.8.4"
+    implementation libs.room.runtime
+    implementation libs.room.ktx
+    kapt libs.room.compiler
 
     implementation libs.appcompat
     implementation libs.material
     implementation libs.core.ktx
-    implementation libs.room3.common.jvm
-    implementation libs.room.common.jvm
-    implementation libs.androidx.room.ktx
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    implementation 'com.tencent.liteav:LiteAVSDK_TRTC:latest.release'
+    implementation libs.liteav.trtc
 
     // ARouter 核心库
-    api 'com.alibaba:arouter-api:1.5.2'
+    api libs.arouter.api
 
     // ARouter 注解处理器 (Kotlin 项目用 kapt)
-    kapt 'com.alibaba:arouter-compiler:1.5.2'
-
-    // Material Components for Android
-    implementation "com.google.android.material:material:1.11.0"
+    kapt libs.arouter.compiler
 }

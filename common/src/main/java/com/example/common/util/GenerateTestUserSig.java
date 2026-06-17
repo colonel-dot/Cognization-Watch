@@ -3,6 +3,8 @@ package com.example.common.util;
 
 import android.util.Base64;
 
+import com.example.common.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,7 +69,7 @@ public class GenerateTestUserSig {
      * .com/rav).
      * `SDKAppID` uniquely identifies a Tencent Cloud account.
      */
-    public static final int SDKAPPID = 1600115028;
+    public static final int SDKAPPID = BuildConfig.TRTC_SDK_APP_ID;
 
     /**
      * Signature validity period, which should not be set too short
@@ -90,7 +92,7 @@ public class GenerateTestUserSig {
      * and key to your backend server to prevent key disclosure and traffic stealing.
      * Reference: https://cloud.tencent.com/document/product/647/17275#Server
      */
-    public static final String SDKSECRETKEY = "cdebcf844fb7f4a7f4a465e4cf3be5b81fd4874780f0eec14bcee69312252326";
+    public static final String SDKSECRETKEY = BuildConfig.TRTC_SDK_SECRET_KEY;
 
     /**
      * Calculating UserSig

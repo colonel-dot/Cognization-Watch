@@ -4,16 +4,34 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
 }
 
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+}
+
+def localConfig = { String propertyName, String environmentName, String defaultValue = "" ->
+    def localValue = localProperties.getProperty(propertyName)
+    if (localValue != null && !localValue.trim().isEmpty()) {
+        return localValue
+    }
+    def environmentValue = System.getenv(environmentName)
+    if (environmentValue != null && !environmentValue.trim().isEmpty()) {
+        return environmentValue
+    }
+    return defaultValue
+}
+
 android {
     namespace 'com.example.cogwatch'
     compileSdk 36
 
     signingConfigs {
         release {
-            storeFile file("../release.jks")
-            storePassword "123456"
-            keyAlias "key0"
-            keyPassword "123456"
+            storeFile file(localConfig("release.storeFile", "COGWATCH_RELEASE_STORE_FILE", "../release.jks"))
+            storePassword localConfig("release.storePassword", "COGWATCH_RELEASE_STORE_PASSWORD")
+            keyAlias localConfig("release.keyAlias", "COGWATCH_RELEASE_KEY_ALIAS", "key0")
+            keyPassword localConfig("release.keyPassword", "COGWATCH_RELEASE_KEY_PASSWORD")
         }
     }
 
@@ -25,6 +43,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                amapApiKey: localConfig("amap.apiKey", "AMAP_API_KEY")
+        ]
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -71,16 +92,16 @@ kapt {
 dependencies {
 
     // arouter
-    implementation "com.alibaba:arouter-api:1.5.2"
+    implementation libs.arouter.api
     // arouter 注解处理器
-    kapt "com.alibaba:arouter-compiler:1.5.2"
+    kapt libs.arouter.compiler
 
     implementation project(":bridge")
     implementation project(":cognitive")
     implementation project(":common")
     implementation libs.appcompat
     implementation libs.material
-    implementation libs.activity
+    implementation libs.activity.core
     implementation libs.constraintlayout
     implementation libs.core.ktx
     testImplementation libs.junit
@@ -88,22 +109,22 @@ dependencies {
     androidTestImplementation libs.espresso.core
 
     // Splash启动页
-    implementation "androidx.core:core-splashscreen:1.0.1"
+    implementation libs.splashscreen
 
     // Flow
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+    implementation libs.coroutines.core
 
     // 协程
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
+    implementation libs.coroutines.android
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.lifecycle.viewmodel.ktx
 
     // Room
-    implementation "androidx.room:room-ktx:2.6.1"
+    implementation libs.room.ktx
 
     // by viewModels()
-    implementation "androidx.fragment:fragment-ktx:1.6.2"
-    implementation "androidx.activity:activity-ktx:1.8.2"
+    implementation libs.fragment.ktx
+    implementation libs.activity.ktx
 }

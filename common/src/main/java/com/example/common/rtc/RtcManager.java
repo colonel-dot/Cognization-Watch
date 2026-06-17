@@ -18,8 +18,6 @@ import java.lang.ref.WeakReference;
 public class RtcManager {
     private static final String TAG = "RtcManager";
 
-    private static final int SDKAPPID = 1600115028;
-
     private TRTCCloud cloud;
     private TXDeviceManager manager;
     private final Context context;
@@ -50,7 +48,7 @@ public class RtcManager {
         ensureCloudInitialized();
         Log.d(TAG, "startVideoCall - userId: " + userId + ", targetId: " + targetId + ", isElder: " + isElder);
         TRTCCloudDef.TRTCParams trtcParams = new TRTCCloudDef.TRTCParams();
-        trtcParams.sdkAppId = SDKAPPID;
+        trtcParams.sdkAppId = GenerateTestUserSig.SDKAPPID;
         trtcParams.userId = userId;
         trtcParams.userSig = GenerateTestUserSig.genTestUserSig(trtcParams.userId);
         if (!isElder) {
@@ -74,7 +72,7 @@ public class RtcManager {
     public void startVideoCall(String userId, int roomId) {
         ensureCloudInitialized();
         TRTCCloudDef.TRTCParams trtcParams = new TRTCCloudDef.TRTCParams();
-        trtcParams.sdkAppId = SDKAPPID;
+        trtcParams.sdkAppId = GenerateTestUserSig.SDKAPPID;
         trtcParams.userId = userId;
         trtcParams.userSig = GenerateTestUserSig.genTestUserSig(userId);
         trtcParams.roomId = roomId;
