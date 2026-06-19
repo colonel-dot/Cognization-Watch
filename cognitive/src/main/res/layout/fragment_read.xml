@@ -39,7 +39,7 @@
         android:fontFamily="@font/harmonyos_sans_bold"
         />
 
-    <ui.PinyinTextView
+    <com.example.cognitive.ui.PinyinTextView
         android:id="@+id/read"
         android:layout_width="match_parent"
         android:padding="6dp"
@@ -54,7 +54,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center_vertical"
         android:textSize="16sp"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/white_background"
         android:text="赫里内勒多·马尔克斯上校曾躲过三次暗杀，五次受伤大难不死，身经百战安然无恙，却败给了无尽的等待，屈服于凄凉的晚景，在一间借来的光线昏暗的屋子里想着阿玛兰妲"
         android:fontFamily="@font/harmonyos_sans_medium"
@@ -93,7 +93,7 @@
             android:id="@+id/bar_1"
             android:layout_width="3.6dp"
             android:layout_height="10dp"
-            android:background="@drawable/background_rounded"
+            android:background="@drawable/cognitive_background_rounded"
             android:backgroundTint="@color/blue"/>
 
         <View
@@ -101,7 +101,7 @@
             android:layout_width="3.6dp"
             android:layout_height="18dp"
             android:layout_marginStart="3.6dp"
-            android:background="@drawable/background_rounded"
+            android:background="@drawable/cognitive_background_rounded"
             android:backgroundTint="@color/blue"/>
 
         <View
@@ -109,7 +109,7 @@
             android:layout_width="3.6dp"
             android:layout_height="30dp"
             android:layout_marginStart="3.6dp"
-            android:background="@drawable/background_rounded"
+            android:background="@drawable/cognitive_background_rounded"
             android:backgroundTint="@color/blue"/>
 
         <View
@@ -117,7 +117,7 @@
             android:layout_width="3.6dp"
             android:layout_height="18dp"
             android:layout_marginStart="3.6dp"
-            android:background="@drawable/background_rounded"
+            android:background="@drawable/cognitive_background_rounded"
             android:backgroundTint="@color/blue"/>
 
         <View
@@ -125,7 +125,7 @@
             android:layout_width="3.6dp"
             android:layout_height="10dp"
             android:layout_marginStart="3.6dp"
-            android:background="@drawable/background_rounded"
+            android:background="@drawable/cognitive_background_rounded"
             android:backgroundTint="@color/blue"/>
 
     </LinearLayout>
@@ -135,7 +135,7 @@
         android:layout_width="120dp"
         android:layout_height="60dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/red"
         android:clickable="true"
         android:fontFamily="@font/harmonyos_sans_bold"
@@ -173,7 +173,7 @@
         app:layout_constraintEnd_toStartOf="@id/medium"
         app:layout_constraintTop_toTopOf="@id/medium"
         app:layout_constraintBottom_toBottomOf="@id/medium"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/green"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="4dp"
@@ -188,7 +188,7 @@
         app:layout_constraintEnd_toStartOf="@id/high"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/orange"
         app:layout_constraintBottom_toBottomOf="parent"
         />
@@ -201,7 +201,7 @@
         app:layout_constraintStart_toEndOf="@id/medium"
         app:layout_constraintTop_toTopOf="@id/medium"
         app:layout_constraintBottom_toBottomOf="@id/medium"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/red"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="4dp"

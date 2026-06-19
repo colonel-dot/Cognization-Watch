@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_top_rounded"
+    android:background="@drawable/cognitive_background_top_rounded"
     android:backgroundTint="@color/white_background"
     android:orientation="vertical"
     android:padding="20dp">
@@ -133,7 +133,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/light_orange"
         android:padding="12dp"
         android:text="专家建议：保持充足睡眠"

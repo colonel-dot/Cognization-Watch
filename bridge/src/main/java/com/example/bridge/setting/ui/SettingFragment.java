@@ -66,7 +66,7 @@ public class SettingFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        return inflater.inflate(R.layout.bridge_fragment_setting, container, false);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class SettingFragment extends Fragment {
 
         dialog.show();
 
-        Drawable background = ContextCompat.getDrawable(requireContext(), R.drawable.background_rounded);
+        Drawable background = ContextCompat.getDrawable(requireContext(), R.drawable.bridge_background_rounded);
         if (background != null) {
             Drawable wrappedDrawable = DrawableCompat.wrap(background.mutate());
             DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(requireContext(), R.color.white_background));

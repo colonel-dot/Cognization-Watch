@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import collection.ui.HealthMonitoringFragment
+import com.example.cognitive.collection.ui.HealthMonitoringFragment
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
 import com.example.cognitive.main.home.model.HomeRVModel
@@ -24,9 +24,9 @@ import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.remote.LoginStatusManager
 import com.example.common.rtc.RtcActivity
 import com.example.common.util.ItemSpacingDecoration
-import game.ui.BrainTrainingFragment
-import read_assessment.ui.ReadFragment
-import sports.data.StepForegroundService
+import com.example.cognitive.game.ui.BrainTrainingFragment
+import com.example.cognitive.read_assessment.ui.ReadFragment
+import com.example.cognitive.sports.data.StepForegroundService
 
 class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -72,8 +72,8 @@ class HomeFragment : Fragment() {
         }
 
         val list: MutableList<HomeRVModel> = ArrayList()
-        list.add(HomeRVModel(R.drawable.brain, "认知测试", R.color.blue))
-        list.add(HomeRVModel(R.drawable.game, "大脑训练", R.color.green))
+        list.add(HomeRVModel(R.drawable.cognitive_brain, "认知测试", R.color.blue))
+        list.add(HomeRVModel(R.drawable.cognitive_game, "大脑训练", R.color.green))
         list.add(HomeRVModel(R.drawable.pulse, "健康数据监测", R.color.blue))
         list.add(HomeRVModel(R.drawable.video, "视频通话", R.color.orange))
 

@@ -7,7 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.GuestStateHolder
 import com.example.common.persistense.AppDatabase
-import user.UserManager
+import com.example.cognitive.user.UserManager
 
 class CogwatchApp: Application() {
     override fun onCreate() {

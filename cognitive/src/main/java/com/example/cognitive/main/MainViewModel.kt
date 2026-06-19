@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
-import repository.NetWorkRepository
-import repository.UpdateRepository
-import risk.work.DailyRiskCalculator
-import risk.model.toEntity
-import risk.model.toNormalizedList
-import risk.model.toResult
-import risk.work.RiskConfigManager
-import user.UserManager
+import com.example.cognitive.repository.NetWorkRepository
+import com.example.cognitive.repository.UpdateRepository
+import com.example.cognitive.risk.work.DailyRiskCalculator
+import com.example.cognitive.risk.model.toEntity
+import com.example.cognitive.risk.model.toNormalizedList
+import com.example.cognitive.risk.model.toResult
+import com.example.cognitive.risk.work.RiskConfigManager
+import com.example.cognitive.user.UserManager
 import java.time.LocalDate
 
 private const val TAG = "MainViewModel"

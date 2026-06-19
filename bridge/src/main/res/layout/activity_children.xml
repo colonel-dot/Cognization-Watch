@@ -22,7 +22,7 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@drawable/background_top_rounded"
+        android:background="@drawable/bridge_background_top_rounded"
         app:menu="@menu/children_botton_nav"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

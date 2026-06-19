@@ -1,6 +1,6 @@
 package com.example.cogwatch.login.remote
 
-import remote.ApiService
+import com.example.cognitive.remote.ApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn

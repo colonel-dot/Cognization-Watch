@@ -1,0 +1,9 @@
+package com.example.cognitive.risk.model
+
+data class Baseline(
+    val mean: Double,
+    val std: Double,
+    val median: Double,
+    val q1: Double, // 前 25％
+    val q3: Double // 前 75％
+)

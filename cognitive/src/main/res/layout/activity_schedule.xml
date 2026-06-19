@@ -65,7 +65,7 @@
                     android:layout_height="3dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/background_rounded"
+                    android:background="@drawable/cognitive_background_rounded"
                     android:backgroundTint="@color/grey"/>
 
                 <LinearLayout
@@ -135,7 +135,7 @@
                     android:layout_height="3dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
-                    android:background="@drawable/background_rounded"
+                    android:background="@drawable/cognitive_background_rounded"
                     android:backgroundTint="@color/grey" />
 
                 <LinearLayout

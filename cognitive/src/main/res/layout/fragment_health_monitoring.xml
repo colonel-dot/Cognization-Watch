@@ -66,7 +66,7 @@
         android:id="@+id/premium"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/cognitive_background_rounded"
         android:backgroundTint="@color/light_purple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

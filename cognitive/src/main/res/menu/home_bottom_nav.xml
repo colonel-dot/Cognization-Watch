@@ -2,17 +2,17 @@
 
     <item
         android:id="@+id/home"
-        android:icon="@drawable/home"
+        android:icon="@drawable/cognitive_home"
         android:title="主页"/>
 
     <item
         android:id="@+id/history"
-        android:icon="@drawable/history"
+        android:icon="@drawable/cognitive_history"
         android:title="历史"/>
 
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/settings"
+        android:icon="@drawable/cognitive_settings"
         android:title="设置"/>
 
 </menu>

@@ -31,7 +31,7 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_record, parent, false);
+                .inflate(R.layout.bridge_item_record, parent, false);
         return new Holder(itemView);
     }
 

@@ -29,13 +29,13 @@ import com.example.common.login.simulate.InsertData
 import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.router.RouterPaths
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import geofence.vm.GeofenceViewModel
+import com.example.cognitive.geofence.vm.GeofenceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mine.ui.RecordFragment
-import setting.ui.SettingFragment
-import sports.data.StepForegroundService
+import com.example.cognitive.mine.ui.RecordFragment
+import com.example.cognitive.setting.ui.SettingFragment
+import com.example.cognitive.sports.data.StepForegroundService
 
 private const val TAG = "MainActivity"
 

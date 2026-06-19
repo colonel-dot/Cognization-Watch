@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="170dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background_rounded"
+    android:background="@drawable/bridge_background_rounded"
     android:backgroundTint="@color/white_background"
     android:stateListAnimator="@animator/button_press"
     android:clickable="true">
@@ -27,7 +27,7 @@
         android:layout_height="30dp"
         android:text="Medium Risk"
         android:textColor="@color/white"
-        android:background="@drawable/background_rounded"
+        android:background="@drawable/bridge_background_rounded"
         android:fontFamily="@font/harmonyos_sans_bold"
         app:layout_constraintStart_toEndOf="@id/title"
         app:layout_constraintTop_toTopOf="@id/title"

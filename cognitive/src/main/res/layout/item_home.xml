@@ -5,7 +5,7 @@
     android:layout_height="100dp"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:background="@drawable/background_rounded"
+    android:background="@drawable/cognitive_background_rounded"
     android:backgroundTint="@color/blue"
     android:stateListAnimator="@animator/button_press">
 
@@ -15,7 +15,7 @@
         android:layout_height="42dp"
         android:padding="5dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/brain"
+        android:src="@drawable/cognitive_brain"
         app:tint="@color/white" />
     
     <TextView
