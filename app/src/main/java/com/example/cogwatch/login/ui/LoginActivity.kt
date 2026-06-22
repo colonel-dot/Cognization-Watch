@@ -130,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
             LoginRepository().login(userName, passWord).collect { result ->
                 result.fold(
                     onSuccess = { loginResponse ->
-                        Log.d(TAG, "login: 收到账号密码分别是 $userName 和 $passWord 的登录请求，服务器返回状态码 ${loginResponse.code}")
+                        Log.d(TAG, "login: server returned status code ${loginResponse.code}")
                         if (loginResponse.code == 200) {
                             Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
                             LoginStatusManager.saveLoginStatus(applicationContext, true, userName, identity)
@@ -146,7 +146,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     },
                     onFailure = { e ->
-                        Log.d(TAG, "login: 收到账号密码分别是 $userName 和 $passWord 的登录请求但是失败")
+                        Log.d(TAG, "login: request failed", e)
                         Toast.makeText(this@LoginActivity, "请求失败：${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 )

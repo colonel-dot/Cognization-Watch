@@ -1,6 +1,6 @@
 package com.example.cogwatch.login.remote
 
-import com.example.cognitive.remote.ApiService
+import com.example.common.login.remote.LoginApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -12,7 +12,7 @@ class LoginRepository {
     fun login(username: String, password: String) = flow {
         try {
             val request = LoginRequest(username, password)
-            val response = RetrofitClient.createService(ApiService::class.java).login(request)
+            val response = RetrofitClient.createService(LoginApiService::class.java).login(request)
             emit(Result.success(response))
         } catch (e: Exception) {
             emit(Result.failure(e))

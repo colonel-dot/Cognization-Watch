@@ -7,8 +7,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 import com.example.common.persistense.risk.DailyRiskEntity
-import com.example.common.login.remote.LoginRequest
-import com.example.common.login.remote.LoginResponse
 
 // 用于健康数据的请求
 data class UpdateDailyHealthRequest(
@@ -25,9 +23,6 @@ data class UpdateDailyRiskRequest(
 )
 
 interface ApiService {
-    @POST("login")
-    suspend fun login(@Body request: LoginRequest): LoginResponse
-
 /*    @POST("elder/updatedailyrisk")
     suspend fun postDailyRisk(account: String, date: LocalDate, risk: DailyRiskResult) */
 
