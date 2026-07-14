@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.facade.template.IProvider
@@ -23,22 +24,21 @@ import com.example.common.login.LoginPopupProvider
 import com.example.common.login.simulate.InsertData
 import com.example.common.router.RouterPaths
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 private const val TAG = "ChildrenActivity"
 
 class ChildrenActivity : AppCompatActivity() {
 
     private lateinit var bottomNavigation: BottomNavigationView
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_children)
+        setContentView(R.layout.bridge_activity_children)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -47,27 +47,10 @@ class ChildrenActivity : AppCompatActivity() {
 
         bottomNavigation = findViewById(R.id.navigation)
 
-        initBottomNavigation()
-
         if (intent?.getBooleanExtra("guest", false) == true) {
-            GuestStateHolder.setGuest(true)
-            try {
-                InsertData.init(this)
-                GeofenceStatusManager.setFenceEnabled(this, true)
-                GeofenceStatusManager.saveFenceInfo(this, "", 3000f, InsertData.HOME_LAT, InsertData.HOME_LNG)
-            } catch (e: Exception) {
-                Log.e(TAG, "初始化访客数据失败: ${e.message}", e)
-            }
-            // 访客模式同步插入数据，确保 Dashboard 加载时数据已就绪
-            runBlocking(Dispatchers.IO) {
-                try {
-                    InsertData.insertBehaviorData()
-                    InsertData.insertRiskData()
-                    InsertData.insertGeofenceData()
-                } catch (e: Exception) {
-                    Log.e(TAG, "插入访客数据失败: ${e.message}", e)
-                }
-            }
+            initGuestDataThenNavigation()
+        } else {
+            initBottomNavigation()
         }
 
         ARouter.getInstance()
@@ -96,6 +79,31 @@ class ChildrenActivity : AppCompatActivity() {
                     Log.d(TAG, "路由到达: ${postcard.path}")
                 }
             })
+    }
+
+    private fun initGuestDataThenNavigation() {
+        GuestStateHolder.setGuest(true)
+        try {
+            InsertData.init(this)
+            GeofenceStatusManager.setFenceEnabled(this, true)
+            GeofenceStatusManager.saveFenceInfo(this, "", 3000f, InsertData.HOME_LAT, InsertData.HOME_LNG)
+        } catch (e: Exception) {
+            Log.e(TAG, "初始化访客数据失败: ${e.message}", e)
+        }
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    InsertData.insertBehaviorData()
+                    InsertData.insertRiskData()
+                    InsertData.insertGeofenceData()
+                } catch (e: Exception) {
+                    if (e is CancellationException) throw e
+                    Log.e(TAG, "插入访客数据失败: ${e.message}", e)
+                }
+            }
+            initBottomNavigation()
+        }
     }
 
     private fun initBottomNavigation() {

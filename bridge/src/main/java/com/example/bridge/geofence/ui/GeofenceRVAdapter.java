@@ -31,7 +31,7 @@ public class GeofenceRVAdapter extends RecyclerView.Adapter<GeofenceRVAdapter.Ho
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_geofence, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bridge_item_geofence, parent, false);
         return new Holder(view);
     }
 

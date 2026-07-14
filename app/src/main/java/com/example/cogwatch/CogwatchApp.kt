@@ -12,13 +12,13 @@ import com.example.cognitive.user.UserManager
 class CogwatchApp: Application() {
     override fun onCreate() {
         super.onCreate()
-        Log.e("ARouterDebug", "Application onCreate")
+        Log.d("ARouterDebug", "Application onCreate")
 //        if (BuildConfig.DEBUG) {
 //            ARouter.openLog()
 //            ARouter.openDebug()
 //        }
         ARouter.init(this)
-        Log.e("ARouterDebug", "ARouter init finished")
+        Log.d("ARouterDebug", "ARouter init finished")
 
         AppDatabase.init(this)
 

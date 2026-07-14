@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +41,8 @@ import com.example.common.persistense.BusinessDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SettingFragment extends Fragment {
 
@@ -48,19 +52,25 @@ public class SettingFragment extends Fragment {
     private LinearLayout signout;
     private SettingAdapter adapter;
     private GeoViewModel viewModel;
+    private final ExecutorService logoutExecutor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private final ActivityResultLauncher<String> locationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                Context context = getContext();
+                if (context == null) {
+                    return;
+                }
                 if (isGranted) {
-                    LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-                    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        Toast.makeText(requireContext(), "请先开启定位服务", Toast.LENGTH_SHORT).show();
+                    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                    if (locationManager == null || !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        Toast.makeText(context, "请先开启定位服务", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     } else {
                         showGeofenceDialog();
                     }
                 } else {
-                    Toast.makeText(requireContext(), "需要定位权限才能设置围栏", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "需要定位权限才能设置围栏", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -98,6 +108,9 @@ public class SettingFragment extends Fragment {
     }
 
     private void showGeofenceDialog() {
+        if (!isAdded()) {
+            return;
+        }
         GeofenceDialogFragment dialog = new GeofenceDialogFragment();
         dialog.setOnFenceCreatedListener((lat, lng, radius) -> {
             Log.d("SettingFragment", "围栏参数获取成功: lat=" + lat + ", lng=" + lng + ", radius=" + radius);
@@ -117,13 +130,17 @@ public class SettingFragment extends Fragment {
     }
 
     private void checkLocationPermissionAndShowDialog() {
-        LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            Toast.makeText(requireContext(), "请先开启定位服务", Toast.LENGTH_SHORT).show();
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null || !locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(context, "请先开启定位服务", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             return;
         }
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
@@ -194,14 +211,45 @@ public class SettingFragment extends Fragment {
     }
 
     private void performLogout() {
-        LoginStatusManager.INSTANCE.logout(requireContext());
-        BindStatusManager.INSTANCE.clearBindStatus(requireContext());
-        BusinessDataManager.INSTANCE.clearAll(requireContext());
-        Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setClassName("com.example.cogwatch", "com.example.cogwatch.login.ui.LoginActivity");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        Context appContext = context.getApplicationContext();
+        LoginStatusManager.INSTANCE.logout(appContext);
+        BindStatusManager.INSTANCE.clearBindStatus(appContext);
+
+        logoutExecutor.execute(() -> {
+            try {
+                BusinessDataManager.INSTANCE.clearAll(appContext);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to clear business data during logout", e);
+            } finally {
+                mainHandler.post(() -> {
+                if (!isAdded()) {
+                    return;
+                }
+                Toast.makeText(requireContext(), "已退出登录", Toast.LENGTH_SHORT).show();
+                Intent intent = requireContext()
+                        .getPackageManager()
+                        .getLaunchIntentForPackage(requireContext().getPackageName());
+                if (intent == null) {
+                    Log.e(TAG, "Unable to resolve launcher activity after logout");
+                    return;
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            });
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        logoutExecutor.shutdown();
     }
 }

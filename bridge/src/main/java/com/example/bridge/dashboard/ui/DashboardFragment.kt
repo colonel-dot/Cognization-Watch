@@ -1,5 +1,6 @@
 package com.example.bridge.dashboard.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -55,7 +56,7 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        return inflater.inflate(R.layout.bridge_fragment_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,11 +110,12 @@ class DashboardFragment : Fragment() {
     }
 
     private fun loadDashboardDataWithRefreshComplete() {
-        lifecycleScope.launch {
+        val appContext = requireContext().applicationContext
+        viewLifecycleOwner.lifecycleScope.launch {
             swipeRefresh?.isRefreshing = true
             try {
                 val (data, hasData) = withContext(Dispatchers.IO) {
-                    loadDashboardData()
+                    loadDashboardData(appContext)
                 }
                 if (view == null) return@launch
                 updateDashboardUI(data)
@@ -135,8 +137,8 @@ class DashboardFragment : Fragment() {
 
     private data class DashboardLoadResult(val data: DashboardData, val hasData: Boolean)
 
-    private suspend fun loadDashboardData(): DashboardLoadResult = coroutineScope {
-        val username = LoginStatusManager.getLoggedInUserId(requireContext())
+    private suspend fun loadDashboardData(context: Context): DashboardLoadResult = coroutineScope {
+        val username = LoginStatusManager.getLoggedInUserId(context)
         val childAccount = username
         val elderAccount = BindStatusManager.getBindStatus().second
 
@@ -147,7 +149,7 @@ class DashboardFragment : Fragment() {
             )
         }
 
-        val database = AppDatabase.getDatabase(requireContext())
+        val database = AppDatabase.getDatabase(context)
         val riskDao: DailyRiskDao = database.dailyRiskDao()
         val behaviorDao: DailyBehaviorDao = database.dailyBehaviorDao()
 
@@ -203,7 +205,7 @@ class DashboardFragment : Fragment() {
 
         // 获取最新围栏事件
         val latestGeofence = withContext(Dispatchers.IO) {
-            GeofenceRepository.getLatestEvent(requireContext())
+            GeofenceRepository.getLatestEvent(context)
         }
         val alertTip = latestGeofence?.let { getGeofenceTip(it) } ?: "没有数据源"
 
@@ -279,6 +281,14 @@ class DashboardFragment : Fragment() {
             adapter!!.list[3] = DashboardAlertItem(data.alertTip)
         }
         adapter!!.notifyDataSetChanged()
+    }
+
+    override fun onDestroyView() {
+        recyclerView?.adapter = null
+        recyclerView = null
+        swipeRefresh = null
+        adapter = null
+        super.onDestroyView()
     }
 
     data class DashboardData(

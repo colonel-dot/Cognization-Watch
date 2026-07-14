@@ -61,8 +61,20 @@ The initial implementation tasks only rename the smaller layout/drawable set bel
 
 | Type | Old | New |
 | --- | --- | --- |
+| layout | `activity_children` | `bridge_activity_children` |
+| layout | `dialog_fragment_fence` | `bridge_dialog_fragment_fence` |
+| layout | `dialog_fragment_remark` | `bridge_dialog_fragment_remark` |
+| layout | `dialog_record_detail` | `bridge_dialog_record_detail` |
+| layout | `fragment_dashboard` | `bridge_fragment_dashboard` |
+| layout | `fragment_geofence` | `bridge_fragment_geofence` |
+| layout | `fragment_profiles` | `bridge_fragment_profiles` |
 | layout | `fragment_record` | `bridge_fragment_record` |
 | layout | `fragment_setting` | `bridge_fragment_setting` |
+| layout | `item_dashboard_alert` | `bridge_item_dashboard_alert` |
+| layout | `item_dashboard_collection` | `bridge_item_dashboard_collection` |
+| layout | `item_dashboard_risk` | `bridge_item_dashboard_risk` |
+| layout | `item_dashboard_rtc` | `bridge_item_dashboard_rtc` |
+| layout | `item_geofence` | `bridge_item_geofence` |
 | layout | `item_record` | `bridge_item_record` |
 | layout | `item_setting` | `bridge_item_setting` |
 | drawable | `background_rounded` | `bridge_background_rounded` |

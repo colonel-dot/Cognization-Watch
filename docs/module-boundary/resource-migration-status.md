@@ -13,8 +13,20 @@ Generated on 2026-06-17 after Tasks 8-11.
 
 ### Bridge layouts
 
+- `activity_children` -> `bridge_activity_children`
+- `dialog_fragment_fence` -> `bridge_dialog_fragment_fence`
+- `dialog_fragment_remark` -> `bridge_dialog_fragment_remark`
+- `dialog_record_detail` -> `bridge_dialog_record_detail`
+- `fragment_dashboard` -> `bridge_fragment_dashboard`
+- `fragment_geofence` -> `bridge_fragment_geofence`
+- `fragment_profiles` -> `bridge_fragment_profiles`
 - `fragment_record` -> `bridge_fragment_record`
 - `fragment_setting` -> `bridge_fragment_setting`
+- `item_dashboard_alert` -> `bridge_item_dashboard_alert`
+- `item_dashboard_collection` -> `bridge_item_dashboard_collection`
+- `item_dashboard_risk` -> `bridge_item_dashboard_risk`
+- `item_dashboard_rtc` -> `bridge_item_dashboard_rtc`
+- `item_geofence` -> `bridge_item_geofence`
 - `item_record` -> `bridge_item_record`
 - `item_setting` -> `bridge_item_setting`
 
@@ -66,7 +78,7 @@ These duplicates remain after the initial resource-prefixing pass:
 - `font/harmonyos_sans_bold`: `app`, `bridge`, `cognitive`, `common`
 - `font/harmonyos_sans_medium`: `app`, `bridge`, `cognitive`, `common`
 - `font/harmonyos_sans_regular`: `app`, `bridge`, `cognitive`, `common`
-- `layout/dialog_record_detail`: `bridge`, `cognitive`, `common`
+- `layout/dialog_record_detail`: `cognitive`, `common`
 - launcher icon resources under `mipmap-*`: `app`, `bridge`
 - `values/colors.xml`: `app`, `bridge`, `cognitive`, `common`
 - `values/strings.xml`: `app`, `bridge`, `cognitive`
@@ -74,7 +86,7 @@ These duplicates remain after the initial resource-prefixing pass:
 
 ## Follow-Up
 
-- Review whether `dialog_record_detail` should live only in `common`; otherwise prefix the bridge/cognitive copies.
+- Review whether `dialog_record_detail` should live only in `common`; otherwise prefix the remaining cognitive copy.
 - Decide whether shared icon drawables such as `call`, `mic`, `video`, and `voiceprint` should move to `common` instead of being duplicated.
 - Keep launcher icons and shared fonts deferred unless the build or packaging process reports a concrete collision.
 - Do not rename values XML filenames; only rename entries inside them if a real resource-name collision appears.

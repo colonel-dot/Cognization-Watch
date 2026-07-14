@@ -62,7 +62,7 @@ class GeofenceFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_geofence, container, false)
+        return inflater.inflate(R.layout.bridge_fragment_geofence, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -171,12 +171,12 @@ class GeofenceFragment : Fragment() {
             status = localStatus
         )
 
-        GeofenceRepository.insertEventBlocking(item)
+        withContext(Dispatchers.IO) {
+            GeofenceRepository.insertEventBlocking(item)
+        }
         Log.d("GeofenceFragment", "老人轨迹事件已存入本地: status=${movement.status}, lat=${movement.lat}, lng=${movement.lon}")
 
-        withContext(Dispatchers.Main) {
-            refreshData()
-        }
+        refreshData()
     }
 
     private fun startPollTimer() {
@@ -231,21 +231,27 @@ class GeofenceFragment : Fragment() {
         aMapWrapper!!.onCreate()
         aMapWrapper!!.getMapAsyn { map ->
             aMap = map
+            if (view == null) return@getMapAsyn
 
-            val items = GeofenceRepository.getAllEventsBlocking()
-            if (aMap != null && items.isNotEmpty()) {
-                val item = items[0]
-                val latLng = LatLng(item.lat, item.lng)
-                if (itemMarker != null) itemMarker!!.remove()
-                itemMarker = aMap!!.addMarker(
-                    MarkerOptions()
-                        .position(latLng)
-                        .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
-                        .draggable(false)
-                        .visible(true)
-                )
-                aMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
-                updateLocationStatus(item)
+            viewLifecycleOwner.lifecycleScope.launch {
+                val items = withContext(Dispatchers.IO) {
+                    GeofenceRepository.getAllEventsBlocking()
+                }
+                val currentMap = aMap ?: return@launch
+                if (items.isNotEmpty()) {
+                    val item = items[0]
+                    val latLng = LatLng(item.lat, item.lng)
+                    if (itemMarker != null) itemMarker!!.remove()
+                    itemMarker = currentMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
+                            .draggable(false)
+                            .visible(true)
+                    )
+                    currentMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                    updateLocationStatus(item)
+                }
             }
         }
     }
@@ -266,32 +272,54 @@ class GeofenceFragment : Fragment() {
 
     private fun refreshData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val items = GeofenceRepository.getAllEventsBlocking()
-            adapter!!.list = items
+            try {
+                val items = withContext(Dispatchers.IO) {
+                    GeofenceRepository.getAllEventsBlocking()
+                }
+                adapter?.list = items
 
-            adapter!!.setOnItemClickListener { position ->
-                val item = items[position]
-                val latLng = LatLng(item.lat, item.lng)
-                if (itemMarker != null) itemMarker!!.remove()
-                itemMarker = aMap!!.addMarker(
-                    MarkerOptions()
-                        .position(latLng)
-                        .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
-                        .draggable(false)
-                        .visible(true)
-                )
-                aMap!!.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
-                updateLocationStatus(item)
+                adapter?.setOnItemClickListener { position ->
+                    val item = items[position]
+                    val currentMap = aMap ?: return@setOnItemClickListener
+                    val latLng = LatLng(item.lat, item.lng)
+                    if (itemMarker != null) itemMarker!!.remove()
+                    itemMarker = currentMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title(StringMap.mapMinuteToRelativeTime(item.timestamp))
+                            .draggable(false)
+                            .visible(true)
+                    )
+                    currentMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                    updateLocationStatus(item)
+                }
+
+                adapter?.notifyDataSetChanged()
+            } catch (e: Exception) {
+                Log.e("GeofenceFragment", "Failed to refresh geofence records", e)
+            } finally {
+                swipeRefresh?.isRefreshing = false
             }
-
-            adapter!!.notifyDataSetChanged()
-            swipeRefresh!!.isRefreshing = false
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
         stopPollTimer()
         aMapWrapper?.onDestroy()
+        aMapWrapper = null
+        aMap = null
+        itemMarker = null
+        map = null
+        location = null
+        swipeRefresh = null
+        record?.adapter = null
+        record = null
+        adapter = null
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        stopPollTimer()
+        super.onDestroy()
     }
 }

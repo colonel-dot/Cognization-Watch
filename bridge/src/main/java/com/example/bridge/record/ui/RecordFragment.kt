@@ -104,7 +104,6 @@ class RecordFragment : Fragment() {
         if (GuestStateHolder.isGuest()) {
             Log.d("RecordFragment", "游客模式，直接刷新本地数据")
             loadRiskDataFromDatabase()
-            swipeRefresh?.isRefreshing = false
             return
         }
 
@@ -129,7 +128,6 @@ class RecordFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "同步成功", Toast.LENGTH_SHORT).show()
                         loadRiskDataFromDatabase()
-                        swipeRefresh?.isRefreshing = false
                     }
                 } else {
                     Log.d("RecordFragment", "网络数据为空")
@@ -298,6 +296,10 @@ class RecordFragment : Fragment() {
             } catch (e: Exception) {
                 if (e is CancellationException) throw e
                 e.printStackTrace()
+            } finally {
+                withContext(Dispatchers.Main) {
+                    swipeRefresh?.isRefreshing = false
+                }
             }
         }
     }
@@ -344,5 +346,16 @@ class RecordFragment : Fragment() {
         yAxis?.isGranularityEnabled = true
 
         lineChart?.invalidate()
+    }
+
+    override fun onDestroyView() {
+        record?.adapter = null
+        week = null
+        half = null
+        lineChart = null
+        record = null
+        swipeRefresh = null
+        adapter = null
+        super.onDestroyView()
     }
 }

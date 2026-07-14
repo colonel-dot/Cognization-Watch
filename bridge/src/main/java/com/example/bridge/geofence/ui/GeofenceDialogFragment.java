@@ -64,7 +64,7 @@ public class GeofenceDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_fragment_fence, container, false);
+        return inflater.inflate(R.layout.bridge_dialog_fragment_fence, container, false);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class GeofenceDialogFragment extends DialogFragment {
             try {
                 createFence((float) radius);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                handleFenceCreationError(e);
             }
         });
     }
@@ -112,7 +112,7 @@ public class GeofenceDialogFragment extends DialogFragment {
                     try {
                         createFence(seekBar.getProgress() > 0 ? seekBar.getProgress() : 3000);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        handleFenceCreationError(e);
                     }
                 } else {
                     Toast.makeText(getContext(), "需要定位权限才能创建围栏", Toast.LENGTH_SHORT).show();
@@ -144,7 +144,16 @@ public class GeofenceDialogFragment extends DialogFragment {
         locationClient.setLocationOption(option);
         locationClient.setLocationListener(location -> {
             Log.d(TAG, "location callback, errorCode=" + location.getErrorCode());
-            requireActivity().runOnUiThread(() -> {
+            androidx.fragment.app.FragmentActivity activity = getActivity();
+            if (activity == null) {
+                destroyLocationClient();
+                return;
+            }
+            activity.runOnUiThread(() -> {
+                try {
+                    if (!isAdded()) {
+                        return;
+                    }
                 if (location.getErrorCode() == 0) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
@@ -162,17 +171,34 @@ public class GeofenceDialogFragment extends DialogFragment {
                     Toast.makeText(getContext(), "定位失败: " + location.getErrorInfo(), Toast.LENGTH_SHORT).show();
                 }
 
-                locationClient.stopLocation();
-                locationClient.onDestroy();
+                } finally {
+                    destroyLocationClient();
+                }
             });
         });
         Log.d(TAG, "startLocation");
         locationClient.startLocation();
     }
 
+    private void handleFenceCreationError(Exception e) {
+        Log.e(TAG, "创建围栏失败", e);
+        if (isAdded()) {
+            Toast.makeText(requireContext(), "围栏创建失败，请稍后重试", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void destroyLocationClient() {
+        if (locationClient != null) {
+            locationClient.stopLocation();
+            locationClient.onDestroy();
+            locationClient = null;
+        }
+        option = null;
+    }
+
     @Override
     public void onDestroy() {
+        destroyLocationClient();
         super.onDestroy();
-        option = null;
     }
 }

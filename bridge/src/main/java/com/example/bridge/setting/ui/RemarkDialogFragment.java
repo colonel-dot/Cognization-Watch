@@ -41,7 +41,7 @@ public class RemarkDialogFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_fragment_remark, container, false);
+        return inflater.inflate(R.layout.bridge_dialog_fragment_remark, container, false);
     }
 
     @Override

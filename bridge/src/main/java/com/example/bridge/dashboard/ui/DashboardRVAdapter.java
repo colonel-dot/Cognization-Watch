@@ -46,19 +46,19 @@ public class DashboardRVAdapter extends RecyclerView.Adapter<DashboardRVAdapter.
         View view;
         return switch (viewType) {
             case TYPE_RTC -> {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_rtc, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bridge_item_dashboard_rtc, parent, false);
                 yield new RtcHolder(view);
             }
             case TYPE_RISK -> {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_risk, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bridge_item_dashboard_risk, parent, false);
                 yield new RiskHolder(view);
             }
             case TYPE_COLLECTION -> {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_collection, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bridge_item_dashboard_collection, parent, false);
                 yield new CollectionHolder(view);
             }
             case TYPE_ALERT -> {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dashboard_alert, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bridge_item_dashboard_alert, parent, false);
                 yield new AlertHolder(view);
             }
             default -> throw new IllegalStateException("Unexpected value: " + viewType);
