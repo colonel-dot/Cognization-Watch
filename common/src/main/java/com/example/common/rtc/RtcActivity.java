@@ -51,6 +51,7 @@ public class RtcActivity extends AppCompatActivity {
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA,
         };
+
     }
 
     private boolean checkPermissions() {

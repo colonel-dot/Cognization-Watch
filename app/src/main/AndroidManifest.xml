@@ -39,6 +39,26 @@
         tools:replace="android:theme,android:name"
         tools:targetApi="31" >
 
+        <!-- androidx.startup InitializationProvider: auto-discovers Initializer implementations -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.example.cogwatch.startup.ARouterInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="com.example.cogwatch.startup.AppDatabaseInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="com.example.cogwatch.startup.CogwatchComponentsInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="com.example.cogwatch.startup.TrtcPreloadInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
         <activity
             android:name=".splash.SplashActivity"
             android:exported="true"

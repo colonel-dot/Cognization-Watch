@@ -4,14 +4,13 @@
 buildscript {
     // 配置仓库，确保能下载到 arouter-register
     repositories {
+        // 国内镜像优先，解决 Maven Central / Google 直连超时/TLS 失败
+        maven { url 'https://mirrors.aliyun.com/maven/public' }
+        maven { url 'https://mirrors.aliyun.com/maven/google' }
+        maven { url 'https://mirrors.aliyun.com/maven/central' }
+        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
         google()
         mavenCentral()
-        // 可选：阿里镜像，解决下载慢/下载失败问题
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/repository/central' }
     }
 
     dependencies {
@@ -26,4 +25,3 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
 }
-

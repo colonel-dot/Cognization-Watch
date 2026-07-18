@@ -127,4 +127,9 @@ dependencies {
     // by viewModels()
     implementation libs.fragment.ktx
     implementation libs.activity.ktx
+
+    // Startup optimization
+    implementation libs.startup.runtime
+    implementation libs.profileinstaller
+    implementation libs.tracing
 }

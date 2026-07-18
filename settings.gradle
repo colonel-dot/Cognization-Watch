@@ -1,5 +1,8 @@
 pluginManagement {
     repositories {
+        maven { url 'https://mirrors.aliyun.com/maven/public' }
+        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
+
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -14,6 +17,8 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url 'https://mirrors.aliyun.com/maven/public' }
+        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
@@ -22,6 +27,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Cognization-Watch"
 include ':app'
+include ':benchmark'
 include ':cognitive'
 include ':bridge'
 include ':common'

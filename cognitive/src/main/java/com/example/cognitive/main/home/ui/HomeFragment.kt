@@ -130,7 +130,7 @@ class HomeFragment : Fragment() {
                 Manifest.permission.ACTIVITY_RECOGNITION
             )
         } else {
-            TODO("VERSION.SDK_INT < TIRAMISU")
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
     private fun checkPermissions(): Boolean {

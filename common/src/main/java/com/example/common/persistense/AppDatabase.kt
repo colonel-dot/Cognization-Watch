@@ -1,6 +1,7 @@
 package com.example.common.persistense
 
 import android.content.Context
+import android.os.Trace
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -25,23 +26,40 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dailyRiskDao(): DailyRiskDao
     abstract fun geofenceItemDao(): GeofenceItemDao
     companion object {
-        private var instance : AppDatabase ?= null
+        @Volatile
+        private var instance: AppDatabase? = null
         private var appContext: Context? = null
 
-        @Synchronized
-        fun getDatabase(context: Context): AppDatabase {
-            instance?.let {
-                return it
-            }
-            return Room.databaseBuilder(context.applicationContext,
-                AppDatabase::class.java, "daily_behavior_database")
-                .build().apply { instance = this }
-        }
-
+        /**
+         * Lazy init — only caches the ApplicationContext.
+         * The actual Room .build() is deferred until [getDatabase] is first called.
+         */
         @Synchronized
         fun init(context: Context) {
             appContext = context.applicationContext
-            getDatabase(context)
+        }
+
+        /**
+         * Returns the AppDatabase singleton, building it on first access (double-checked locking).
+         */
+        fun getDatabase(context: Context? = null): AppDatabase {
+            instance?.let { return it }
+            synchronized(this) {
+                instance?.let { return it }
+                val ctx = context?.applicationContext
+                    ?: appContext
+                    ?: throw IllegalStateException("AppDatabase not initialized. Call init() first.")
+                Trace.beginSection("AppDatabase Build")
+                return try {
+                    Room.databaseBuilder(
+                        ctx,
+                        AppDatabase::class.java,
+                        "daily_behavior_database"
+                    ).build().apply { instance = this }
+                } finally {
+                    Trace.endSection()
+                }
+            }
         }
 
         fun getInstance(): AppDatabase {

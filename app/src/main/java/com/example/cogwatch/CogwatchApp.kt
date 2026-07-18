@@ -1,29 +1,25 @@
 package com.example.cogwatch
 
 import android.app.Application
+import android.os.Trace
 import android.util.Log
-import com.alibaba.android.arouter.BuildConfig
-import com.alibaba.android.arouter.launcher.ARouter
-import com.example.common.bind_device.BindStatusManager
-import com.example.common.login.GuestStateHolder
-import com.example.common.persistense.AppDatabase
-import com.example.cognitive.user.UserManager
 
-class CogwatchApp: Application() {
+/**
+ * Application entry point.
+ *
+ * All component initialization (ARouter, AppDatabase, BindStatusManager,
+ * GuestStateHolder, UserManager, TRTC) is delegated to the androidx.startup
+ * Initializer chain. See app/.../startup/ for individual Initializer classes.
+ *
+ * Key optimization: AppDatabase.init() only caches the ApplicationContext;
+ * the expensive Room.databaseBuilder().build() is deferred until the first
+ * DAO access, removing it from the cold-start critical path.
+ */
+class CogwatchApp : Application() {
     override fun onCreate() {
+        Trace.beginSection("CogwatchApp_onCreate")
         super.onCreate()
-        Log.d("ARouterDebug", "Application onCreate")
-//        if (BuildConfig.DEBUG) {
-//            ARouter.openLog()
-//            ARouter.openDebug()
-//        }
-        ARouter.init(this)
-        Log.d("ARouterDebug", "ARouter init finished")
-
-        AppDatabase.init(this)
-
-        BindStatusManager.init(this)
-        GuestStateHolder.init(this)
-        UserManager.init(this)
+        Log.d("CogwatchApp", "启动任务委托给startup初始化器")
+        Trace.endSection()
     }
 }
