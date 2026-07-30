@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
+
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.R
+import com.example.cognitive.databinding.ActivitySchulteGridBinding
 import com.example.cognitive.main.MainViewModel
 import com.example.cognitive.schulte.data.SchulteEvaluatorType
 import com.example.cognitive.schulte.data.SchulteGridCell
@@ -28,11 +29,7 @@ import kotlin.getValue
 
 class SchulteGridActivity : AppCompatActivity() {
 
-    private var time: TextView? = null
-    private var grid: TextView? = null
-    private var schulte: RecyclerView? = null
-    private var pause: TextView? = null
-    private var start: TextView? = null
+    private lateinit var binding: ActivitySchulteGridBinding
 
     private var timer: TimerHelper? = null
     private var engine: SchulteGridEngine? = null
@@ -44,14 +41,13 @@ class SchulteGridActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_schulte_grid)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivitySchulteGridBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        bindView()
 
         initTimer()
 
@@ -59,15 +55,7 @@ class SchulteGridActivity : AppCompatActivity() {
 
         bindClickListener()
 
-        grid?.text = engine!!.cur.toString() + " / " + engine!!.end
-    }
-
-    private fun bindView() {
-        time = findViewById(R.id.time)
-        grid = findViewById(R.id.grid)
-        schulte = findViewById(R.id.schulte)
-        pause = findViewById(R.id.pause)
-        start = findViewById(R.id.start)
+        binding.grid.text = engine!!.cur.toString() + " / " + engine!!.end
     }
 
     private fun initTimer() {
@@ -75,7 +63,7 @@ class SchulteGridActivity : AppCompatActivity() {
         timer!!.setOnTimerListener { `val`: Long ->
             ms = `val`
             val second = Math.toIntExact(`val` / 1000)
-            time!!.text = second.toString()
+            binding.time.text = second.toString()
         }
     }
 
@@ -90,7 +78,7 @@ class SchulteGridActivity : AppCompatActivity() {
         }
 
         adapter = SchulteGridRVAdapter(list)
-        schulte!!.setAdapter(adapter)
+        binding.schulte.setAdapter(adapter)
 
         adapter!!.setOnItemClickListener { pos: Int ->
             val res = engine!!.click(adapter!!.list[pos].num)
@@ -100,53 +88,53 @@ class SchulteGridActivity : AppCompatActivity() {
                 1 -> { // 游戏完成
                     timer!!.stop()
                     engine!!.stop()
-                    start!!.text = "开始"
-                    pause!!.text = "暂停"
+                    binding.start.text = "开始"
+                    binding.pause.text = "暂停"
                     showFinishedDialog()
                     Log.d(TAG, "initGameEngine: 即将保存和更新舒尔特成绩")
                     viewModel.saveGameTime(if (engine!!.isFourSquared) 4 else 5, ms)
                     mainViewModel.notifyRecordChanged()
                 }
                 0 -> { // 点击正确
-                    grid!!.text = engine!!.cur.toString() + " / " + engine!!.end
+                    binding.grid.text = engine!!.cur.toString() + " / " + engine!!.end
                 }
             }
         }
 
         val span = if (engine!!.isFourSquared) 4 else 5
-        schulte!!.setLayoutManager(GridLayoutManager(this, span))
+        binding.schulte.setLayoutManager(GridLayoutManager(this, span))
     }
 
     private fun bindClickListener() {
         // 暂停继续按钮
-        pause!!.setOnClickListener { _: View? ->
+        binding.pause.setOnClickListener { _: View? ->
             if (engine!!.state == SchulteGridEngine.State.RUNNING) {
                 timer!!.pause()
                 engine!!.pause()
-                pause!!.text = "继续"
+                binding.pause.text = "继续"
             } else if (engine!!.state == SchulteGridEngine.State.PAUSED) {
                 timer!!.resume()
                 engine!!.resume()
-                pause!!.text = "暂停"
+                binding.pause.text = "暂停"
             }
         }
 
         // 开始结束按钮
-        start!!.setOnClickListener { _: View? ->
+        binding.start.setOnClickListener { _: View? ->
             if (engine!!.state == SchulteGridEngine.State.STOPPED) {
                 timer!!.start()
                 engine!!.start()
                 adapter!!.shuffle()
-                start!!.text = "结束"
-                pause!!.text = "暂停"
+                binding.start.text = "结束"
+                binding.pause.text = "暂停"
             } else {
                 timer!!.stop()
                 engine!!.stop()
-                start!!.text = "开始"
-                pause!!.text = "暂停"
+                binding.start.text = "开始"
+                binding.pause.text = "暂停"
 
-                time!!.text = "0"
-                grid!!.text = "0 / " + engine!!.end
+                binding.time.text = "0"
+                binding.grid.text = "0 / " + engine!!.end
 
                 // 重置单元格选中状态
                 for (cell in adapter!!.list) {
@@ -164,8 +152,8 @@ class SchulteGridActivity : AppCompatActivity() {
             .setTitle("完成！")
             .setMessage(String.format("用时 %.3f 秒", seconds))
             .setPositiveButton("确定") { dialog, _ ->
-                time!!.text = "0"
-                grid!!.text = "0 / " + engine!!.end
+                binding.time.text = "0"
+                binding.grid.text = "0 / " + engine!!.end
                 dialog.dismiss()
             }
             .create()

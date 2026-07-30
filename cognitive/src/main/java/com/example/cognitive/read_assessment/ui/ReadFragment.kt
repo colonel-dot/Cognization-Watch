@@ -9,8 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -20,26 +18,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.cognitive.R
+import com.example.cognitive.databinding.FragmentReadBinding
 import com.example.cognitive.main.MainViewModel
 import com.example.cognitive.read_assessment.vm.ReadViewModel
 import kotlinx.coroutines.launch
 
 class ReadFragment : Fragment() {
-    private lateinit var bar_1: View
-    private lateinit var bar_2: View
-    private lateinit var bar_3: View
-    private lateinit var bar_4: View
-    private lateinit var bar_5: View
+    private var _binding: FragmentReadBinding? = null
+    private val binding get() = _binding!!
 
     private val voiceAnimators = mutableListOf<ObjectAnimator>()
 
     private val viewModel: ReadViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
-
-    private lateinit var read: TextView
-    private lateinit var mic: ImageView
-    private lateinit var stop: TextView
-    private lateinit var result: TextView
 
     private var speakText: String? = null
 
@@ -57,42 +48,32 @@ class ReadFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_read, container, false)
+    ): View {
+        _binding = FragmentReadBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindView(view)
+        initView()
         observeViewModel()
         bindClickListener()
     }
 
-    private fun bindView(view: View) {
-        read = view.findViewById(R.id.read)
-        mic = view.findViewById(R.id.mic)
-        stop = view.findViewById(R.id.stop)
-        result = view.findViewById(R.id.result)
-
+    private fun initView() {
         speakText = viewModel.getText()
-        read.text = speakText
-
-        bar_1 = view.findViewById(R.id.bar_1)
-        bar_2 = view.findViewById(R.id.bar_2)
-        bar_3 = view.findViewById(R.id.bar_3)
-        bar_4 = view.findViewById(R.id.bar_4)
-        bar_5 = view.findViewById(R.id.bar_5)
+        binding.read.text = speakText
     }
 
     fun startAllVoiceAnimation() {
         stopAllVoiceAnimation()
         voiceAnimators.clear()
 
-        startVoiceAnim(bar_1, 0)
-        startVoiceAnim(bar_2, 120)
-        startVoiceAnim(bar_3, 240)
-        startVoiceAnim(bar_4, 120)
-        startVoiceAnim(bar_5, 0)
+        startVoiceAnim(binding.bar1, 0)
+        startVoiceAnim(binding.bar2, 120)
+        startVoiceAnim(binding.bar3, 240)
+        startVoiceAnim(binding.bar4, 120)
+        startVoiceAnim(binding.bar5, 0)
     }
 
     fun stopAllVoiceAnimation() {
@@ -102,11 +83,11 @@ class ReadFragment : Fragment() {
         }
         voiceAnimators.clear()
 
-        bar_1.scaleY = 1f
-        bar_2.scaleY = 1f
-        bar_3.scaleY = 1f
-        bar_4.scaleY = 1f
-        bar_5.scaleY = 1f
+        binding.bar1.scaleY = 1f
+        binding.bar2.scaleY = 1f
+        binding.bar3.scaleY = 1f
+        binding.bar4.scaleY = 1f
+        binding.bar5.scaleY = 1f
     }
 
     private fun startVoiceAnim(bar: View, delay: Int) {
@@ -121,14 +102,14 @@ class ReadFragment : Fragment() {
     }
 
     fun bindClickListener() {
-        read.setOnClickListener {
+        binding.read.setOnClickListener {
             speakText = viewModel.getText()
             Log.d(TAG, "换过来的句子是: $speakText")
-            read.text = speakText
-            Log.d(TAG, "TextView 现在是: ${read.text}")
+            binding.read.text = speakText
+            Log.d(TAG, "TextView 现在是: ${binding.read.text}")
         }
 
-        mic.setOnClickListener {
+        binding.mic.setOnClickListener {
             if (checkPermissions()) {
                 startRecord()
                 startAllVoiceAnimation()
@@ -137,7 +118,7 @@ class ReadFragment : Fragment() {
             }
         }
 
-        stop.setOnClickListener {
+        binding.stop.setOnClickListener {
             viewModel.stopRecord()
             stopAllVoiceAnimation()
         }
@@ -146,12 +127,12 @@ class ReadFragment : Fragment() {
     private fun observeViewModel() {
         // 持续状态：LiveData 是最佳选择
         viewModel.isRecording.observe(viewLifecycleOwner) { isRec ->
-            mic.isEnabled = !isRec
-            stop.isEnabled = isRec
+            binding.mic.isEnabled = !isRec
+            binding.stop.isEnabled = isRec
         }
 
         viewModel.scoreResult.observe(viewLifecycleOwner) { score ->
-            result.text = score ?: "暂无评分"
+            binding.result.text = score ?: "暂无评分"
         }
 
         // 一次性事件：用 SharedFlow 替代 LiveData，消除粘性事件 bug
@@ -159,7 +140,7 @@ class ReadFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recordResult.collect { file ->
                     Toast.makeText(requireContext(), "录音已保存", Toast.LENGTH_SHORT).show()
-                    result.text = "评估中..."
+                    binding.result.text = "评估中..."
                     val text = speakText ?: return@collect
                     viewModel.evaluateSpeech(file, text, "zh-CHS")
                     mainViewModel.notifyRecordChanged()
@@ -188,6 +169,7 @@ class ReadFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         stopAllVoiceAnimation()
+        _binding = null
     }
 
     companion object {

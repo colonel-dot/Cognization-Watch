@@ -3,14 +3,12 @@ package com.example.cognitive.setting.ui;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.CognitiveItemSettingBinding;
 
 import java.util.List;
 
@@ -34,9 +32,8 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cognitive_item_setting, parent, false);
-        return new ViewHolder(view);
+        CognitiveItemSettingBinding binding = CognitiveItemSettingBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
@@ -50,32 +47,25 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private final CognitiveItemSettingBinding binding;
 
-        ImageView icon_iv;
-        TextView type_tv;
-        Switch switch_;
-        ImageView expand_iv;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            icon_iv = itemView.findViewById(R.id.icon);
-            type_tv = itemView.findViewById(R.id.type);
-            switch_ = itemView.findViewById(R.id.setting_switch);
-            expand_iv = itemView.findViewById(R.id.expand);
+        public ViewHolder(CognitiveItemSettingBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
             SettingItem item = list.get(position);
-            icon_iv.setImageResource(item.getIcon());
-            type_tv.setText(item.getType());
+            binding.icon.setImageResource(item.getIcon());
+            binding.type.setText(item.getType());
             if (item.isSwitch()) {
-                switch_.setVisibility(View.VISIBLE);
-                expand_iv.setVisibility(View.GONE);
-                switch_.setChecked(item.isChecked());
-                switch_.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSwitchChanged(item, isChecked));
+                binding.settingSwitch.setVisibility(View.VISIBLE);
+                binding.expand.setVisibility(View.GONE);
+                binding.settingSwitch.setChecked(item.isChecked());
+                binding.settingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSwitchChanged(item, isChecked));
             } else {
-                switch_.setVisibility(View.GONE);
-                expand_iv.setVisibility(View.VISIBLE);
+                binding.settingSwitch.setVisibility(View.GONE);
+                binding.expand.setVisibility(View.VISIBLE);
                 itemView.setOnClickListener(v -> listener.onItemClick(item));
             }
         }

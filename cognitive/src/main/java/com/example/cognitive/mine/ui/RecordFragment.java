@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,10 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.CognitiveFragmentRecordBinding;
 import com.example.common.persistense.risk.DailyRiskEntity;
 import com.example.common.record.ui.RecordDetailBottomSheet;
 import com.github.mikephil.charting.charts.LineChart;
@@ -39,11 +37,7 @@ public class RecordFragment extends Fragment {
 
     private static final String TAG = "RecordFragment";
 
-    private TextView week;
-    private TextView half;
-    private LineChart lineChart;
-    private RecyclerView record;
-    private SwipeRefreshLayout swipeRefresh;
+    private CognitiveFragmentRecordBinding binding;
     private RecordRVAdapter adapter;
     private List<DailyRiskEntity> riskDataList = new ArrayList<>();
     private int selectedDays = 15;
@@ -56,7 +50,8 @@ public class RecordFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.cognitive_fragment_record, container, false);
+        binding = CognitiveFragmentRecordBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -65,7 +60,6 @@ public class RecordFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(RecordViewModel.class);
 
-        bindView(view);
         bindClickListener();
         initLineChart();
         initRecyclerView();
@@ -80,45 +74,38 @@ public class RecordFragment extends Fragment {
             riskDataList = new ArrayList<>(list);
             adapter.setList(riskDataList);
             updateLineChartData(riskDataList);
-            swipeRefresh.setRefreshing(false);
+            binding.swipeRefresh.setRefreshing(false);
         });
     }
 
-    private void bindView(View view) {
-        week = view.findViewById(R.id.week);
-        half = view.findViewById(R.id.half);
-        record = view.findViewById(R.id.record);
-        lineChart = view.findViewById(R.id.lineChart);
-        swipeRefresh = view.findViewById(R.id.swipeRefresh);
-    }
-
     private void bindClickListener() {
-        week.setOnClickListener(v -> {
+        binding.week.setOnClickListener(v -> {
             selectedDays = 7;
             updateButtonAppearance();
             viewModel.queryRecordsByDays(7);
         });
-        half.setOnClickListener(v -> {
+        binding.half.setOnClickListener(v -> {
             selectedDays = 15;
             updateButtonAppearance();
             viewModel.queryRecordsByDays(15);
         });
         updateButtonAppearance();
 
-        swipeRefresh.setOnRefreshListener(() -> viewModel.queryRecordsByDays(selectedDays));
+        binding.swipeRefresh.setOnRefreshListener(() -> viewModel.queryRecordsByDays(selectedDays));
     }
 
     private void updateButtonAppearance() {
         if (selectedDays == 7) {
-            week.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.blue));
-            half.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.deep_grey));
+            binding.week.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.blue));
+            binding.half.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.deep_grey));
         } else {
-            week.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.deep_grey));
-            half.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.blue));
+            binding.week.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.deep_grey));
+            binding.half.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.blue));
         }
     }
 
     private void initLineChart() {
+        LineChart lineChart = binding.lineChart;
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
         lineChart.setTouchEnabled(true);
@@ -145,12 +132,12 @@ public class RecordFragment extends Fragment {
 
     private void initRecyclerView() {
         adapter = new RecordRVAdapter(new ArrayList<>());
-        record.setLayoutManager(new LinearLayoutManager(getContext()));
-        record.setAdapter(adapter);
+        binding.record.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.record.setAdapter(adapter);
 
         com.example.common.util.ItemSpacingDecoration itemSpacingDecoration =
                 new com.example.common.util.ItemSpacingDecoration(getContext(), 3, 16, false);
-        record.addItemDecoration(itemSpacingDecoration);
+        binding.record.addItemDecoration(itemSpacingDecoration);
 
         adapter.setOnRecordClickListener((position, riskEntity) -> {
             FragmentManager fm = getParentFragmentManager();
@@ -180,6 +167,7 @@ public class RecordFragment extends Fragment {
         dataSet.setDrawCircles(false);
         dataSet.setDrawValues(false);
 
+        LineChart lineChart = binding.lineChart;
         lineChart.setData(new LineData(dataSet));
 
         TreeSet<Float> yLabels = new TreeSet<>();
@@ -207,5 +195,11 @@ public class RecordFragment extends Fragment {
         yAxis.setGranularityEnabled(true);
 
         lineChart.invalidate();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

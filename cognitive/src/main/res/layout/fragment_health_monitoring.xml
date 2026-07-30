@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="collection.ui.HealthMonitoringFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/function"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="基础健康情况监测"
-        android:textColor="@color/blue"
-        android:textSize="24sp"
-        android:fontFamily="@font/harmonyos_sans_bold"
-        />
-
-    <TextView
-        android:id="@+id/hint"
-        android:layout_width="match_parent"
-        android:layout_height="21dp"
-        app:layout_constraintTop_toBottomOf="@id/function"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:text="今日数据"
-        android:textColor="@color/grey"
-        android:textSize="12sp"
-        android:fontFamily="@font/harmonyos_sans_bold"
-        />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/hint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/premium"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@android:color/transparent"
-            />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <FrameLayout
-        android:id="@+id/premium"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/cognitive_background_rounded"
-        android:backgroundTint="@color/light_purple"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp"
-        android:stateListAnimator="@animator/button_press"
-        android:clickable="true">
+        android:layout_height="match_parent"
+        tools:context="collection.ui.HealthMonitoringFragment">
 
         <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="这里是信息推广页"
-            android:textSize="16sp"
-            android:textColor="@color/purple"
-            android:fontFamily="@font/harmonyos_sans_bold"
+            android:id="@+id/function"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_gravity="center"
-            />
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="基础健康情况监测"
+            android:textColor="@color/blue"
+            android:textSize="24sp"
+            android:fontFamily="@font/harmonyos_sans_bold" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/hint"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"
+            app:layout_constraintTop_toBottomOf="@id/function"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="今日数据"
+            android:textColor="@color/grey"
+            android:textSize="12sp"
+            android:fontFamily="@font/harmonyos_sans_bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/hint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/premium"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@android:color/transparent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <FrameLayout
+            android:id="@+id/premium"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/cognitive_background_rounded"
+            android:backgroundTint="@color/light_purple"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="20dp"
+            android:stateListAnimator="@animator/button_press"
+            android:clickable="true">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="这里是信息推广页"
+                android:textSize="16sp"
+                android:textColor="@color/purple"
+                android:fontFamily="@font/harmonyos_sans_bold"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

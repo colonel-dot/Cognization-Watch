@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.cognitive.collection.model.HealthMonitoringRVModel
 import com.example.cognitive.R
+import com.example.cognitive.databinding.FragmentHealthMonitoringBinding
 import com.example.common.persistense.AppDatabase
 import com.example.common.util.ItemSpacingDecoration
 import kotlinx.coroutines.launch
@@ -22,6 +21,9 @@ import com.example.cognitive.sports.vm.StepViewModel
 import java.time.LocalDate
 
 class HealthMonitoringFragment : Fragment() {
+
+    private var _binding: FragmentHealthMonitoringBinding? = null
+    private val binding get() = _binding!!
 
     // 刷新回调接口
     interface OnRefreshListener {
@@ -38,7 +40,7 @@ class HealthMonitoringFragment : Fragment() {
     }
 
     fun finishRefresh() {
-        view?.findViewById<SwipeRefreshLayout?>(R.id.swipeRefresh)?.isRefreshing = false
+        _binding?.swipeRefresh?.let { it.isRefreshing = false }
     }
 
     fun refreshData() {
@@ -58,7 +60,7 @@ class HealthMonitoringFragment : Fragment() {
         }
 
         scheduleViewModel.refreshBySystemEvents {
-            view?.findViewById<SwipeRefreshLayout?>(R.id.swipeRefresh)?.isRefreshing = false
+            _binding?.swipeRefresh?.let { it.isRefreshing = false }
         }
     }
 
@@ -73,15 +75,13 @@ class HealthMonitoringFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_health_monitoring, container, false)
+    ): View {
+        _binding = FragmentHealthMonitoringBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val recyclerView = view.findViewById<RecyclerView?>(R.id.content)
-        val swipeRefresh = view.findViewById<SwipeRefreshLayout?>(R.id.swipeRefresh)
 
         list = ArrayList()
         list.add(HealthMonitoringRVModel("今日步数", 0.toDouble(), 10000.0, "steps"))
@@ -89,9 +89,9 @@ class HealthMonitoringFragment : Fragment() {
 
         adapter = HealthMonitoringRVAdapter(list)
 
-        recyclerView?.adapter = adapter
+        binding.content.adapter = adapter
 
-        swipeRefresh?.setOnRefreshListener {
+        binding.swipeRefresh.setOnRefreshListener {
             refreshData()
         }
 
@@ -105,7 +105,7 @@ class HealthMonitoringFragment : Fragment() {
             adapter.notifyItemChanged(1)
         }
 
-        recyclerView?.setLayoutManager(LinearLayoutManager(context))
+        binding.content.layoutManager = LinearLayoutManager(context)
 
         adapter.setOnItemClickListener { position: Int ->
             when (position) {
@@ -116,6 +116,11 @@ class HealthMonitoringFragment : Fragment() {
         }
 
         val itemSpacingDecoration = ItemSpacingDecoration(context, 20, false)
-        recyclerView?.addItemDecoration(itemSpacingDecoration)
+        binding.content.addItemDecoration(itemSpacingDecoration)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

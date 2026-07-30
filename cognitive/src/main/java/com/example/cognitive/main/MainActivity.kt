@@ -21,13 +21,14 @@ import com.alibaba.android.arouter.facade.callback.NavigationCallback
 import com.alibaba.android.arouter.facade.template.IProvider
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.cognitive.R
+import com.example.cognitive.databinding.ActivityMainBinding
 import com.example.cognitive.main.home.ui.HomeFragment
 import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.GuestStateHolder
 import com.example.common.login.LoginPopupProvider
 import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.router.RouterPaths
-import com.google.android.material.bottomnavigation.BottomNavigationView
+
 import com.example.cognitive.geofence.vm.GeofenceViewModel
 import com.example.cognitive.mine.ui.RecordFragment
 import com.example.cognitive.setting.ui.SettingFragment
@@ -37,7 +38,7 @@ private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var binding: ActivityMainBinding
     private var currentFragment: Fragment? = null
     private lateinit var geofenceViewModel: GeofenceViewModel
     private lateinit var mainViewModel: MainViewModel
@@ -64,14 +65,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        bottomNavigation = findViewById(R.id.navigation)
 
         checkAndRequestPermissions()
 
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBottomNavigation() {
-        bottomNavigation.setOnItemSelectedListener { item ->
+        binding.navigation.setOnItemSelectedListener { item ->
             val selectFragment: Fragment? = when (item.itemId) {
                 R.id.home -> HomeFragment()
                 R.id.history -> RecordFragment()

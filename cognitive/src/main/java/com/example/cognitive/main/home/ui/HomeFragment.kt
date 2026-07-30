@@ -15,9 +15,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+
 import com.example.cognitive.collection.ui.HealthMonitoringFragment
 import com.example.cognitive.R
+import com.example.cognitive.databinding.FragmentHomeBinding
 import com.example.cognitive.main.MainViewModel
 import com.example.cognitive.main.home.model.HomeRVModel
 import com.example.common.bind_device.BindStatusManager
@@ -29,6 +30,8 @@ import com.example.cognitive.read_assessment.ui.ReadFragment
 import com.example.cognitive.sports.data.StepForegroundService
 
 class HomeFragment : Fragment() {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
 
     private val cameraPermissionLauncher =
@@ -56,8 +59,9 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,9 +82,8 @@ class HomeFragment : Fragment() {
         list.add(HomeRVModel(R.drawable.video, "视频通话", R.color.orange))
 
         val adapter = HomeRVAdapter(list)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.content)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        binding.content.layoutManager = LinearLayoutManager(context)
+        binding.content.adapter = adapter
 
         adapter.setOnItemClickListener { position: Int ->
             when (position) {
@@ -120,7 +123,12 @@ class HomeFragment : Fragment() {
         }
 
         val itemSpacingDecoration = ItemSpacingDecoration(context, 24, false)
-        recyclerView.addItemDecoration(itemSpacingDecoration)
+        binding.content.addItemDecoration(itemSpacingDecoration)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private val requiredPermissions: Array<String>

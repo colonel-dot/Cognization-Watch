@@ -1,15 +1,13 @@
 package com.example.cognitive.collection.ui;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.example.cognitive.databinding.ItemHealthMonitoringBinding;
 
 import java.util.List;
 
@@ -29,8 +27,8 @@ public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonito
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_health_monitoring, parent, false);
-        return new Holder(view);
+        ItemHealthMonitoringBinding binding = ItemHealthMonitoringBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new Holder(binding);
     }
 
     @Override
@@ -44,23 +42,18 @@ public class HealthMonitoringRVAdapter extends RecyclerView.Adapter<HealthMonito
     }
 
     public class Holder extends RecyclerView.ViewHolder {
+        private final ItemHealthMonitoringBinding binding;
 
-        TextView function;
-        TextView data;
-        LinearProgressIndicator progress;
-
-        public Holder(@NonNull View itemView) {
-            super(itemView);
-            function = itemView.findViewById(R.id.function);
-            data = itemView.findViewById(R.id.data);
-            progress = itemView.findViewById(R.id.progress);
+        public Holder(@NonNull ItemHealthMonitoringBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
             HealthMonitoringRVModel item = list.get(position);
-            function.setText(item.getFunction());
-            data.setText(StringMap.mapNumberWithUnit(item.getData(), item.getUnit()));
-            progress.setProgress((int)(100 * item.getData() / item.getTarget()));
+            binding.function.setText(item.getFunction());
+            binding.data.setText(StringMap.mapNumberWithUnit(item.getData(), item.getUnit()));
+            binding.progress.setProgress((int)(100 * item.getData() / item.getTarget()));
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

@@ -26,6 +26,10 @@ android {
     namespace 'com.example.cogwatch'
     compileSdk 36
 
+    buildFeatures {
+        dataBinding true
+    }
+
     signingConfigs {
         release {
             storeFile file(localConfig("release.storeFile", "COGWATCH_RELEASE_STORE_FILE", "../release.jks"))

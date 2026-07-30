@@ -2,13 +2,12 @@ package com.example.cognitive.mine.ui;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.CognitiveItemRecordBinding;
 import com.example.common.persistense.risk.DailyRiskEntity;
 
 import java.time.format.DateTimeFormatter;
@@ -28,9 +27,8 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cognitive_item_record, parent, false);
-        return new Holder(itemView);
+        CognitiveItemRecordBinding binding = CognitiveItemRecordBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new Holder(binding);
     }
 
     @Override
@@ -59,28 +57,22 @@ public class RecordRVAdapter extends RecyclerView.Adapter<RecordRVAdapter.Holder
     }
 
     public class Holder extends RecyclerView.ViewHolder {
+        private final CognitiveItemRecordBinding binding;
 
-        TextView val; // risk
-        TextView date; // 3.17
-        TextView label; // today, yesterday or Monday etc.
-
-        public Holder(View itemView) {
-            super(itemView);
-
-            val = itemView.findViewById(R.id.val);
-            date = itemView.findViewById(R.id.date);
-            label = itemView.findViewById(R.id.label);
+        public Holder(CognitiveItemRecordBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
             DailyRiskEntity item = list.get(position);
-            val.setText(String.valueOf((int)(item.getRiskScore() * 100)));
+            binding.val.setText(String.valueOf((int)(item.getRiskScore() * 100)));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M.dd");
             String result = item.getDate().format(formatter);
-            date.setText(result);
+            binding.date.setText(result);
 
-            label.setText(StringMap.mapDateToRelativeLabel(item.getDate()));
+            binding.label.setText(StringMap.mapDateToRelativeLabel(item.getDate()));
 
             if (listener != null) {
                 itemView.setOnClickListener(v ->

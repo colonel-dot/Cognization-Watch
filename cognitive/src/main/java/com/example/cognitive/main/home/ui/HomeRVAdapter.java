@@ -1,16 +1,14 @@
 package com.example.cognitive.main.home.ui;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.ItemHomeBinding;
 
 import java.util.List;
 
@@ -29,8 +27,8 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false);
-        return new Holder(view);
+        ItemHomeBinding binding = ItemHomeBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new Holder(binding);
     }
 
     @Override
@@ -44,18 +42,16 @@ public class HomeRVAdapter extends RecyclerView.Adapter<HomeRVAdapter.Holder> {
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        ImageView icon;
-        TextView function;
+        private final ItemHomeBinding binding;
 
-        public Holder(View itemView) {
-            super(itemView);
-            icon = itemView.findViewById(R.id.icon);
-            function = itemView.findViewById(R.id.function);
+        public Holder(ItemHomeBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
-            icon.setImageResource(list.get(position).getImage());
-            function.setText(list.get(position).getFunction());
+            binding.icon.setImageResource(list.get(position).getImage());
+            binding.function.setText(list.get(position).getFunction());
             itemView.setBackgroundTintList(
                     ContextCompat.getColorStateList(itemView.getContext(), list.get(position).getBackground())
             );

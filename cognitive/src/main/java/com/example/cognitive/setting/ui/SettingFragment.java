@@ -15,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.CognitiveFragmentSettingBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,10 @@ public class SettingFragment extends Fragment {
 
     private static final String TAG = "SettingFragment";
 
+    private CognitiveFragmentSettingBinding binding;
+
+    private SettingAdapter adapter;
+
     public SettingFragment() {
     }
 
@@ -45,28 +49,18 @@ public class SettingFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.cognitive_fragment_setting, container, false);
+        binding = CognitiveFragmentSettingBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
-
-    private RecyclerView content;
-    private LinearLayout signout;
-
-    private SettingAdapter adapter;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        bindView(view);
         initRVAdapter();
         initListener();
-    }
-
-    private void bindView(View view) {
-        content = view.findViewById(R.id.content);
-        signout = view.findViewById(R.id.signout);
     }
 
     private void initRVAdapter() {
@@ -100,12 +94,12 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        content.setLayoutManager(new LinearLayoutManager(requireContext()));
-        content.setAdapter(adapter);
+        binding.content.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.content.setAdapter(adapter);
     }
 
     private void initListener() {
-        signout.setOnClickListener(v -> showLogoutConfirmDialog());
+        binding.signout.setOnClickListener(v -> showLogoutConfirmDialog());
     }
 
     private void showLogoutConfirmDialog() {
@@ -146,5 +140,11 @@ public class SettingFragment extends Fragment {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         requireActivity().finish();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

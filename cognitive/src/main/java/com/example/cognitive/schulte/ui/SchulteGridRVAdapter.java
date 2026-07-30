@@ -1,14 +1,13 @@
 package com.example.cognitive.schulte.ui;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.ItemSchulteGridBinding;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,8 +26,8 @@ public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdap
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_schulte_grid, parent, false);
-        return new Holder(view);
+        ItemSchulteGridBinding binding = ItemSchulteGridBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new Holder(binding);
     }
 
     @Override
@@ -47,16 +46,16 @@ public class SchulteGridRVAdapter extends RecyclerView.Adapter<SchulteGridRVAdap
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        TextView cell;
+        private final ItemSchulteGridBinding binding;
 
-        public Holder(@NonNull View itemView) {
-            super(itemView);
-            cell = itemView.findViewById(R.id.cell);
+        public Holder(@NonNull ItemSchulteGridBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
             int num = list.get(position).getNum();
-            cell.setText(String.valueOf(num));
+            binding.cell.setText(String.valueOf(num));
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {

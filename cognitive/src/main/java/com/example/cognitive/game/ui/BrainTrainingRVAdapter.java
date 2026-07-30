@@ -1,16 +1,14 @@
 package com.example.cognitive.game.ui;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cognitive.R;
+import com.example.cognitive.databinding.ItemBrainTrainingBinding;
 
 import java.util.List;
 
@@ -29,8 +27,8 @@ public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRV
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_brain_training, parent, false);
-        return new Holder(view);
+        ItemBrainTrainingBinding binding = ItemBrainTrainingBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new Holder(binding);
     }
 
     @Override
@@ -44,22 +42,17 @@ public class BrainTrainingRVAdapter extends RecyclerView.Adapter<BrainTrainingRV
     }
 
     public class Holder extends RecyclerView.ViewHolder {
+        private final ItemBrainTrainingBinding binding;
 
-        TextView function;
-        ImageView icon;
-        TextView state;
-
-        public Holder(@NonNull View itemView) {
-            super(itemView);
-            function = itemView.findViewById(R.id.function);
-            icon = itemView.findViewById(R.id.icon);
-            state = itemView.findViewById(R.id.state);
+        public Holder(@NonNull ItemBrainTrainingBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         public void bindView(int position) {
-            function.setText(list.get(position).getFunction());
-            icon.setImageResource(list.get(position).getIcon());
-            state.setText(list.get(position).getState());
+            binding.function.setText(list.get(position).getFunction());
+            binding.icon.setImageResource(list.get(position).getIcon());
+            binding.state.setText(list.get(position).getState());
             itemView.setBackgroundTintList(
                     ContextCompat.getColorStateList(itemView.getContext(), list.get(position).getBackground())
             );

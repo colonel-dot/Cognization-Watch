@@ -4,8 +4,6 @@ import android.app.AppOpsManager
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -16,28 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.schedule.vm.ScheduleViewModel
-import com.example.cognitive.R
+
+import com.example.cognitive.databinding.ActivityScheduleBinding
 import com.example.cognitive.main.MainViewModel
 
 class ScheduleActivity : AppCompatActivity() {
 
-    private lateinit var tvBedTime: TextView
-    private lateinit var tvWakeTime: TextView
+    private lateinit var binding: ActivityScheduleBinding
 
     private lateinit var bedHourAdapter: WheelAdapter
     private lateinit var bedMinuteAdapter: WheelAdapter
     private lateinit var wakeHourAdapter: WheelAdapter
     private lateinit var wakeMinuteAdapter: WheelAdapter
 
-    private lateinit var rvBedHour: RecyclerView
-    private lateinit var rvBedMinute: RecyclerView
-    private lateinit var rvWakeHour: RecyclerView
-    private lateinit var rvWakeMinute: RecyclerView
-
     private lateinit var map: HashMap<RecyclerView, LinearSnapHelper>
-
-    private lateinit var btn_rise: Button
-    private lateinit var btn_bed: Button
 
     private val viewModel: ScheduleViewModel by viewModels {
         ScheduleViewModel.Factory(application)
@@ -47,8 +37,9 @@ class ScheduleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_schedule)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityScheduleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -59,24 +50,13 @@ class ScheduleActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
 
-        tvBedTime = findViewById(R.id.tvBedTime)
-        tvWakeTime = findViewById(R.id.tvWakeTime)
-
-        btn_bed = findViewById(R.id.btn_bed)
-        btn_rise = findViewById(R.id.btn_rise)
-
-        rvBedHour = findViewById(R.id.rvBedHour)
-        rvBedMinute = findViewById(R.id.rvBedMinute)
-        rvWakeHour = findViewById(R.id.rvHour)
-        rvWakeMinute = findViewById(R.id.rvMinute)
-
         map = HashMap()
-        map[rvBedHour] = CircularSnapHelper(viewModel.hours.size)
-        map[rvBedMinute] = CircularSnapHelper(viewModel.minutes.size)
-        map[rvWakeHour] = CircularSnapHelper(viewModel.hours.size)
-        map[rvWakeMinute] = CircularSnapHelper(viewModel.minutes.size)
+        map[binding.rvBedHour] = CircularSnapHelper(viewModel.hours.size)
+        map[binding.rvBedMinute] = CircularSnapHelper(viewModel.minutes.size)
+        map[binding.rvHour] = CircularSnapHelper(viewModel.hours.size)
+        map[binding.rvMinute] = CircularSnapHelper(viewModel.minutes.size)
 
-        bedHourAdapter = setupWheel(rvBedHour, viewModel.hours, viewModel.bedHourPos) { selectedHour, pos ->
+        bedHourAdapter = setupWheel(binding.rvBedHour, viewModel.hours, viewModel.bedHourPos) { selectedHour, pos ->
             viewModel.onBedTimeSelected(
                 selectedHour,
                 bedMinuteAdapter.getRealValue(),
@@ -85,7 +65,7 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
-        bedMinuteAdapter = setupWheel(rvBedMinute, viewModel.minutes, viewModel.bedMinutePos) { selectedMinute, pos ->
+        bedMinuteAdapter = setupWheel(binding.rvBedMinute, viewModel.minutes, viewModel.bedMinutePos) { selectedMinute, pos ->
             viewModel.onBedTimeSelected(
                 bedHourAdapter.getRealValue(),
                 selectedMinute,
@@ -94,7 +74,7 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
-        wakeHourAdapter = setupWheel(rvWakeHour, viewModel.hours, viewModel.wakeHourPos) { selectedHour, pos ->
+        wakeHourAdapter = setupWheel(binding.rvHour, viewModel.hours, viewModel.wakeHourPos) { selectedHour, pos ->
             viewModel.onWakeTimeSelected(
                 selectedHour,
                 wakeMinuteAdapter.getRealValue(),
@@ -103,7 +83,7 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
-        wakeMinuteAdapter = setupWheel(rvWakeMinute, viewModel.minutes, viewModel.wakeMinutePos) { selectedMinute, pos ->
+        wakeMinuteAdapter = setupWheel(binding.rvMinute, viewModel.minutes, viewModel.wakeMinutePos) { selectedMinute, pos ->
             viewModel.onWakeTimeSelected(
                 wakeHourAdapter.getRealValue(),
                 selectedMinute,
@@ -112,7 +92,7 @@ class ScheduleActivity : AppCompatActivity() {
             )
         }
 
-        btn_bed.setOnClickListener {
+        binding.btnBed.setOnClickListener {
             viewModel.saveScheduleToDb(
                 bedHour = bedHourAdapter.getRealValue(),
                 bedMinute = bedMinuteAdapter.getRealValue(),
@@ -124,7 +104,7 @@ class ScheduleActivity : AppCompatActivity() {
             Toast.makeText(this, "作息时间已保存", Toast.LENGTH_SHORT).show()
         }
 
-        btn_rise.setOnClickListener {
+        binding.btnRise.setOnClickListener {
             viewModel.saveScheduleToDb(
                 bedHour = bedHourAdapter.getRealValue(),
                 bedMinute = bedMinuteAdapter.getRealValue(),
@@ -210,18 +190,18 @@ class ScheduleActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.bedTimeText.observe(this) { text ->
-            tvBedTime.text = text
-            rvBedHour.postDelayed({
-                scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, rvBedHour)
-                scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, rvBedMinute)
+            binding.tvBedTime.text = text
+            binding.rvBedHour.postDelayed({
+                scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, binding.rvBedHour)
+                scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, binding.rvBedMinute)
             }, 50)
         }
 
         viewModel.wakeTimeText.observe(this) { text ->
-            tvWakeTime.text = text
-            rvWakeHour.postDelayed({
-                scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, rvWakeHour)
-                scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, rvWakeMinute)
+            binding.tvWakeTime.text = text
+            binding.rvHour.postDelayed({
+                scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, binding.rvHour)
+                scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, binding.rvMinute)
             }, 50)
         }
     }
