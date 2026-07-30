@@ -16,9 +16,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.cognitive.R
 import com.example.cognitive.main.MainViewModel
 import com.example.cognitive.read_assessment.vm.ReadViewModel
+import kotlinx.coroutines.launch
 
 class ReadFragment : Fragment() {
     private lateinit var bar_1: View
@@ -136,17 +140,11 @@ class ReadFragment : Fragment() {
         stop.setOnClickListener {
             viewModel.stopRecord()
             stopAllVoiceAnimation()
-            speakText?.let { text ->
-                result.text = "评估中..."
-                viewModel.evaluateSpeech(text, "zh-CHS")
-                mainViewModel.notifyRecordChanged()
-            } ?: run {
-                result.text = "暂无朗读文本"
-            }
         }
     }
 
     private fun observeViewModel() {
+        // 持续状态：LiveData 是最佳选择
         viewModel.isRecording.observe(viewLifecycleOwner) { isRec ->
             mic.isEnabled = !isRec
             stop.isEnabled = isRec
@@ -156,11 +154,16 @@ class ReadFragment : Fragment() {
             result.text = score ?: "暂无评分"
         }
 
-        viewModel.recordSavedEvent.observe(viewLifecycleOwner) { file ->
-            file?.let {
-                Toast.makeText(requireContext(), "录音已保存", Toast.LENGTH_SHORT).show()
-            } ?: run {
-                Toast.makeText(requireContext(), "录音保存失败", Toast.LENGTH_SHORT).show()
+        // 一次性事件：用 SharedFlow 替代 LiveData，消除粘性事件 bug
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.recordResult.collect { file ->
+                    Toast.makeText(requireContext(), "录音已保存", Toast.LENGTH_SHORT).show()
+                    result.text = "评估中..."
+                    val text = speakText ?: return@collect
+                    viewModel.evaluateSpeech(file, text, "zh-CHS")
+                    mainViewModel.notifyRecordChanged()
+                }
             }
         }
     }

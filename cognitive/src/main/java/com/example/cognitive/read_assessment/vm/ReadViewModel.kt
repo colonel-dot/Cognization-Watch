@@ -1,23 +1,26 @@
 package com.example.cognitive.read_assessment.vm
 
 import android.app.Application
-import android.media.AudioFormat
 import androidx.lifecycle.*
-import com.github.squti.androidwaverecorder.WaveRecorder
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
+import com.example.cognitive.read_assessment.data.AudioRecorderManager
 import com.example.cognitive.read_assessment.data.ReadAssessmentRepository
 import com.example.cognitive.read_assessment.data.ReadAssessmentSource
 import com.example.cognitive.repository.UpdateRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import java.io.File
 import java.time.LocalDate
 import kotlin.random.Random
 
 private const val TAG = "RecordViewModel"
 
-class ReadViewModel(application: Application) : AndroidViewModel(application ) {
+class ReadViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo = ReadAssessmentRepository()
+    private val audioManager = AudioRecorderManager()
 
     private val appDatabase = AppDatabase.getDatabase(application)
     private val dailyBehaviorDao = appDatabase.dailyBehaviorDao()
@@ -25,50 +28,32 @@ class ReadViewModel(application: Application) : AndroidViewModel(application ) {
     private val _isRecording = MutableLiveData(false)
     val isRecording: LiveData<Boolean> = _isRecording
 
-    private val _recordSavedEvent = MutableLiveData<File?>()
-    val recordSavedEvent: LiveData<File?> = _recordSavedEvent
+    /** 一次性事件：录音文件保存结果。用 SharedFlow 避免 LiveData 粘性问题。 */
+    private val _recordResult = MutableSharedFlow<File>(extraBufferCapacity = 1)
+    val recordResult: SharedFlow<File> = _recordResult.asSharedFlow()
 
     private val _scoreResult = MutableLiveData<String>()
     val scoreResult: LiveData<String> = _scoreResult
 
-    private var recorder: WaveRecorder? = null
-    private var curFile: File? = null
-
     fun getText(): String {
         val cnt = Random.nextInt(0, 100)
-        val speakText: String = ReadAssessmentSource.getTextByIndex(cnt)
-        return speakText
+        return ReadAssessmentSource.getTextByIndex(cnt)
     }
 
     fun startRecord(rootDir: File) {
-        val dir = File(rootDir, "recordings")
-        if (!dir.exists()) dir.mkdirs()
-
-        curFile = File(dir, "record_${System.currentTimeMillis()}.wav")
-
-        recorder = WaveRecorder(curFile!!.absolutePath).apply {
-            noiseSuppressorActive = true
-            configureWaveSettings {
-                sampleRate = 16000
-                channels = AudioFormat.CHANNEL_IN_MONO
-                audioEncoding = AudioFormat.ENCODING_PCM_16BIT
-            }
-        }
-
-        recorder?.startRecording()
+        audioManager.start(rootDir)
         _isRecording.value = true
     }
 
     fun stopRecord() {
-        recorder?.stopRecording()
-        _isRecording.postValue(false)
-        _recordSavedEvent.postValue(curFile)
-        recorder = null
+        val file = audioManager.stop()
+        _isRecording.value = false
+        if (file != null) {
+            _recordResult.tryEmit(file)
+        }
     }
 
-
-    fun evaluateSpeech(refText: String, langType: String) {
-        val file = curFile ?: return
+    fun evaluateSpeech(file: File, refText: String, langType: String) {
         viewModelScope.launch {
             val json = repo.evaluate(file, refText, langType)
 
@@ -90,7 +75,7 @@ class ReadViewModel(application: Application) : AndroidViewModel(application ) {
         }
     }
 
-    suspend fun saveRecordToDatabase(score: Double) {
+    private suspend fun saveRecordToDatabase(score: Double) {
         val today = LocalDate.now()
         dailyBehaviorDao.getOrInitTodayBehavior(today)
         UpdateRepository.updateSpeechScore(score)

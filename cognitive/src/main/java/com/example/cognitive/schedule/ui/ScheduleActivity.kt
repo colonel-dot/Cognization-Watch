@@ -39,7 +39,9 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var btn_rise: Button
     private lateinit var btn_bed: Button
 
-    private val viewModel: ScheduleViewModel by viewModels()
+    private val viewModel: ScheduleViewModel by viewModels {
+        ScheduleViewModel.Factory(application)
+    }
     private val mainViewModel: MainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -32,7 +32,7 @@
         />
 
     <Switch
-        android:id="@+id/switch_"
+        android:id="@+id/setting_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"

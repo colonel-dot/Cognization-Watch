@@ -1,26 +1,28 @@
 package com.example.cognitive.schedule.vm
 
 import android.app.Application
-import android.app.usage.UsageEvents
-import android.app.usage.UsageStatsManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
 import com.example.cognitive.repository.UpdateRepository
+import com.example.cognitive.schedule.data.ScreenEvent
+import com.example.cognitive.schedule.data.ScreenEventProvider
+import com.example.cognitive.schedule.data.UsageStatsScreenEventProvider
 import java.time.LocalDate
 import java.util.*
 
 private const val TAG = "ScheduleViewModel"
 
-data class ScreenEvent(val type: String, val time: Long)
-
-class ScheduleViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val context = application.applicationContext
+class ScheduleViewModel @JvmOverloads constructor(
+    application: Application,
+    private val screenEventProvider: ScreenEventProvider = UsageStatsScreenEventProvider(application)
+) : AndroidViewModel(application) {
 
     private val dailyBehaviorDao =
         AppDatabase.getDatabase(application).dailyBehaviorDao()
@@ -48,6 +50,20 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
     init {
         initScheduleFromDbOrSystem()
+    }
+
+    /**
+     * 自定义 Factory，支持注入 [ScreenEventProvider]。
+     * 用默认构造参数时无需显式传入；测试时注入 mock 即可。
+     */
+    class Factory @JvmOverloads constructor(
+        private val application: Application,
+        private val screenEventProvider: ScreenEventProvider = UsageStatsScreenEventProvider(application)
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return ScheduleViewModel(application, screenEventProvider) as T
+        }
     }
 
 
@@ -107,7 +123,6 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             // 只要用户已经设置过，就从数据库读取而非用系统推断
             if (entity.wakeMinute!! > 1e-5 || entity.sleepMinute!! > 1e-5) {
                 hasInitBySystemEvents = true
-                // 从数据库读取并更新UI
                 applyScheduleToUI(
                     sleepHour = entity.sleepMinute!! / 60,
                     sleepMinute = entity.sleepMinute!! % 60,
@@ -149,7 +164,6 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
             onComplete?.invoke()
         }
     }
-
 
 
     /* ================= UI 同步 ================= */
@@ -213,11 +227,6 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
 
             UpdateRepository.updateScheduleTime(wakeMinuteOfDay, sleepMinuteOfDay)
             Log.d(TAG, "saveScheduleToDb: 已经调用了更新数据库的方法")
-         /* dailyBehaviorDao.updateSchedule(
-                date = today,
-                wakeMinute = wakeMinuteOfDay,
-                sleepMinute = sleepMinuteOfDay
-            ) */
         }
     }
 
@@ -228,33 +237,11 @@ class ScheduleViewModel(application: Application) : AndroidViewModel(application
         return hour * 60 + minute
     }
 
-    private fun getScreenEventsToday(): List<ScreenEvent> {
-        val usm = context.getSystemService(Application.USAGE_STATS_SERVICE) as UsageStatsManager
-        val cal = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 4)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-
-        val events = mutableListOf<ScreenEvent>()
-        val usageEvents = usm.queryEvents(cal.timeInMillis, System.currentTimeMillis())
-        val event = UsageEvents.Event()
-
-        while (usageEvents.hasNextEvent()) {
-            usageEvents.getNextEvent(event)
-            when (event.eventType) {
-                UsageEvents.Event.SCREEN_INTERACTIVE ->
-                    events.add(ScreenEvent("SCREEN_ON", event.timeStamp))
-                UsageEvents.Event.SCREEN_NON_INTERACTIVE ->
-                    events.add(ScreenEvent("SCREEN_OFF", event.timeStamp))
-            }
-        }
-        return events.sortedBy { it.time }
-    }
-
-    private fun getDefaultSleepWakeTime(): Pair<Long, Long> {
-        val events = getScreenEventsToday()
+    /**
+     * 通过 [ScreenEventProvider] 推断默认作息时间，替代原来直接调 UsageStatsManager。
+     */
+    private suspend fun getDefaultSleepWakeTime(): Pair<Long, Long> {
+        val events = screenEventProvider.getScreenEventsToday()
         val now = System.currentTimeMillis()
 
         if (events.isEmpty()) {

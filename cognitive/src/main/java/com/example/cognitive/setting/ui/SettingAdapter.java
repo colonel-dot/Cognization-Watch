@@ -60,7 +60,7 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
             super(itemView);
             icon_iv = itemView.findViewById(R.id.icon);
             type_tv = itemView.findViewById(R.id.type);
-            switch_ = itemView.findViewById(R.id.switch_);
+            switch_ = itemView.findViewById(R.id.setting_switch);
             expand_iv = itemView.findViewById(R.id.expand);
         }
 

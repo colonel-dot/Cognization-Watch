@@ -52,14 +52,14 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
 
         ImageView icon_iv;
         TextView type_tv;
-        Switch switch_;
+        Switch switch_to;
         ImageView expand_iv;
 
         public ViewHolder(View itemView) {
             super(itemView);
             icon_iv = itemView.findViewById(R.id.icon);
             type_tv = itemView.findViewById(R.id.type);
-            switch_ = itemView.findViewById(R.id.switch_);
+            switch_to = itemView.findViewById(R.id.switch_to);
             expand_iv = itemView.findViewById(R.id.expand);
         }
 
@@ -68,11 +68,11 @@ public class SettingAdapter extends RecyclerView.Adapter<SettingAdapter.ViewHold
             icon_iv.setImageResource(item.getIcon());
             type_tv.setText(item.getType());
             if (item.isSwitch()) {
-                switch_.setVisibility(View.VISIBLE);
+                switch_to.setVisibility(View.VISIBLE);
                 expand_iv.setVisibility(View.GONE);
-                switch_.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSwitchChanged(item, isChecked));
+                switch_to.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onSwitchChanged(item, isChecked));
             } else {
-                switch_.setVisibility(View.GONE);
+                switch_to.setVisibility(View.GONE);
                 expand_iv.setVisibility(View.VISIBLE);
                 itemView.setOnClickListener(v -> listener.onItemClick(item));
             }

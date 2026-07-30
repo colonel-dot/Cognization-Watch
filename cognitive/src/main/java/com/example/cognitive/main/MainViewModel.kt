@@ -73,4 +73,19 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     fun notifyRecordChanged() {
         _recordChanged.postValue(Unit)
     }
+
+    /**
+     * 游客模式下初始化模拟数据。
+     * 原先写在 Activity.onCreate 中——屏幕旋转会重复执行，移到 ViewModel.init 确保只执行一次。
+     */
+    fun initGuestDataIfNeeded() {
+        if (!GuestStateHolder.isGuest()) return
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            InsertData.init(getApplication())
+            InsertData.insertBehaviorData()
+            InsertData.insertRiskData()
+            InsertData.insertGeofenceData()
+            Log.d(TAG, "initGuestDataIfNeeded: 游客模拟数据初始化完成")
+        }
+    }
 }

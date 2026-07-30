@@ -8,7 +8,7 @@ buildscript {
         maven { url 'https://mirrors.aliyun.com/maven/public' }
         maven { url 'https://mirrors.aliyun.com/maven/google' }
         maven { url 'https://mirrors.aliyun.com/maven/central' }
-        maven { url 'https://repo.huaweicloud.com/repository/maven/' }
+        //maven { url 'https://repo.huaweicloud.com/repository/maven/' }
         google()
         mavenCentral()
     }

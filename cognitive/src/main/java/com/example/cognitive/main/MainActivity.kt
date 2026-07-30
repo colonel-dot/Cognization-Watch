@@ -25,14 +25,10 @@ import com.example.cognitive.main.home.ui.HomeFragment
 import com.example.common.bind_device.BindStatusManager
 import com.example.common.login.GuestStateHolder
 import com.example.common.login.LoginPopupProvider
-import com.example.common.login.simulate.InsertData
 import com.example.common.persistense.geofence.GeofenceRepository
 import com.example.common.router.RouterPaths
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.cognitive.geofence.vm.GeofenceViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.example.cognitive.mine.ui.RecordFragment
 import com.example.cognitive.setting.ui.SettingFragment
 import com.example.cognitive.sports.data.StepForegroundService
@@ -44,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private var currentFragment: Fragment? = null
     private lateinit var geofenceViewModel: GeofenceViewModel
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private lateinit var mainViewModel: MainViewModel
 
     private val multiplePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -80,19 +76,16 @@ class MainActivity : AppCompatActivity() {
         checkAndRequestPermissions()
 
         geofenceViewModel = ViewModelProvider(this)[GeofenceViewModel::class.java]
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         initBottomNavigation()
 
         GeofenceRepository.initialize(this)
 
+        // 游客模式数据初始化——移到 ViewModel 中，避免屏幕旋转重复执行
         if (intent?.getBooleanExtra("guest", false) == true) {
             GuestStateHolder.setGuest(true)
-            InsertData.init(this)
-            coroutineScope.launch(Dispatchers.IO) {
-                InsertData.insertBehaviorData()
-                InsertData.insertRiskData()
-                InsertData.insertGeofenceData()
-            }
+            mainViewModel.initGuestDataIfNeeded()
         }
 
         val otherId = BindStatusManager.getBindStatus().second

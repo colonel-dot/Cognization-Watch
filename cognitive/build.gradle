@@ -20,6 +20,10 @@ android {
     namespace 'com.example.cognitive'
     compileSdk 36
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         minSdk 26
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
