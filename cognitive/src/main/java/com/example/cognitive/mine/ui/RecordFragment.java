@@ -67,7 +67,7 @@ public class RecordFragment extends Fragment {
     }
 
     private void observeViewModel() {
-        viewModel.getAllRiskData().observe(getViewLifecycleOwner(), list -> {
+        viewModel.getAllRiskDataLiveData().observe(getViewLifecycleOwner(), list -> {
             if (list.isEmpty()) {
                 return;
             }

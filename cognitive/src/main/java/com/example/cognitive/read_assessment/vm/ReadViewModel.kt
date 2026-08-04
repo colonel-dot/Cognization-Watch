@@ -1,16 +1,20 @@
 package com.example.cognitive.read_assessment.vm
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
 import com.example.cognitive.read_assessment.data.AudioRecorderManager
 import com.example.cognitive.read_assessment.data.ReadAssessmentRepository
 import com.example.cognitive.read_assessment.data.ReadAssessmentSource
 import com.example.cognitive.repository.UpdateRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import java.io.File
 import java.time.LocalDate
 import kotlin.random.Random
@@ -25,15 +29,15 @@ class ReadViewModel(application: Application) : AndroidViewModel(application) {
     private val appDatabase = AppDatabase.getDatabase(application)
     private val dailyBehaviorDao = appDatabase.dailyBehaviorDao()
 
-    private val _isRecording = MutableLiveData(false)
-    val isRecording: LiveData<Boolean> = _isRecording
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
-    /** 一次性事件：录音文件保存结果。用 SharedFlow 避免 LiveData 粘性问题。 */
+    /** 一次性事件：录音文件保存结果。用 SharedFlow 避免粘性问题。 */
     private val _recordResult = MutableSharedFlow<File>(extraBufferCapacity = 1)
     val recordResult: SharedFlow<File> = _recordResult.asSharedFlow()
 
-    private val _scoreResult = MutableLiveData<String>()
-    val scoreResult: LiveData<String> = _scoreResult
+    private val _scoreResult = MutableStateFlow("")
+    val scoreResult: StateFlow<String> = _scoreResult.asStateFlow()
 
     fun getText(): String {
         val cnt = Random.nextInt(0, 100)
@@ -71,7 +75,7 @@ class ReadViewModel(application: Application) : AndroidViewModel(application) {
 
             saveRecordToDatabase(overall)
 
-            _scoreResult.postValue(result)
+            _scoreResult.value = result
         }
     }
 

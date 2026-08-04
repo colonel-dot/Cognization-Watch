@@ -10,10 +10,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cognitive.schedule.vm.ScheduleViewModel
+import kotlinx.coroutines.launch
 
 import com.example.cognitive.databinding.ActivityScheduleBinding
 import com.example.cognitive.main.MainViewModel
@@ -189,20 +193,27 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.bedTimeText.observe(this) { text ->
-            binding.tvBedTime.text = text
-            binding.rvBedHour.postDelayed({
-                scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, binding.rvBedHour)
-                scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, binding.rvBedMinute)
-            }, 50)
-        }
-
-        viewModel.wakeTimeText.observe(this) { text ->
-            binding.tvWakeTime.text = text
-            binding.rvHour.postDelayed({
-                scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, binding.rvHour)
-                scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, binding.rvMinute)
-            }, 50)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.bedTimeText.collect { text ->
+                        binding.tvBedTime.text = text
+                        binding.rvBedHour.postDelayed({
+                            scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, binding.rvBedHour)
+                            scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, binding.rvBedMinute)
+                        }, 50)
+                    }
+                }
+                launch {
+                    viewModel.wakeTimeText.collect { text ->
+                        binding.tvWakeTime.text = text
+                        binding.rvHour.postDelayed({
+                            scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, binding.rvHour)
+                            scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, binding.rvMinute)
+                        }, 50)
+                    }
+                }
+            }
         }
     }
 

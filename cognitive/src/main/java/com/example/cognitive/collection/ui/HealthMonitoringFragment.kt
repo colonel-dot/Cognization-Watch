@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cognitive.collection.model.HealthMonitoringRVModel
 import com.example.cognitive.R
 import com.example.cognitive.databinding.FragmentHealthMonitoringBinding
-import com.example.common.persistense.AppDatabase
 import com.example.common.util.ItemSpacingDecoration
 import kotlinx.coroutines.launch
 import com.example.cognitive.schedule.ui.ScheduleActivity
 import com.example.cognitive.schedule.vm.ScheduleViewModel
 import com.example.cognitive.sports.vm.StepViewModel
-import java.time.LocalDate
 
 class HealthMonitoringFragment : Fragment() {
 
@@ -44,21 +44,7 @@ class HealthMonitoringFragment : Fragment() {
     }
 
     fun refreshData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val dao = AppDatabase.Companion.getDatabase(requireContext()).dailyBehaviorDao()
-                val entity = dao.getOrInitTodayBehavior(LocalDate.now())
-                val steps = entity.steps?.toDouble() ?: 0.0
-
-                if (list.isNotEmpty() && list[0] != null) {
-                    list[0] = list[0]!!.copy(data = steps)
-                    adapter.notifyItemChanged(0)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
+        // 步数由 StepViewModel 的 DAO Flow 自动推送，无需手动查询
         scheduleViewModel.refreshBySystemEvents {
             _binding?.swipeRefresh?.let { it.isRefreshing = false }
         }
@@ -95,14 +81,21 @@ class HealthMonitoringFragment : Fragment() {
             refreshData()
         }
 
-        stepsViewModel.stepCount.observe(viewLifecycleOwner) { steps ->
-            list[0] = list[0]?.copy(data = steps)
-            adapter.notifyItemChanged(0)
-        }
-
-        scheduleViewModel.scheduleHours.observe(viewLifecycleOwner) { hours ->
-            list[1] = list[1]?.copy(data = hours ?: 0.0)
-            adapter.notifyItemChanged(1)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    stepsViewModel.stepCount.collect { steps ->
+                        list[0] = list[0]?.copy(data = steps)
+                        adapter.notifyItemChanged(0)
+                    }
+                }
+                launch {
+                    scheduleViewModel.scheduleHours.collect { hours ->
+                        list[1] = list[1]?.copy(data = hours)
+                        adapter.notifyItemChanged(1)
+                    }
+                }
+            }
         }
 
         binding.content.layoutManager = LinearLayoutManager(context)

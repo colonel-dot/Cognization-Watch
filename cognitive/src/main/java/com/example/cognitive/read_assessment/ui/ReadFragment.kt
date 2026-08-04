@@ -125,14 +125,21 @@ class ReadFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // 持续状态：LiveData 是最佳选择
-        viewModel.isRecording.observe(viewLifecycleOwner) { isRec ->
-            binding.mic.isEnabled = !isRec
-            binding.stop.isEnabled = isRec
-        }
-
-        viewModel.scoreResult.observe(viewLifecycleOwner) { score ->
-            binding.result.text = score ?: "暂无评分"
+        // 持续状态：使用 StateFlow + repeatOnLifecycle 观察
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.isRecording.collect { isRec ->
+                        binding.mic.isEnabled = !isRec
+                        binding.stop.isEnabled = isRec
+                    }
+                }
+                launch {
+                    viewModel.scoreResult.collect { score ->
+                        binding.result.text = score.ifEmpty { "暂无评分" }
+                    }
+                }
+            }
         }
 
         // 一次性事件：用 SharedFlow 替代 LiveData，消除粘性事件 bug

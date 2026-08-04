@@ -3,9 +3,10 @@ package com.example.cognitive.main
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import com.example.common.login.GuestStateHolder
 import com.example.common.login.simulate.InsertData
 import kotlinx.coroutines.launch
@@ -32,8 +33,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private val riskDao = appDatabase.dailyRiskDao()
     private val riskConfigManager = RiskConfigManager(getApplication())
 
-    private val _recordChanged = MutableLiveData<Unit>()
-    val recordChanged: LiveData<Unit> = _recordChanged
+    private val _recordChanged = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val recordChanged: SharedFlow<Unit> = _recordChanged.asSharedFlow()
 
     fun initTodaySaveYesterday() {
         viewModelScope.launch {
@@ -71,7 +72,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun notifyRecordChanged() {
-        _recordChanged.postValue(Unit)
+        _recordChanged.tryEmit(Unit)
     }
 
     /**

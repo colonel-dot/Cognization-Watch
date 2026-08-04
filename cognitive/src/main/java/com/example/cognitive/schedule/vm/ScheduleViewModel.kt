@@ -3,11 +3,12 @@ package com.example.cognitive.schedule.vm
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.common.persistense.AppDatabase
 import com.example.cognitive.repository.UpdateRepository
@@ -32,14 +33,14 @@ class ScheduleViewModel @JvmOverloads constructor(
     val hours = (0..23).map { String.format("%02d", it) }
     val minutes = (0..59).map { String.format("%02d", it) }
 
-    private val _bedTimeText = MutableLiveData<String>()
-    val bedTimeText: LiveData<String> = _bedTimeText
+    private val _bedTimeText = MutableStateFlow<String>("")
+    val bedTimeText: StateFlow<String> = _bedTimeText.asStateFlow()
 
-    private val _wakeTimeText = MutableLiveData<String>()
-    val wakeTimeText: LiveData<String> = _wakeTimeText
+    private val _wakeTimeText = MutableStateFlow<String>("")
+    val wakeTimeText: StateFlow<String> = _wakeTimeText.asStateFlow()
 
-    private val _scheduleHours = MutableLiveData<Double>()
-    val scheduleHours: LiveData<Double> = _scheduleHours
+    private val _scheduleHours = MutableStateFlow<Double>(0.0)
+    val scheduleHours: StateFlow<Double> = _scheduleHours.asStateFlow()
 
     var bedHourPos = 0
     var bedMinutePos = 0
