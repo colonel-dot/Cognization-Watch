@@ -31,6 +31,7 @@ mpandroidchart = "v3.1.0"
 pinyin4j = "2.5.0"
 retrofit = "2.9.0"
 waveRecorder = "2.1.0"
+databindingCommon = "9.3.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -76,6 +77,7 @@ profileinstaller = { module = "androidx.profileinstaller:profileinstaller", vers
 startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startup" }
 tracing = { module = "androidx.tracing:tracing", version.ref = "tracing" }
 uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
+databinding-common = { group = "androidx.databinding", name = "databinding-common", version.ref = "databindingCommon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

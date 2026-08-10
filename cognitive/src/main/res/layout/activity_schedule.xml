@@ -2,6 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.cognitive.schedule.vm.ScheduleViewModel" />
+    </data>
+
     <ScrollView
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -60,7 +66,8 @@
                         android:layout_height="wrap_content"
                         android:text="起床时间 07:00"
                         android:textSize="18sp"
-                        android:fontFamily="@font/harmonyos_sans_bold" />
+                        android:fontFamily="@font/harmonyos_sans_bold"
+                        app:stateText="@{viewModel.wakeTimeText}" />
 
                     <View
                         android:layout_width="40dp"
@@ -130,7 +137,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/harmonyos_sans_bold"
                         android:text="睡觉时间 23:00"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        app:stateText="@{viewModel.bedTimeText}" />
 
                     <View
                         android:layout_width="40dp"

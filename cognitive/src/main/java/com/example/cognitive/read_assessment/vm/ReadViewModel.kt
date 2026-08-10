@@ -36,7 +36,7 @@ class ReadViewModel(application: Application) : AndroidViewModel(application) {
     private val _recordResult = MutableSharedFlow<File>(extraBufferCapacity = 1)
     val recordResult: SharedFlow<File> = _recordResult.asSharedFlow()
 
-    private val _scoreResult = MutableStateFlow("")
+    private val _scoreResult = MutableStateFlow("暂无评分")
     val scoreResult: StateFlow<String> = _scoreResult.asStateFlow()
 
     fun getText(): String {

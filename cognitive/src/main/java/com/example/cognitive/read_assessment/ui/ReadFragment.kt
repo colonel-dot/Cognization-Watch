@@ -55,6 +55,8 @@ class ReadFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
         initView()
         observeViewModel()
         bindClickListener()
@@ -125,24 +127,8 @@ class ReadFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // 持续状态：使用 StateFlow + repeatOnLifecycle 观察
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.isRecording.collect { isRec ->
-                        binding.mic.isEnabled = !isRec
-                        binding.stop.isEnabled = isRec
-                    }
-                }
-                launch {
-                    viewModel.scoreResult.collect { score ->
-                        binding.result.text = score.ifEmpty { "暂无评分" }
-                    }
-                }
-            }
-        }
-
-        // 一次性事件：用 SharedFlow 替代 LiveData，消除粘性事件 bug
+        // 持续状态（isRecording / scoreResult）已通过 DataBinding 在 XML 中绑定，
+        // 这里只观察一次性事件：录音文件保存结果
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.recordResult.collect { file ->

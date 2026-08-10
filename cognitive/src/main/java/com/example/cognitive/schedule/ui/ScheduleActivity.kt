@@ -42,6 +42,8 @@ class ScheduleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityScheduleBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -193,11 +195,12 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+        // 文字绑定（tvBedTime / tvWakeTime）已通过 DataBinding 在 XML 中完成，
+        // 这里继续观察 StateFlow 是为了在文案变化时同步滚动滚轮到对应位置
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.bedTimeText.collect { text ->
-                        binding.tvBedTime.text = text
+                    viewModel.bedTimeText.collect {
                         binding.rvBedHour.postDelayed({
                             scrollWheelTo(viewModel.bedHourPos, bedHourAdapter, binding.rvBedHour)
                             scrollWheelTo(viewModel.bedMinutePos, bedMinuteAdapter, binding.rvBedMinute)
@@ -205,8 +208,7 @@ class ScheduleActivity : AppCompatActivity() {
                     }
                 }
                 launch {
-                    viewModel.wakeTimeText.collect { text ->
-                        binding.tvWakeTime.text = text
+                    viewModel.wakeTimeText.collect {
                         binding.rvHour.postDelayed({
                             scrollWheelTo(viewModel.wakeHourPos, wakeHourAdapter, binding.rvHour)
                             scrollWheelTo(viewModel.wakeMinutePos, wakeMinuteAdapter, binding.rvMinute)

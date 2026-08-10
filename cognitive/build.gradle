@@ -115,6 +115,7 @@ dependencies {
     // 组件化
     implementation libs.arouter.api
     implementation libs.activity.core
+    implementation libs.databinding.common
     kapt libs.arouter.compiler
 
     implementation libs.fragment.ktx
